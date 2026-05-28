@@ -18,6 +18,10 @@
   const STORAGE_KEY = 'pixelworld:v1';
   const MAX_HISTORY = 50;
 
+  // 도안 갤러리 서버 (Google Apps Script 웹앱 URL).
+  // 비워두면 갤러리는 설정 안내만 표시됩니다. apps-script/Code.gs 참고.
+  const GALLERY_API_URL = '';
+
   // ===== 상태 =====
   let state = {
     ratio: 'square',
@@ -28,7 +32,10 @@
     currentColor: '#4c8dff',
     brushSize: 1,
     guidesVisible: true,
-    currentScreen: null
+    currentScreen: null,
+    patternMode: null,     // null | 'chart'(도안 보기) | 'color'(번호대로 색칠)
+    patternCells: null,    // 각 칸의 번호 배열 (0 = 빈 칸)
+    patternLegend: null    // [{ num, color }]
   };
 
   let undoStack = [];
@@ -56,6 +63,13 @@
   const inputReference = document.getElementById('input-reference');
   const btnRemoveReference = document.getElementById('btn-remove-reference');
   const inputLoadJson = document.getElementById('input-load-json');
+  const inputLoadPattern = document.getElementById('input-load-pattern');
+  const patternLegendEl = document.getElementById('pattern-legend');
+  const patternLegendLabel = document.getElementById('pattern-legend-label');
+  const patternLegendActions = document.getElementById('pattern-legend-actions');
+  const patternLegendItems = document.getElementById('pattern-legend-items');
+  const galleryModal = document.getElementById('gallery-modal');
+  const galleryBody = document.getElementById('gallery-body');
   const toastEl = document.getElementById('toast');
   const modalEl = document.getElementById('modal-confirm');
   const modalTitle = document.getElementById('modal-title');
@@ -143,6 +157,9 @@
       state.cols = cols;
       state.rows = rows;
       state.pixels = new Array(cols * rows).fill(null);
+      state.patternMode = null;
+      state.patternCells = null;
+      state.patternLegend = null;
       undoStack = [];
       redoStack = [];
       enterEditor();
@@ -157,6 +174,7 @@
     syncSizeButtons();
     updateHistoryButtons();
     updateGuidesUI();
+    if (state.patternMode) applyPatternUI(); else clearPatternUI();
     saveLocal();
     showScreen('editor');
     maybeShowEraseHint();
@@ -313,6 +331,297 @@
     }
   }
 
+  // ===== 도안(컬러링) 기능 =====
+  // 완성된 그림 → 색상별 번호 배정 (첫 등장 순서대로 1, 2, 3...)
+  function buildPatternFromPixels(pixels) {
+    const colorToNum = new Map();
+    const legend = [];
+    const cells = new Array(pixels.length).fill(0);
+    for (let i = 0; i < pixels.length; i++) {
+      const c = pixels[i];
+      if (!c) continue;
+      const key = c.toLowerCase();
+      let num = colorToNum.get(key);
+      if (num === undefined) {
+        num = legend.length + 1;
+        colorToNum.set(key, num);
+        legend.push({ num, color: c });
+      }
+      cells[i] = num;
+    }
+    return { legend, cells };
+  }
+
+  function handleMakePattern() {
+    const filled = state.pixels.some(p => p);
+    if (!filled) { toast('먼저 그림을 그려 주세요!'); return; }
+    const { legend, cells } = buildPatternFromPixels(state.pixels);
+    state.patternMode = 'chart';
+    state.patternCells = cells;
+    state.patternLegend = legend;
+    applyPatternUI();
+    saveLocal();
+    toast(`색상 ${legend.length}개로 도안을 만들었어요!`);
+  }
+
+  function handleLoadPattern() {
+    inputLoadPattern.click();
+  }
+
+  function loadPatternData(data) {
+    if (!data || !Array.isArray(data.cells) || !Array.isArray(data.legend) || !data.cols || !data.rows) {
+      throw new Error('형식 오류');
+    }
+    const total = data.cols * data.rows;
+    state.ratio = data.ratio || 'square';
+    state.sizeKey = data.sizeKey || 'medium';
+    state.cols = data.cols;
+    state.rows = data.rows;
+    state.pixels = new Array(total).fill(null);
+    state.patternCells = data.cells.slice(0, total);
+    while (state.patternCells.length < total) state.patternCells.push(0);
+    state.patternLegend = data.legend.map(l => ({ num: l.num, color: l.color }));
+    state.patternMode = 'color';
+    undoStack = [];
+    redoStack = [];
+    buildGrid();
+    updateHistoryButtons();
+    applyPatternUI();
+    if (state.patternLegend[0]) selectColor(state.patternLegend[0].color);
+    showScreen('editor');
+    saveLocal();
+  }
+
+  async function exitPatternMode() {
+    if (state.patternMode === 'color') {
+      const ok = await showConfirm('도안 끝내기', '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.');
+      if (!ok) return;
+    }
+    state.patternMode = null;
+    state.patternCells = null;
+    state.patternLegend = null;
+    clearPatternUI();
+    refreshGrid();
+    saveLocal();
+  }
+
+  function applyPatternUI() {
+    if (!state.patternMode) { clearPatternUI(); return; }
+    editorMain.classList.add('pattern-active');
+    canvasWrapper.classList.toggle('pattern-chart', state.patternMode === 'chart');
+    canvasWrapper.classList.toggle('pattern-color', state.patternMode === 'color');
+    patternLegendEl.hidden = false;
+    buildLegendBar();
+    renderPatternNumbers();
+    requestAnimationFrame(() => resizeCanvas());
+  }
+
+  function clearPatternUI() {
+    editorMain.classList.remove('pattern-active');
+    canvasWrapper.classList.remove('pattern-chart', 'pattern-color');
+    if (patternLegendEl) patternLegendEl.hidden = true;
+    const cells = pixelGrid.children;
+    for (let i = 0; i < cells.length; i++) {
+      if (cells[i].dataset) delete cells[i].dataset.num;
+    }
+    requestAnimationFrame(() => resizeCanvas());
+  }
+
+  function renderPatternNumbers() {
+    if (!state.patternCells) return;
+    const cells = pixelGrid.children;
+    for (let i = 0; i < state.patternCells.length && i < cells.length; i++) {
+      if (cells[i].dataset) updateCellNum(cells[i], i);
+    }
+  }
+
+  function buildLegendBar() {
+    if (!patternLegendEl || !state.patternLegend) return;
+    const isColor = state.patternMode === 'color';
+    patternLegendLabel.textContent = isColor ? '번호에 맞게 색칠해요!' : '색칠 도안 (숫자 = 색깔)';
+
+    patternLegendActions.innerHTML = '';
+    if (state.patternMode === 'chart') {
+      addLegendAction('download', '도안 저장', downloadPattern);
+      if (GALLERY_API_URL) addLegendAction('cloud_upload', '갤러리에 올리기', submitToGallery);
+      addLegendAction('edit', '그림으로 돌아가기', exitPatternMode);
+    } else {
+      addLegendAction('check_circle', '도안 끝내기', exitPatternMode);
+    }
+
+    patternLegendItems.innerHTML = '';
+    state.patternLegend.forEach(({ num, color }) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'legend-chip';
+      chip.innerHTML =
+        `<span class="legend-num">${num}</span>` +
+        `<span class="legend-sw" style="background:${color}"></span>` +
+        `<span class="legend-hex">${color.toUpperCase()}</span>`;
+      if (isColor) {
+        chip.addEventListener('click', () => {
+          selectColor(color);
+          toast(`${num}번 색을 골랐어요!`);
+        });
+      } else {
+        chip.classList.add('legend-chip-static');
+      }
+      patternLegendItems.appendChild(chip);
+    });
+  }
+
+  function addLegendAction(icon, label, fn) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'legend-action btn btn-ghost btn-small';
+    b.innerHTML = `<span class="material-icons">${icon}</span> ${label}`;
+    b.addEventListener('click', fn);
+    patternLegendActions.appendChild(b);
+  }
+
+  function downloadPattern() {
+    if (!state.patternCells || !state.patternLegend) return;
+    const data = {
+      app: 'pixelworld',
+      type: 'pattern',
+      version: 1,
+      ratio: state.ratio,
+      sizeKey: state.sizeKey,
+      cols: state.cols,
+      rows: state.rows,
+      legend: state.patternLegend,
+      cells: state.patternCells,
+      savedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `도안-${todayStr()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast('도안 파일을 저장했어요!');
+  }
+
+  // ===== 도안 갤러리 =====
+  function handleGallery() {
+    galleryModal.classList.add('open');
+    loadGalleryList();
+  }
+  function closeGallery() {
+    galleryModal.classList.remove('open');
+  }
+  document.getElementById('gallery-close').addEventListener('click', closeGallery);
+  galleryModal.addEventListener('click', (e) => { if (e.target === galleryModal) closeGallery(); });
+
+  async function loadGalleryList() {
+    if (!GALLERY_API_URL) {
+      galleryBody.innerHTML =
+        '<p class="gallery-msg">아직 갤러리 서버가 연결되지 않았어요.<br>' +
+        'Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>' +
+        '친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)</p>';
+      return;
+    }
+    galleryBody.innerHTML = '<p class="gallery-msg">도안을 불러오는 중...</p>';
+    try {
+      const res = await fetch(GALLERY_API_URL + '?action=list');
+      const json = await res.json();
+      const list = Array.isArray(json) ? json : (json.items || []);
+      renderGalleryList(list);
+    } catch (err) {
+      galleryBody.innerHTML = '<p class="gallery-msg">갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</p>';
+    }
+  }
+
+  function renderGalleryList(list) {
+    if (!list.length) {
+      galleryBody.innerHTML = '<p class="gallery-msg">아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!</p>';
+      return;
+    }
+    galleryBody.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'gallery-grid';
+    list.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'gallery-item';
+      const img = document.createElement('img');
+      img.className = 'gallery-thumb';
+      img.alt = '도안 미리보기';
+      try { img.src = renderPatternThumb(item, 160); } catch (_) {}
+      const title = document.createElement('div');
+      title.className = 'gallery-title';
+      title.textContent = item.title || '도안';
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-primary btn-small';
+      btn.innerHTML = '<span class="material-icons">brush</span> 색칠하기';
+      btn.addEventListener('click', () => {
+        try { loadPatternData(item); closeGallery(); }
+        catch (_) { toast('이 도안을 불러올 수 없어요.'); }
+      });
+      card.appendChild(img);
+      card.appendChild(title);
+      card.appendChild(btn);
+      grid.appendChild(card);
+    });
+    galleryBody.appendChild(grid);
+  }
+
+  // 도안(번호+범례) → 정답 색상 썸네일 이미지
+  function renderPatternThumb(pattern, maxSize = 160) {
+    const cols = pattern.cols, rows = pattern.rows;
+    const numToColor = {};
+    (pattern.legend || []).forEach(l => { numToColor[l.num] = l.color; });
+    const scale = Math.max(1, Math.floor(maxSize / Math.max(cols, rows)));
+    const c = document.createElement('canvas');
+    c.width = cols * scale;
+    c.height = rows * scale;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, c.width, c.height);
+    const cells = pattern.cells || [];
+    for (let i = 0; i < cells.length; i++) {
+      const n = cells[i];
+      if (!n) continue;
+      const color = numToColor[n];
+      if (!color) continue;
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      ctx.fillStyle = color;
+      ctx.fillRect(col * scale, row * scale, scale, scale);
+    }
+    return c.toDataURL('image/png');
+  }
+
+  async function submitToGallery() {
+    if (!GALLERY_API_URL) { toast('갤러리 서버가 설정되지 않았어요.'); return; }
+    if (!state.patternCells || !state.patternLegend) return;
+    const title = prompt('도안 이름을 정해 주세요!', '내 도안');
+    if (title === null) return;
+    toast('갤러리에 올리는 중...');
+    const payload = {
+      title: title || '내 도안',
+      ratio: state.ratio,
+      sizeKey: state.sizeKey,
+      cols: state.cols,
+      rows: state.rows,
+      legend: state.patternLegend,
+      cells: state.patternCells
+    };
+    try {
+      // text/plain 으로 보내 CORS preflight 를 피한다 (Apps Script 호환)
+      await fetch(GALLERY_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      toast('갤러리에 올렸어요!');
+    } catch (err) {
+      toast('갤러리에 올리지 못했어요.');
+    }
+  }
+
   document.getElementById('btn-home').addEventListener('click', handleHome);
 
   // ===== 팔레트 =====
@@ -391,6 +700,7 @@
     }
     pixelGrid.style.width = `${Math.floor(w)}px`;
     pixelGrid.style.height = `${Math.floor(h)}px`;
+    pixelGrid.style.setProperty('--cell-px', `${w / state.cols}px`);
   }
 
   // ResizeObserver로 캔버스 영역 변경 감지
@@ -420,6 +730,7 @@
     for (let i = 0; i < state.pixels.length && i < cells.length; i++) {
       if (cells[i].classList && cells[i].classList.contains('pixel-cell')) {
         cells[i].style.background = state.pixels[i] || 'transparent';
+        if (state.patternMode) updateCellNum(cells[i], i);
       }
     }
   }
@@ -441,8 +752,21 @@
         const i = r * state.cols + c;
         if (state.pixels[i] === value) continue;
         state.pixels[i] = value;
-        if (cells[i]) cells[i].style.background = value || 'transparent';
+        if (cells[i]) {
+          cells[i].style.background = value || 'transparent';
+          if (state.patternMode === 'color') updateCellNum(cells[i], i);
+        }
       }
+    }
+  }
+
+  // 색칠 모드: 칸이 비어 있을 때만 번호 안내를 보여 준다 (칠하면 번호가 사라짐)
+  function updateCellNum(cell, i) {
+    const n = state.patternCells ? state.patternCells[i] : 0;
+    if (n > 0 && (state.patternMode === 'chart' || !state.pixels[i])) {
+      cell.dataset.num = n;
+    } else {
+      delete cell.dataset.num;
     }
   }
 
@@ -463,6 +787,7 @@
   pixelGrid.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     closeAllPopovers();
+    if (state.patternMode === 'chart') return; // 도안 보기 모드는 읽기 전용
     isPointerDown = true;
     try { pixelGrid.setPointerCapture(e.pointerId); } catch (_) {}
     const idx = cellIndexFromEvent(e);
@@ -668,6 +993,9 @@
     'export-jpg': handleExportJpg,
     'copy-jpg': handleCopyJpg,
     'share-link': handleShareLink,
+    'make-pattern': handleMakePattern,
+    'load-pattern': handleLoadPattern,
+    'gallery': handleGallery,
     'clear': handleClear,
     'back-step': handleBackStep
   };
@@ -711,9 +1039,13 @@
         state.rows = data.rows;
         state.pixels = data.pixels.slice(0, data.cols * data.rows);
         while (state.pixels.length < data.cols * data.rows) state.pixels.push(null);
+        state.patternMode = null;
+        state.patternCells = null;
+        state.patternLegend = null;
         undoStack = [];
         redoStack = [];
         buildGrid();
+        clearPatternUI();
         updateHistoryButtons();
         saveLocal();
         toast('불러왔어요!');
@@ -721,6 +1053,24 @@
         toast('파일을 읽을 수 없어요.');
       }
       inputLoadJson.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  // 도안 파일 불러오기
+  inputLoadPattern.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        loadPatternData(data);
+        toast('도안을 불러왔어요! 번호에 맞게 색칠해 보세요.');
+      } catch (err) {
+        toast('도안 파일을 읽을 수 없어요.');
+      }
+      inputLoadPattern.value = '';
     };
     reader.readAsText(file);
   });
@@ -795,7 +1145,10 @@
         currentColor: state.currentColor,
         brushSize: state.brushSize,
         guidesVisible: state.guidesVisible,
-        currentScreen: state.currentScreen
+        currentScreen: state.currentScreen,
+        patternMode: state.patternMode,
+        patternCells: state.patternCells,
+        patternLegend: state.patternLegend
       }));
     } catch (_) {}
   }
@@ -835,6 +1188,11 @@
     if (saved) {
       Object.assign(state, saved);
       if (typeof state.guidesVisible !== 'boolean') state.guidesVisible = true;
+      if (state.patternMode !== 'chart' && state.patternMode !== 'color') {
+        state.patternMode = null;
+        state.patternCells = null;
+        state.patternLegend = null;
+      }
     }
 
     const screen = saved && saved.currentScreen;

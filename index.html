@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=7" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -164,6 +164,16 @@
               <span class="material-icons">link</span> 링크 공유
             </button>
             <div class="dropdown-divider"></div>
+            <button class="dropdown-item" data-action="make-pattern">
+              <span class="material-icons">format_list_numbered</span> 도안 만들기
+            </button>
+            <button class="dropdown-item" data-action="load-pattern">
+              <span class="material-icons">file_open</span> 도안 불러오기
+            </button>
+            <button class="dropdown-item" data-action="gallery">
+              <span class="material-icons">collections</span> 도안 갤러리
+            </button>
+            <div class="dropdown-divider"></div>
             <button class="dropdown-item dropdown-item-danger" data-action="clear">
               <span class="material-icons">delete_sweep</span> 전체 지우기
             </button>
@@ -205,6 +215,17 @@
           </button>
         </div>
       </aside>
+
+      <section class="pattern-legend" id="pattern-legend" hidden>
+        <div class="pattern-legend-head">
+          <span class="pattern-legend-title">
+            <span class="material-icons">format_list_numbered</span>
+            <span id="pattern-legend-label">색칠 도안</span>
+          </span>
+          <div class="pattern-legend-actions" id="pattern-legend-actions"></div>
+        </div>
+        <div class="pattern-legend-items" id="pattern-legend-items"></div>
+      </section>
     </main>
   </div>
 
@@ -221,9 +242,25 @@
     </div>
   </div>
 
+  <!-- 도안 갤러리 -->
+  <div class="modal" id="gallery-modal">
+    <div class="modal-card gallery-card">
+      <div class="gallery-head">
+        <h3 class="modal-title gallery-title-head">
+          <span class="material-icons">collections</span> 도안 갤러리
+        </h3>
+        <button class="icon-btn icon-btn-sm" id="gallery-close" title="닫기">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="gallery-body" id="gallery-body"></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <input type="file" id="input-load-json" accept="application/json" hidden />
+  <input type="file" id="input-load-pattern" accept="application/json" hidden />
 
   <footer class="app-footer">
     <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer">
@@ -231,6 +268,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

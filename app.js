@@ -251,6 +251,21 @@
   }
   window.addEventListener('resize', () => resizeCanvas());
 
+  // Footer 실제 높이 측정 (safe-area 인셋 포함) — CSS 변수 갱신
+  const footerEl = document.querySelector('.app-footer');
+  function syncFooterHeight() {
+    if (!footerEl) return;
+    const h = Math.ceil(footerEl.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--footer-h', `${h}px`);
+    resizeCanvas();
+  }
+  if (footerEl && typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncFooterHeight).observe(footerEl);
+  }
+  window.addEventListener('resize', syncFooterHeight);
+  window.addEventListener('orientationchange', syncFooterHeight);
+  syncFooterHeight();
+
   function refreshGrid() {
     const cells = pixelGrid.children;
     for (let i = 0; i < state.pixels.length && i < cells.length; i++) {

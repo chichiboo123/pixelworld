@@ -43,20 +43,16 @@
     size: document.getElementById('screen-size'),
     editor: document.getElementById('screen-editor')
   };
-  const palette = document.getElementById('palette');
   const mPalette = document.getElementById('m-palette');
   const pixelGrid = document.getElementById('pixel-grid');
   const canvasArea = document.querySelector('.canvas-area');
   const canvasWrapper = document.getElementById('canvas-wrapper');
-  const currentColorChip = document.getElementById('current-color-chip');
   const inputCustomColor = document.getElementById('input-custom-color');
-  const btnCustomColor = document.getElementById('btn-custom-color');
   const editorMain = document.querySelector('.editor-main');
+  const referencePanel = document.getElementById('reference-panel');
   const referencePreview = document.getElementById('reference-preview');
   const inputReference = document.getElementById('input-reference');
   const btnRemoveReference = document.getElementById('btn-remove-reference');
-  const dropdownDisk = document.getElementById('dropdown-disk');
-  const btnDisk = document.getElementById('btn-disk');
   const inputLoadJson = document.getElementById('input-load-json');
   const toastEl = document.getElementById('toast');
   const modalEl = document.getElementById('modal-confirm');
@@ -64,9 +60,8 @@
   const modalMessage = document.getElementById('modal-message');
   const btnUndo = document.getElementById('btn-undo');
   const btnRedo = document.getElementById('btn-redo');
-  const btnGuides = document.getElementById('btn-guides');
 
-  // 모바일 도구 트리거 / 팝오버
+  // 도구 트리거 / 팝오버
   const mBrushIndicator = document.getElementById('m-brush-indicator');
   const mColorIndicator = document.getElementById('m-color-indicator');
   const mTriggerBrush = document.getElementById('m-trigger-brush');
@@ -171,39 +166,128 @@
     }
   }
 
-  // 홈 / 이전 단계
-  document.getElementById('btn-home').addEventListener('click', async () => {
+  // ===== 액션 핸들러 (네임드 함수) =====
+  async function handleHome() {
     const ok = await showConfirm('홈으로 가기', '홈 화면으로 돌아가요. 현재 그림은 자동으로 저장돼요.');
     if (!ok) return;
     saveLocal();
     showScreen('ratio');
-  });
-  document.getElementById('btn-back-step').addEventListener('click', async () => {
+  }
+  async function handleBackStep() {
     const ok = await showConfirm('이전 단계로', '캔버스 크기 선택 화면으로 돌아가요. 다시 크기를 고르면 지금 그림이 사라질 수 있어요.');
     if (!ok) return;
     saveLocal();
     updateSizeLabels();
     showScreen('size');
-  });
+  }
+  async function handleClear() {
+    const hasContent = state.pixels.some(p => p !== null);
+    if (!hasContent) { toast('이미 빈 캔버스예요!'); return; }
+    const ok = await showConfirm('전체 지우기', '지금 그린 그림이 모두 사라져요. 정말 지울까요?');
+    if (!ok) return;
+    pushUndo(state.pixels.slice());
+    state.pixels = new Array(state.cols * state.rows).fill(null);
+    refreshGrid();
+    saveLocal();
+    toast('캔버스를 비웠어요!');
+  }
+  function handleGuidesToggle() {
+    state.guidesVisible = !state.guidesVisible;
+    updateGuidesUI();
+    saveLocal();
+  }
+  function handleReferenceToggle() {
+    editorMain.classList.toggle('reference-open');
+    requestAnimationFrame(() => resizeCanvas());
+  }
+  function handleSaveJson() {
+    const data = {
+      app: 'pixelworld',
+      version: 1,
+      ratio: state.ratio,
+      sizeKey: state.sizeKey,
+      cols: state.cols,
+      rows: state.rows,
+      pixels: state.pixels,
+      savedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pixelworld-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast('저장했어요!');
+  }
+  function handleLoadJson() {
+    inputLoadJson.click();
+  }
+  function handleExportJpg() {
+    const c = renderToCanvas();
+    c.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pixelworld-${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast('JPG로 저장했어요!');
+    }, 'image/jpeg', 0.92);
+  }
+  function handleCopyJpg() {
+    const c = renderToCanvas();
+    c.toBlob(async (blob) => {
+      try {
+        if (!navigator.clipboard || !window.ClipboardItem) throw new Error('not supported');
+        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+        toast('이미지가 클립보드에 복사됐어요!');
+      } catch (err) {
+        toast('이 브라우저에서는 복사를 지원하지 않아요.');
+      }
+    }, 'image/png');
+  }
+  async function handleShareLink() {
+    const payload = {
+      r: state.ratio,
+      s: state.sizeKey,
+      c: state.cols,
+      h: state.rows,
+      p: compressPixels(state.pixels)
+    };
+    const json = JSON.stringify(payload);
+    const encoded = base64UrlEncode(json);
+    const url = `${location.origin}${location.pathname}#art=${encoded}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast('공유 링크를 복사했어요!');
+    } catch (err) {
+      prompt('이 링크를 복사해서 공유하세요:', url);
+    }
+  }
+
+  document.getElementById('btn-home').addEventListener('click', handleHome);
 
   // ===== 팔레트 =====
   function buildPalette() {
-    [palette, mPalette].forEach(container => {
-      if (!container) return;
-      container.innerHTML = '';
-      PALETTE.forEach(color => {
-        const s = document.createElement('button');
-        s.type = 'button';
-        s.className = 'color-swatch';
-        s.style.background = color;
-        s.dataset.color = color;
-        if (color === state.currentColor) s.classList.add('active');
-        s.addEventListener('click', () => {
-          selectColor(color);
-          closeAllMobilePopovers();
-        });
-        container.appendChild(s);
+    if (!mPalette) return;
+    mPalette.innerHTML = '';
+    PALETTE.forEach(color => {
+      const s = document.createElement('button');
+      s.type = 'button';
+      s.className = 'color-swatch';
+      s.style.background = color;
+      s.dataset.color = color;
+      if (color === state.currentColor) s.classList.add('active');
+      s.addEventListener('click', () => {
+        selectColor(color);
+        closeAllPopovers();
       });
+      mPalette.appendChild(s);
     });
   }
   function selectColor(color) {
@@ -219,11 +303,9 @@
     });
   }
   function updateCurrentColorChip() {
-    if (currentColorChip) currentColorChip.style.background = state.currentColor;
     if (mColorIndicator) mColorIndicator.style.background = state.currentColor;
   }
 
-  btnCustomColor.addEventListener('click', () => inputCustomColor.click());
   inputCustomColor.addEventListener('input', (e) => selectColor(e.target.value));
   inputCustomColor.addEventListener('change', (e) => selectColor(e.target.value));
 
@@ -251,7 +333,7 @@
     const rect = canvasArea.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
-    const cssPad = 24;     // canvas-area padding 양쪽
+    const cssPad = 20;     // canvas-area padding 양쪽
     const border = 4;      // wrapper border 양쪽
     const availW = Math.max(80, rect.width - cssPad - border);
     const availH = Math.max(80, rect.height - cssPad - border);
@@ -337,6 +419,7 @@
 
   pixelGrid.addEventListener('pointerdown', (e) => {
     e.preventDefault();
+    closeAllPopovers();
     isPointerDown = true;
     try { pixelGrid.setPointerCapture(e.pointerId); } catch (_) {}
     const idx = cellIndexFromEvent(e);
@@ -376,11 +459,11 @@
       state.brushSize = parseInt(btn.dataset.brush, 10);
       syncSizeButtons();
       saveLocal();
-      closeAllMobilePopovers();
+      closeAllPopovers();
     });
   });
 
-  // ===== Undo / Redo / Clear =====
+  // ===== Undo / Redo =====
   function pushUndo(snapshot) {
     undoStack.push(snapshot);
     if (undoStack.length > MAX_HISTORY) undoStack.shift();
@@ -417,38 +500,15 @@
     else if (meta && (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey))) { e.preventDefault(); redo(); }
   });
 
-  document.getElementById('btn-clear').addEventListener('click', async () => {
-    const hasContent = state.pixels.some(p => p !== null);
-    if (!hasContent) { toast('이미 빈 캔버스예요!'); return; }
-    const ok = await showConfirm('전체 지우기', '지금 그린 그림이 모두 사라져요. 정말 지울까요?');
-    if (!ok) return;
-    pushUndo(state.pixels.slice());
-    state.pixels = new Array(state.cols * state.rows).fill(null);
-    refreshGrid();
-    saveLocal();
-    toast('캔버스를 비웠어요!');
-  });
-
   // ===== 중앙 가이드라인 토글 =====
   function updateGuidesUI() {
     canvasWrapper.classList.toggle('guides-hidden', !state.guidesVisible);
-    btnGuides.classList.toggle('active', state.guidesVisible);
-    btnGuides.title = state.guidesVisible ? '중앙 가이드라인 숨기기' : '중앙 가이드라인 보기';
     if (moreGuidesLabel) {
       moreGuidesLabel.textContent = state.guidesVisible ? '가이드라인 숨기기' : '가이드라인 보기';
     }
   }
-  btnGuides.addEventListener('click', () => {
-    state.guidesVisible = !state.guidesVisible;
-    updateGuidesUI();
-    saveLocal();
-  });
 
   // ===== 참고 이미지 =====
-  document.getElementById('btn-reference').addEventListener('click', () => {
-    editorMain.classList.toggle('reference-open');
-    requestAnimationFrame(() => resizeCanvas());
-  });
   document.getElementById('btn-close-reference').addEventListener('click', () => {
     editorMain.classList.remove('reference-open');
     requestAnimationFrame(() => resizeCanvas());
@@ -473,116 +533,71 @@
     btnRemoveReference.style.display = 'none';
   });
 
-  // ===== 디스켓 드롭다운 =====
-  btnDisk.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdownDisk.classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    if (!dropdownDisk.contains(e.target) && e.target !== btnDisk && !btnDisk.contains(e.target)) {
-      dropdownDisk.classList.remove('open');
-    }
-  });
-
-  // ===== 모바일 트리거 / 팝오버 =====
-  function closeAllMobilePopovers() {
+  // ===== 트리거 / 팝오버 =====
+  function closeAllPopovers() {
     [mPopBrush, mPopColor].forEach(p => p && p.classList.remove('open'));
     [mTriggerBrush, mTriggerColor].forEach(t => t && t.classList.remove('open'));
+    if (dropdownMore) dropdownMore.classList.remove('open');
   }
-  function toggleMobilePopover(triggerEl, popoverEl) {
+  function togglePopover(triggerEl, popoverEl) {
     const willOpen = !popoverEl.classList.contains('open');
-    closeAllMobilePopovers();
+    closeAllPopovers();
     if (willOpen) {
       popoverEl.classList.add('open');
       triggerEl.classList.add('open');
     }
   }
-  if (mTriggerBrush) {
-    mTriggerBrush.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleMobilePopover(mTriggerBrush, mPopBrush);
-    });
-  }
-  if (mTriggerColor) {
-    mTriggerColor.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleMobilePopover(mTriggerColor, mPopColor);
-    });
-  }
-  if (mTriggerCustom) {
-    mTriggerCustom.addEventListener('click', () => {
-      closeAllMobilePopovers();
-      inputCustomColor.click();
-    });
-  }
+  mTriggerBrush.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePopover(mTriggerBrush, mPopBrush);
+  });
+  mTriggerColor.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePopover(mTriggerColor, mPopColor);
+  });
+  mTriggerCustom.addEventListener('click', () => {
+    closeAllPopovers();
+    inputCustomColor.click();
+  });
+
+  // ===== 더보기 메뉴 =====
+  const MORE_ACTIONS = {
+    'toggle-reference': handleReferenceToggle,
+    'toggle-guides': handleGuidesToggle,
+    'save-json': handleSaveJson,
+    'load-json': handleLoadJson,
+    'export-jpg': handleExportJpg,
+    'copy-jpg': handleCopyJpg,
+    'share-link': handleShareLink,
+    'clear': handleClear,
+    'back-step': handleBackStep
+  };
+
+  btnMore.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = !dropdownMore.classList.contains('open');
+    closeAllPopovers();
+    if (willOpen) dropdownMore.classList.add('open');
+  });
+
+  dropdownMore.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    dropdownMore.classList.remove('open');
+    const fn = MORE_ACTIONS[action];
+    if (fn) fn();
+  });
+
+  // 바깥 클릭 시 모든 팝오버 닫기
   document.addEventListener('click', (e) => {
-    const insideBrush = mPopBrush && (mPopBrush.contains(e.target) || (mTriggerBrush && mTriggerBrush.contains(e.target)));
-    const insideColor = mPopColor && (mPopColor.contains(e.target) || (mTriggerColor && mTriggerColor.contains(e.target)));
-    if (!insideBrush && !insideColor) closeAllMobilePopovers();
+    const insideBrush = mPopBrush.contains(e.target) || mTriggerBrush.contains(e.target);
+    const insideColor = mPopColor.contains(e.target) || mTriggerColor.contains(e.target);
+    const insideMore = dropdownMore.contains(e.target) || btnMore.contains(e.target);
+    if (!insideBrush && !insideColor && !insideMore) closeAllPopovers();
   });
 
-  // ===== 더보기 메뉴 (모바일) =====
-  if (btnMore && dropdownMore) {
-    btnMore.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dropdownMore.classList.toggle('open');
-      closeAllMobilePopovers();
-    });
-    document.addEventListener('click', (e) => {
-      if (!dropdownMore.contains(e.target) && e.target !== btnMore && !btnMore.contains(e.target)) {
-        dropdownMore.classList.remove('open');
-      }
-    });
-    dropdownMore.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn) return;
-      const action = btn.dataset.action;
-      dropdownMore.classList.remove('open');
-      const dispatch = {
-        'toggle-reference': () => document.getElementById('btn-reference').click(),
-        'toggle-guides': () => btnGuides.click(),
-        'save-json': () => document.getElementById('btn-save-json').click(),
-        'load-json': () => document.getElementById('btn-load-json').click(),
-        'export-jpg': () => document.getElementById('btn-export-jpg').click(),
-        'copy-jpg': () => document.getElementById('btn-copy-jpg').click(),
-        'share-link': () => document.getElementById('btn-share-link').click(),
-        'clear': () => document.getElementById('btn-clear').click(),
-        'back-step': () => document.getElementById('btn-back-step').click()
-      };
-      const fn = dispatch[action];
-      if (fn) fn();
-    });
-  }
-
-  // ===== 저장 / 불러오기 (JSON) =====
-  document.getElementById('btn-save-json').addEventListener('click', () => {
-    dropdownDisk.classList.remove('open');
-    const data = {
-      app: 'pixelworld',
-      version: 1,
-      ratio: state.ratio,
-      sizeKey: state.sizeKey,
-      cols: state.cols,
-      rows: state.rows,
-      pixels: state.pixels,
-      savedAt: new Date().toISOString()
-    };
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `pixelworld-${Date.now()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    toast('저장했어요!');
-  });
-
-  document.getElementById('btn-load-json').addEventListener('click', () => {
-    dropdownDisk.classList.remove('open');
-    inputLoadJson.click();
-  });
+  // 파일 입력
   inputLoadJson.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -611,7 +626,7 @@
     reader.readAsText(file);
   });
 
-  // ===== Export =====
+  // ===== Export 렌더링 =====
   function renderToCanvas(scale = 24) {
     const c = document.createElement('canvas');
     c.width = state.cols * scale;
@@ -629,53 +644,6 @@
     }
     return c;
   }
-
-  document.getElementById('btn-export-jpg').addEventListener('click', () => {
-    const c = renderToCanvas();
-    c.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `pixelworld-${Date.now()}.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      toast('JPG로 저장했어요!');
-    }, 'image/jpeg', 0.92);
-  });
-
-  document.getElementById('btn-copy-jpg').addEventListener('click', () => {
-    const c = renderToCanvas();
-    c.toBlob(async (blob) => {
-      try {
-        if (!navigator.clipboard || !window.ClipboardItem) throw new Error('not supported');
-        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-        toast('이미지가 클립보드에 복사됐어요!');
-      } catch (err) {
-        toast('이 브라우저에서는 복사를 지원하지 않아요.');
-      }
-    }, 'image/png');
-  });
-
-  document.getElementById('btn-share-link').addEventListener('click', async () => {
-    const payload = {
-      r: state.ratio,
-      s: state.sizeKey,
-      c: state.cols,
-      h: state.rows,
-      p: compressPixels(state.pixels)
-    };
-    const json = JSON.stringify(payload);
-    const encoded = base64UrlEncode(json);
-    const url = `${location.origin}${location.pathname}#art=${encoded}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast('공유 링크를 복사했어요!');
-    } catch (err) {
-      prompt('이 링크를 복사해서 공유하세요:', url);
-    }
-  });
 
   function compressPixels(pixels) {
     const colorMap = new Map();

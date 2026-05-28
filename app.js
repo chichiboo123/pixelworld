@@ -36,6 +36,7 @@
   let strokeMode = null;
   let isPointerDown = false;
   let modalResolver = null;
+  let referenceFloatPos = null; // 세로모드 플로팅 패널 위치 (세션 한정)
 
   // ===== DOM =====
   const screens = {
@@ -198,7 +199,25 @@
   }
   function handleReferenceToggle() {
     editorMain.classList.toggle('reference-open');
+    if (editorMain.classList.contains('reference-open') && isPortrait()) {
+      applyFloatingPosition();
+    }
     requestAnimationFrame(() => resizeCanvas());
+  }
+  function isPortrait() {
+    return window.matchMedia('(orientation: portrait)').matches;
+  }
+  function applyFloatingPosition() {
+    if (!referencePanel) return;
+    if (referenceFloatPos) {
+      referencePanel.style.left = referenceFloatPos.left + 'px';
+      referencePanel.style.top = referenceFloatPos.top + 'px';
+      referencePanel.style.right = 'auto';
+    } else {
+      referencePanel.style.left = '';
+      referencePanel.style.top = '';
+      referencePanel.style.right = '';
+    }
   }
   function handleSaveJson() {
     const data = {
@@ -513,6 +532,62 @@
     editorMain.classList.remove('reference-open');
     requestAnimationFrame(() => resizeCanvas());
   });
+
+  // 세로모드 플로팅 패널 드래그
+  const referenceHeader = referencePanel ? referencePanel.querySelector('.reference-header') : null;
+  let refDragState = null;
+  if (referenceHeader) {
+    referenceHeader.addEventListener('pointerdown', (e) => {
+      if (!isPortrait()) return;
+      if (e.target.closest('button')) return; // 닫기 버튼은 드래그 제외
+      e.preventDefault();
+      const rect = referencePanel.getBoundingClientRect();
+      refDragState = {
+        startX: e.clientX,
+        startY: e.clientY,
+        originLeft: rect.left,
+        originTop: rect.top,
+        pointerId: e.pointerId
+      };
+      referenceHeader.classList.add('dragging');
+      try { referenceHeader.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    referenceHeader.addEventListener('pointermove', (e) => {
+      if (!refDragState) return;
+      const dx = e.clientX - refDragState.startX;
+      const dy = e.clientY - refDragState.startY;
+      const panelRect = referencePanel.getBoundingClientRect();
+      const margin = 4;
+      const minLeft = margin;
+      const maxLeft = window.innerWidth - panelRect.width - margin;
+      const minTop = margin;
+      const maxTop = window.innerHeight - panelRect.height - margin;
+      const newLeft = Math.max(minLeft, Math.min(maxLeft, refDragState.originLeft + dx));
+      const newTop = Math.max(minTop, Math.min(maxTop, refDragState.originTop + dy));
+      referencePanel.style.left = newLeft + 'px';
+      referencePanel.style.top = newTop + 'px';
+      referencePanel.style.right = 'auto';
+      referenceFloatPos = { left: newLeft, top: newTop };
+    });
+    function endDrag() {
+      if (!refDragState) return;
+      refDragState = null;
+      referenceHeader.classList.remove('dragging');
+    }
+    referenceHeader.addEventListener('pointerup', endDrag);
+    referenceHeader.addEventListener('pointercancel', endDrag);
+  }
+
+  // 회전 시 플로팅 위치 초기화 (방향 바뀌면 새 위치 기본값으로)
+  window.addEventListener('orientationchange', () => {
+    referenceFloatPos = null;
+    if (referencePanel) {
+      referencePanel.style.left = '';
+      referencePanel.style.top = '';
+      referencePanel.style.right = '';
+    }
+  });
+
   inputReference.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;

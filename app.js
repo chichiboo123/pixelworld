@@ -26,13 +26,14 @@
     rows: 24,
     pixels: [],
     currentColor: '#4c8dff',
-    brushSize: 1
+    brushSize: 1,
+    guidesVisible: true
   };
 
   let undoStack = [];
   let redoStack = [];
   let strokeStartSnapshot = null;
-  let strokeMode = null;       // 'paint' | 'erase'
+  let strokeMode = null;
   let isPointerDown = false;
   let modalResolver = null;
 
@@ -44,6 +45,8 @@
   };
   const palette = document.getElementById('palette');
   const pixelGrid = document.getElementById('pixel-grid');
+  const canvasArea = document.querySelector('.canvas-area');
+  const canvasWrapper = document.getElementById('canvas-wrapper');
   const currentColorChip = document.getElementById('current-color-chip');
   const inputCustomColor = document.getElementById('input-custom-color');
   const btnCustomColor = document.getElementById('btn-custom-color');
@@ -60,12 +63,16 @@
   const modalMessage = document.getElementById('modal-message');
   const btnUndo = document.getElementById('btn-undo');
   const btnRedo = document.getElementById('btn-redo');
+  const btnGuides = document.getElementById('btn-guides');
 
   // ===== 화면 전환 =====
   function showScreen(name) {
     Object.entries(screens).forEach(([k, el]) => {
       el.classList.toggle('active', k === name);
     });
+    if (name === 'editor') {
+      requestAnimationFrame(() => resizeCanvas());
+    }
   }
 
   // ===== 토스트 =====
@@ -99,7 +106,7 @@
     }
   });
 
-  // ===== 1단계: 비율 선택 =====
+  // ===== 1단계 =====
   document.querySelectorAll('#screen-ratio .choice-card').forEach(card => {
     card.addEventListener('click', () => {
       state.ratio = card.dataset.ratio;
@@ -107,9 +114,7 @@
       showScreen('size');
     });
   });
-  document.getElementById('btn-back-to-ratio').addEventListener('click', () => {
-    showScreen('ratio');
-  });
+  document.getElementById('btn-back-to-ratio').addEventListener('click', () => showScreen('ratio'));
 
   function updateSizeLabels() {
     const presets = SIZE_PRESETS[state.ratio];
@@ -118,7 +123,7 @@
     document.getElementById('desc-large').textContent  = `${presets.large[0]} × ${presets.large[1]}`;
   }
 
-  // ===== 2단계: 크기 선택 =====
+  // ===== 2단계 =====
   document.querySelectorAll('#screen-size .choice-card').forEach(card => {
     card.addEventListener('click', () => {
       state.sizeKey = card.dataset.size;
@@ -139,6 +144,7 @@
     updateCurrentColorChip();
     syncSizeButtons();
     updateHistoryButtons();
+    updateGuidesUI();
     saveLocal();
     showScreen('editor');
   }
@@ -148,7 +154,7 @@
     });
   }
 
-  // ===== 홈/이전 =====
+  // 홈 / 이전 단계
   document.getElementById('btn-home').addEventListener('click', async () => {
     const ok = await showConfirm('홈으로 가기', '홈 화면으로 돌아가요. 현재 그림은 자동으로 저장돼요.');
     if (!ok) return;
@@ -156,7 +162,7 @@
     showScreen('ratio');
   });
   document.getElementById('btn-back-step').addEventListener('click', async () => {
-    const ok = await showConfirm('이전 단계로', '캔버스 크기 선택 화면으로 돌아가요. 그림 크기를 다시 고르면 지금 그림이 사라질 수 있어요.');
+    const ok = await showConfirm('이전 단계로', '캔버스 크기 선택 화면으로 돌아가요. 다시 크기를 고르면 지금 그림이 사라질 수 있어요.');
     if (!ok) return;
     saveLocal();
     updateSizeLabels();
@@ -193,40 +199,15 @@
     currentColorChip.style.background = state.currentColor;
   }
 
-  // 사용자 지정 색상 (label 대신 명시적 click 호출)
-  btnCustomColor.addEventListener('click', () => {
-    inputCustomColor.click();
-  });
-  inputCustomColor.addEventListener('input', (e) => {
-    selectColor(e.target.value);
-  });
-  inputCustomColor.addEventListener('change', (e) => {
-    selectColor(e.target.value);
-  });
+  btnCustomColor.addEventListener('click', () => inputCustomColor.click());
+  inputCustomColor.addEventListener('input', (e) => selectColor(e.target.value));
+  inputCustomColor.addEventListener('change', (e) => selectColor(e.target.value));
 
-  // ===== 그리드 =====
+  // ===== 그리드 빌드 =====
   function buildGrid() {
     pixelGrid.innerHTML = '';
     pixelGrid.style.gridTemplateColumns = `repeat(${state.cols}, 1fr)`;
     pixelGrid.style.gridTemplateRows = `repeat(${state.rows}, 1fr)`;
-
-    // 화면에 맞춰 캔버스 크기 결정
-    const isMobile = window.innerWidth <= 720;
-    const maxW = Math.min(window.innerWidth - 48, isMobile ? 380 : 560);
-    const maxH = Math.min(window.innerHeight - 240, isMobile ? 380 : 560);
-    const aspect = state.cols / state.rows;
-    let w, h;
-    if (aspect >= 1) {
-      w = Math.min(maxW, maxH * aspect);
-      h = w / aspect;
-    } else {
-      h = Math.min(maxH, maxW / aspect);
-      w = h * aspect;
-    }
-    pixelGrid.style.setProperty('--grid-w', `${w}px`);
-    pixelGrid.style.setProperty('--grid-h', `${h}px`);
-    pixelGrid.style.width = `${w}px`;
-    pixelGrid.style.height = `${h}px`;
 
     const frag = document.createDocumentFragment();
     for (let i = 0; i < state.cols * state.rows; i++) {
@@ -237,29 +218,49 @@
       frag.appendChild(cell);
     }
     pixelGrid.appendChild(frag);
+    resizeCanvas();
   }
 
-  // 리사이즈 시 그리드 크기 재계산
-  let resizeTimer = null;
-  window.addEventListener('resize', () => {
+  // 가용 공간에 캔버스 맞추기
+  function resizeCanvas() {
     if (!screens.editor.classList.contains('active')) return;
-    if (resizeTimer) clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      const oldPixels = state.pixels;
-      buildGrid();
-      state.pixels = oldPixels;
-      refreshGrid();
-    }, 120);
-  });
+    const rect = canvasArea.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    const cssPad = 24;     // canvas-area padding 양쪽
+    const border = 4;      // wrapper border 양쪽
+    const availW = Math.max(80, rect.width - cssPad - border);
+    const availH = Math.max(80, rect.height - cssPad - border);
+    const aspect = state.cols / state.rows;
+    let w, h;
+    if (availW / availH >= aspect) {
+      h = availH;
+      w = h * aspect;
+    } else {
+      w = availW;
+      h = w / aspect;
+    }
+    pixelGrid.style.width = `${Math.floor(w)}px`;
+    pixelGrid.style.height = `${Math.floor(h)}px`;
+  }
+
+  // ResizeObserver로 캔버스 영역 변경 감지
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(() => resizeCanvas());
+    ro.observe(canvasArea);
+  }
+  window.addEventListener('resize', () => resizeCanvas());
 
   function refreshGrid() {
     const cells = pixelGrid.children;
     for (let i = 0; i < state.pixels.length && i < cells.length; i++) {
-      cells[i].style.background = state.pixels[i] || 'transparent';
+      if (cells[i].classList && cells[i].classList.contains('pixel-cell')) {
+        cells[i].style.background = state.pixels[i] || 'transparent';
+      }
     }
   }
 
-  // ===== 토글 방식 그리기 =====
+  // ===== 토글 드로잉 =====
   function applyAt(idx, mode) {
     if (idx < 0 || idx >= state.cols * state.rows) return;
     const col = idx % state.cols;
@@ -276,7 +277,7 @@
         const i = r * state.cols + c;
         if (state.pixels[i] === value) continue;
         state.pixels[i] = value;
-        cells[i].style.background = value || 'transparent';
+        if (cells[i]) cells[i].style.background = value || 'transparent';
       }
     }
   }
@@ -301,25 +302,19 @@
     try { pixelGrid.setPointerCapture(e.pointerId); } catch (_) {}
     const idx = cellIndexFromEvent(e);
     if (idx < 0) return;
-
     strokeStartSnapshot = state.pixels.slice();
-
-    // 첫 칸의 현재 색이 선택 색과 같으면 erase, 아니면 paint
     const current = state.pixels[idx];
     strokeMode = (current && current.toLowerCase() === state.currentColor.toLowerCase()) ? 'erase' : 'paint';
     applyAt(idx, strokeMode);
   });
-
   pixelGrid.addEventListener('pointermove', (e) => {
     if (!isPointerDown) return;
     const idx = cellIndexFromEvent(e);
     if (idx >= 0) applyAt(idx, strokeMode);
   });
-
   function endStroke() {
     if (!isPointerDown) return;
     isPointerDown = false;
-    // 변경 사항 있으면 undo에 push
     if (strokeStartSnapshot && pixelsDiffer(strokeStartSnapshot, state.pixels)) {
       pushUndo(strokeStartSnapshot);
     }
@@ -375,7 +370,6 @@
   btnUndo.addEventListener('click', undo);
   btnRedo.addEventListener('click', redo);
 
-  // 키보드 단축키 (데스크톱 보조)
   document.addEventListener('keydown', (e) => {
     if (!screens.editor.classList.contains('active')) return;
     const meta = e.ctrlKey || e.metaKey;
@@ -383,7 +377,6 @@
     else if (meta && (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey))) { e.preventDefault(); redo(); }
   });
 
-  // 전체 지우기
   document.getElementById('btn-clear').addEventListener('click', async () => {
     const hasContent = state.pixels.some(p => p !== null);
     if (!hasContent) { toast('이미 빈 캔버스예요!'); return; }
@@ -396,12 +389,26 @@
     toast('캔버스를 비웠어요!');
   });
 
+  // ===== 중앙 가이드라인 토글 =====
+  function updateGuidesUI() {
+    canvasWrapper.classList.toggle('guides-hidden', !state.guidesVisible);
+    btnGuides.classList.toggle('active', state.guidesVisible);
+    btnGuides.title = state.guidesVisible ? '중앙 가이드라인 숨기기' : '중앙 가이드라인 보기';
+  }
+  btnGuides.addEventListener('click', () => {
+    state.guidesVisible = !state.guidesVisible;
+    updateGuidesUI();
+    saveLocal();
+  });
+
   // ===== 참고 이미지 =====
   document.getElementById('btn-reference').addEventListener('click', () => {
     editorMain.classList.toggle('reference-open');
+    requestAnimationFrame(() => resizeCanvas());
   });
   document.getElementById('btn-close-reference').addEventListener('click', () => {
     editorMain.classList.remove('reference-open');
+    requestAnimationFrame(() => resizeCanvas());
   });
   inputReference.addEventListener('change', (e) => {
     const file = e.target.files[0];
@@ -491,7 +498,7 @@
     reader.readAsText(file);
   });
 
-  // ===== Export 캔버스 =====
+  // ===== Export =====
   function renderToCanvas(scale = 24) {
     const c = document.createElement('canvas');
     c.width = state.cols * scale;
@@ -538,7 +545,6 @@
     }, 'image/png');
   });
 
-  // ===== 링크 공유 =====
   document.getElementById('btn-share-link').addEventListener('click', async () => {
     const payload = {
       r: state.ratio,
@@ -607,7 +613,8 @@
         rows: state.rows,
         pixels: state.pixels,
         currentColor: state.currentColor,
-        brushSize: state.brushSize
+        brushSize: state.brushSize,
+        guidesVisible: state.guidesVisible
       }));
     } catch (_) {}
   }
@@ -646,6 +653,7 @@
     const saved = loadLocal();
     if (saved && saved.cols && saved.rows && saved.pixels.length === saved.cols * saved.rows) {
       Object.assign(state, saved);
+      if (typeof state.guidesVisible !== 'boolean') state.guidesVisible = true;
       enterEditor();
       return;
     }

@@ -82,9 +82,12 @@
         <button class="icon-btn icon-btn-secondary" id="btn-back-step" title="이전 단계">
           <span class="material-icons">arrow_back</span>
         </button>
-        <h1 class="brand brand-small">픽셀월드</h1>
+        <h1 class="brand-small">픽셀월드</h1>
       </div>
       <div class="topbar-right">
+        <button class="icon-btn icon-btn-secondary" id="btn-guides" title="중앙 가이드라인">
+          <span class="material-icons">grid_goldenratio</span>
+        </button>
         <div class="history-group">
           <button class="icon-btn icon-btn-secondary" id="btn-undo" title="되돌리기" disabled>
             <span class="material-icons">undo</span>
@@ -116,22 +119,21 @@
     </header>
 
     <main class="editor-main">
-      <!-- 사이드바: 색상 + 크기 + 내보내기 -->
       <aside class="sidebar">
         <div class="tool-section">
           <div class="tool-title">붓 크기</div>
           <div class="size-toggle" id="size-toggle">
             <button class="size-btn active" data-brush="1">
-              <div class="size-dot dot-1"></div>
-              <span>1칸</span>
+              <span class="size-dot-slot"><span class="size-dot dot-1"></span></span>
+              <span class="size-label">1칸</span>
             </button>
             <button class="size-btn" data-brush="2">
-              <div class="size-dot dot-2"></div>
-              <span>4칸</span>
+              <span class="size-dot-slot"><span class="size-dot dot-2"></span></span>
+              <span class="size-label">4칸</span>
             </button>
             <button class="size-btn" data-brush="3">
-              <div class="size-dot dot-3"></div>
-              <span>9칸</span>
+              <span class="size-dot-slot"><span class="size-dot dot-3"></span></span>
+              <span class="size-label">9칸</span>
             </button>
           </div>
           <p class="tool-hint">같은 칸을 다시 누르면 지워져요</p>
@@ -151,7 +153,7 @@
           </div>
         </div>
 
-        <div class="tool-section">
+        <div class="tool-section tool-section-export">
           <div class="tool-title">내보내기</div>
           <div class="export-row">
             <button class="export-btn" id="btn-export-jpg" title="JPG 다운로드">
@@ -170,14 +172,14 @@
         </div>
       </aside>
 
-      <!-- 캔버스 -->
       <section class="canvas-area">
-        <div class="canvas-wrapper">
+        <div class="canvas-wrapper" id="canvas-wrapper">
           <div id="pixel-grid" class="pixel-grid"></div>
+          <div class="guide-line guide-h" aria-hidden="true"></div>
+          <div class="guide-line guide-v" aria-hidden="true"></div>
         </div>
       </section>
 
-      <!-- 참고 이미지 패널 -->
       <aside class="reference-panel" id="reference-panel">
         <div class="reference-header">
           <h3><span class="material-icons">image</span> 그림 참고하기</h3>
@@ -215,12 +217,10 @@
     </div>
   </div>
 
-  <!-- 토스트 -->
   <div class="toast" id="toast"></div>
 
   <input type="file" id="input-load-json" accept="application/json" hidden />
 
-  <!-- Footer (뷰포트 고정) -->
   <footer class="app-footer">
     <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer">
       Created by. 교육뮤지컬 꿈꾸는 치수쌤

@@ -276,25 +276,83 @@ body { padding-bottom: var(--footer-h); }
   padding: 8px;
   overflow: hidden;
 }
+.canvas-area { grid-area: canvas; min-height: 0; }
+.reference-panel { grid-area: reference; }
+
+/* 기본(폴백): 캔버스 하단 짧은 스트립 */
 .editor-main.reference-open {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr auto;
   grid-template-areas: "canvas" "reference";
 }
-.canvas-area { grid-area: canvas; min-height: 0; }
-.reference-panel { grid-area: reference; max-height: 35vh; }
+.editor-main.reference-open .reference-panel { max-height: 25vh; }
 
-@media (min-width: 1200px) {
-  .editor-main {
-    gap: 12px;
-    padding: 12px;
-  }
+/* 가로 모드: 좌측 사이드 패널 (사용자 요청) */
+@media (orientation: landscape) {
   .editor-main.reference-open {
-    grid-template-columns: 1fr 280px;
+    grid-template-columns: 260px 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "canvas reference";
+    grid-template-areas: "reference canvas";
   }
-  .reference-panel { max-height: none; }
+  .editor-main.reference-open .reference-panel { max-height: none; }
+}
+@media (orientation: landscape) and (max-width: 900px) {
+  .editor-main.reference-open { grid-template-columns: 200px 1fr; }
+}
+@media (orientation: landscape) and (min-width: 1400px) {
+  .editor-main.reference-open { grid-template-columns: 320px 1fr; }
+}
+
+/* 세로 모드: 플로팅 컴팩트 패널 (드래그 가능) */
+@media (orientation: portrait) {
+  .editor-main.reference-open {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "canvas";
+  }
+  .editor-main.reference-open .reference-panel {
+    position: fixed;
+    top: calc(var(--topbar-h, 60px) + 10px);
+    right: 10px;
+    left: auto;
+    bottom: auto;
+    width: 200px;
+    max-width: 60vw;
+    max-height: calc(100dvh - var(--topbar-h, 60px) - var(--footer-h, 40px) - 20px);
+    z-index: 80;
+    box-shadow: 0 10px 30px rgba(31, 42, 68, 0.28);
+    border: 1px solid var(--line);
+    grid-area: unset;
+    padding: 6px 10px 10px;
+    gap: 6px;
+  }
+  /* 드래그 핸들 인디케이터 (iOS 시트 스타일) */
+  .editor-main.reference-open .reference-panel::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    margin: 0 auto 2px;
+    pointer-events: none;
+  }
+  .editor-main.reference-open .reference-header {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+  .editor-main.reference-open .reference-header.dragging { cursor: grabbing; }
+  .editor-main.reference-open .reference-header h3 { font-size: 13px; }
+  .editor-main.reference-open .reference-upload {
+    padding: 8px;
+    font-size: 12px;
+  }
+  .editor-main.reference-open .reference-upload .material-icons { font-size: 20px; }
+  .editor-main.reference-open .reference-preview { min-height: 80px; padding: 4px; }
+  .editor-main.reference-open .reference-preview img { max-height: 32vh; }
+  .editor-main.reference-open .reference-hint { font-size: 11px; }
 }
 
 /* 붓 크기 토글 (수평·수직 중앙 정렬 완성) */

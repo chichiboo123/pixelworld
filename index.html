@@ -79,13 +79,57 @@
         <button class="icon-btn" id="btn-home" title="홈으로">
           <span class="material-icons">home</span>
         </button>
-        <button class="icon-btn icon-btn-secondary" id="btn-back-step" title="이전 단계">
+        <button class="icon-btn icon-btn-secondary desktop-only" id="btn-back-step" title="이전 단계">
           <span class="material-icons">arrow_back</span>
         </button>
         <h1 class="brand-small">PIXEL WORLD</h1>
       </div>
+
+      <!-- 모바일 전용: 도구 트리거 (붓·색상·사용자색) -->
+      <div class="topbar-tools mobile-only">
+        <div class="dropdown-wrap m-pop-wrap">
+          <button type="button" class="m-trigger" id="m-trigger-brush" title="붓 크기">
+            <span class="m-trigger-dot-slot">
+              <span class="size-dot m-trigger-dot dot-1" id="m-brush-indicator"></span>
+            </span>
+          </button>
+          <div class="dropdown m-popover" id="m-pop-brush">
+            <div class="m-popover-title">붓 크기</div>
+            <div class="size-toggle m-size-toggle">
+              <button type="button" class="size-btn" data-brush="1">
+                <span class="size-dot-slot"><span class="size-dot dot-1"></span></span>
+                <span class="size-label">1칸</span>
+              </button>
+              <button type="button" class="size-btn" data-brush="2">
+                <span class="size-dot-slot"><span class="size-dot dot-2"></span></span>
+                <span class="size-label">4칸</span>
+              </button>
+              <button type="button" class="size-btn" data-brush="3">
+                <span class="size-dot-slot"><span class="size-dot dot-3"></span></span>
+                <span class="size-label">9칸</span>
+              </button>
+            </div>
+            <p class="m-popover-hint">같은 칸을 다시 누르면 지워져요</p>
+          </div>
+        </div>
+
+        <div class="dropdown-wrap m-pop-wrap">
+          <button type="button" class="m-trigger m-trigger-color" id="m-trigger-color" title="색상">
+            <span class="m-trigger-chip" id="m-color-indicator"></span>
+          </button>
+          <div class="dropdown m-popover m-popover-wide" id="m-pop-color">
+            <div class="m-popover-title">색상</div>
+            <div class="palette m-palette" id="m-palette"></div>
+          </div>
+        </div>
+
+        <button type="button" class="m-trigger" id="m-trigger-custom" title="사용자 지정 색">
+          <span class="material-icons">colorize</span>
+        </button>
+      </div>
+
       <div class="topbar-right">
-        <button class="icon-btn icon-btn-secondary" id="btn-guides" title="중앙 가이드라인">
+        <button class="icon-btn icon-btn-secondary desktop-only" id="btn-guides" title="중앙 가이드라인">
           <span class="material-icons">grid_goldenratio</span>
         </button>
         <div class="history-group">
@@ -96,10 +140,10 @@
             <span class="material-icons">redo</span>
           </button>
         </div>
-        <button class="icon-btn icon-btn-danger" id="btn-clear" title="전체 지우기">
+        <button class="icon-btn icon-btn-danger desktop-only" id="btn-clear" title="전체 지우기">
           <span class="material-icons">delete_sweep</span>
         </button>
-        <div class="dropdown-wrap">
+        <div class="dropdown-wrap desktop-only">
           <button class="icon-btn" id="btn-disk" title="저장 / 불러오기">
             <span class="material-icons">save</span>
           </button>
@@ -112,9 +156,49 @@
             </button>
           </div>
         </div>
-        <button class="icon-btn" id="btn-reference" title="그림 참고하기">
+        <button class="icon-btn desktop-only" id="btn-reference" title="그림 참고하기">
           <span class="material-icons">image</span>
         </button>
+
+        <!-- 모바일 전용: 더보기 메뉴 -->
+        <div class="dropdown-wrap mobile-only">
+          <button class="icon-btn icon-btn-secondary" id="btn-more" title="더보기">
+            <span class="material-icons">more_vert</span>
+          </button>
+          <div class="dropdown dropdown-more" id="dropdown-more">
+            <button class="dropdown-item" data-action="toggle-reference">
+              <span class="material-icons">image</span> 그림 참고하기
+            </button>
+            <button class="dropdown-item" data-action="toggle-guides">
+              <span class="material-icons">grid_goldenratio</span>
+              <span id="more-guides-label">가이드라인 숨기기</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" data-action="save-json">
+              <span class="material-icons">file_download</span> 저장하기
+            </button>
+            <button class="dropdown-item" data-action="load-json">
+              <span class="material-icons">file_upload</span> 불러오기
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" data-action="export-jpg">
+              <span class="material-icons">download</span> JPG로 저장
+            </button>
+            <button class="dropdown-item" data-action="copy-jpg">
+              <span class="material-icons">content_copy</span> 이미지 복사
+            </button>
+            <button class="dropdown-item" data-action="share-link">
+              <span class="material-icons">link</span> 링크 공유
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item dropdown-item-danger" data-action="clear">
+              <span class="material-icons">delete_sweep</span> 전체 지우기
+            </button>
+            <button class="dropdown-item" data-action="back-step">
+              <span class="material-icons">arrow_back</span> 이전 단계
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 

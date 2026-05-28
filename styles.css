@@ -278,127 +278,35 @@ body { padding-bottom: var(--footer-h); }
   grid-template-columns: 240px 1fr 260px;
 }
 
+/* 데스크탑/모바일 표시 토글 */
+.mobile-only { display: none; }
+.desktop-only { display: inline-flex; }
+
 @media (max-width: 980px) {
-  /* 에디터: viewport 고정, 상단 도크 + 캔버스 */
+  .mobile-only { display: inline-flex; }
+  .desktop-only { display: none !important; }
+
+  /* 에디터: 사이드바 제거, 캔버스가 전체 공간 차지 */
   #screen-editor.active {
     height: calc(100dvh - var(--footer-h));
     overflow: hidden;
   }
   .editor-main {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas: "sidebar" "canvas";
+    grid-template-rows: 1fr;
+    grid-template-areas: "canvas";
     overflow: hidden;
     padding: 6px;
     gap: 6px;
   }
   .editor-main.reference-open {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
-    grid-template-areas: "sidebar" "reference" "canvas";
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "reference" "canvas";
   }
   .canvas-area     { grid-area: canvas; min-height: 0; padding: 6px; }
-  .sidebar         { grid-area: sidebar; }
+  .sidebar         { display: none; }
   .reference-panel { grid-area: reference; max-height: 25vh; }
-
-  /* 사이드바를 상단 가로 도크로 변환 */
-  .sidebar {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px 8px;
-    padding: 6px 8px;
-    overflow: visible;
-    max-height: none;
-    min-height: 0;
-  }
-  .sidebar > .tool-section {
-    margin: 0;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
-  }
-  .tool-title { display: none; }
-  .tool-hint { display: none; }
-  .current-color-row { display: none; }
-
-  /* 1행 왼쪽: 붓 크기 (작은 정사각 버튼) */
-  .tool-section-size .size-toggle { gap: 4px; }
-  .size-btn {
-    width: 38px;
-    height: 38px;
-    flex: none;
-    padding: 0;
-    gap: 1px;
-  }
-  .size-dot-slot { height: 14px; }
-  .dot-1 { width: 6px;  height: 6px; }
-  .dot-2 { width: 10px; height: 10px; }
-  .dot-3 { width: 16px; height: 16px; }
-  .size-label { font-size: 9px; line-height: 1; }
-
-  /* 1행 가운데: 사용자 지정 (아이콘 전용) */
-  .custom-color-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    padding: 0;
-    margin: 0;
-    flex: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .custom-color-btn > span:not(.material-icons) { display: none; }
-  .custom-color-btn .material-icons { font-size: 18px; }
-
-  /* 1행 오른쪽: 내보내기 (아이콘 전용, 우측 정렬) */
-  .tool-section-export { margin-left: auto; }
-  .export-row {
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
-  }
-  .export-btn {
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    gap: 0;
-  }
-  .export-btn .material-icons { font-size: 18px; }
-  .export-label { display: none; }
-
-  /* 2행: 팔레트 가로 스크롤 (전체 폭) */
-  .tool-section-color {
-    flex-basis: 100%;
-    flex-grow: 1;
-    order: 10;
-  }
-  .palette {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    gap: 4px;
-    flex: 1;
-    min-width: 0;
-    padding: 2px 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-  .palette::-webkit-scrollbar { height: 4px; }
-  .palette::-webkit-scrollbar-thumb {
-    background: var(--primary-soft);
-    border-radius: 2px;
-  }
-  .color-swatch {
-    flex: 0 0 30px;
-    width: 30px;
-    height: 30px;
-    aspect-ratio: auto;
-    border-radius: 6px;
-  }
 }
 
 /* 사이드바 */
@@ -762,23 +670,152 @@ body { padding-bottom: var(--footer-h); }
   .app-footer a { font-size: 12px; }
 }
 
+/* ===== 모바일 토피바 도구 트리거 (가운데 그룹) ===== */
+.topbar-tools {
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.m-pop-wrap { position: relative; flex-shrink: 0; }
+
+.m-trigger {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 12px;
+  background: #f4f7ff;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background .15s ease, transform .12s ease;
+}
+.m-trigger:active { transform: scale(0.95); }
+.m-trigger:hover { background: #e7ecfa; }
+.m-trigger.open { background: var(--primary-soft); box-shadow: inset 0 0 0 2px var(--primary); }
+.m-trigger .material-icons { font-size: 20px; color: var(--primary-dark); }
+
+.m-trigger-dot-slot {
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+.m-trigger-dot { background: var(--primary-dark); border-radius: 2px; display: block; }
+
+.m-trigger-chip {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: #ff7eb6;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+/* ===== 모바일 팝오버 (붓·색상) ===== */
+.m-popover {
+  top: calc(100% + 6px);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  padding: 12px;
+  min-width: 220px;
+  max-width: calc(100vw - 16px);
+}
+.m-popover-wide { min-width: 260px; }
+.m-popover-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-soft);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.m-popover-hint {
+  font-size: 11px;
+  color: var(--text-soft);
+  margin: 8px 0 0;
+  padding: 5px 8px;
+  background: #f4f7ff;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.m-size-toggle { gap: 6px; }
+.m-size-toggle .size-btn { height: 56px; }
+
+.m-palette {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.m-palette .color-swatch {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* 더보기 드롭다운 */
+.dropdown-more {
+  min-width: 200px;
+  max-height: calc(100dvh - var(--topbar-h) - var(--footer-h) - 20px);
+  overflow-y: auto;
+}
+.dropdown-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 4px 0;
+}
+.dropdown-item-danger { color: var(--danger); }
+.dropdown-item-danger:hover { background: var(--danger-soft); color: var(--danger); }
+.dropdown-item-danger .material-icons { color: var(--danger); }
+
 /* ===== 모바일 토피바 ===== */
+@media (max-width: 980px) {
+  .topbar {
+    padding: 6px 10px;
+    gap: 6px;
+    min-height: 52px;
+  }
+  .topbar-left { flex-shrink: 0; }
+  .topbar-right { flex-shrink: 0; }
+}
+
 @media (max-width: 720px) {
-  .topbar { padding: 6px 10px; gap: 4px; min-height: 52px; }
+  .topbar { padding: 6px 8px; gap: 4px; min-height: 52px; }
   .topbar-left .brand-small { display: none; }
   .icon-btn { width: 36px; height: 36px; }
   .icon-btn .material-icons { font-size: 20px; }
   .history-group { padding: 0 3px; }
+  .topbar-tools { gap: 4px; }
+  .m-trigger { width: 36px; height: 36px; }
+  .m-trigger-dot-slot { width: 20px; height: 20px; }
+  .m-trigger-chip { width: 20px; height: 20px; }
 }
 
 @media (max-width: 420px) {
-  .topbar { padding: 5px 6px; gap: 3px; min-height: 48px; }
+  .topbar { padding: 4px 6px; gap: 2px; min-height: 48px; }
   .icon-btn { width: 32px; height: 32px; }
   .icon-btn .material-icons { font-size: 18px; }
   .history-group { padding: 0 2px; gap: 2px; }
-  .sidebar { padding: 5px 6px; gap: 5px 6px; }
-  .size-btn { width: 34px; height: 34px; }
-  .custom-color-btn { width: 34px; height: 34px; }
-  .export-btn { width: 34px; height: 34px; }
-  .color-swatch { flex: 0 0 26px; width: 26px; height: 26px; }
+  .m-trigger { width: 32px; height: 32px; border-radius: 10px; }
+  .m-trigger-dot-slot { width: 18px; height: 18px; border-radius: 5px; }
+  .m-trigger-chip { width: 18px; height: 18px; border-radius: 5px; }
+  .m-trigger .material-icons { font-size: 18px; }
+  .topbar-tools { gap: 3px; }
+}
+
+/* 가로 모드 (낮은 높이) — 푸터·토피바 더 슬림하게 */
+@media (max-width: 980px) and (max-height: 480px) {
+  .topbar { min-height: 44px; padding: 4px 8px; }
+  .icon-btn, .m-trigger { width: 34px; height: 34px; }
+  .icon-btn .material-icons { font-size: 18px; }
+  .app-footer { padding: 4px 12px; padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px)); }
+  .app-footer a { font-size: 11px; }
+  .reference-panel { max-height: 40vh; }
 }

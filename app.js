@@ -44,6 +44,7 @@
     editor: document.getElementById('screen-editor')
   };
   const palette = document.getElementById('palette');
+  const mPalette = document.getElementById('m-palette');
   const pixelGrid = document.getElementById('pixel-grid');
   const canvasArea = document.querySelector('.canvas-area');
   const canvasWrapper = document.getElementById('canvas-wrapper');
@@ -64,6 +65,18 @@
   const btnUndo = document.getElementById('btn-undo');
   const btnRedo = document.getElementById('btn-redo');
   const btnGuides = document.getElementById('btn-guides');
+
+  // 모바일 도구 트리거 / 팝오버
+  const mBrushIndicator = document.getElementById('m-brush-indicator');
+  const mColorIndicator = document.getElementById('m-color-indicator');
+  const mTriggerBrush = document.getElementById('m-trigger-brush');
+  const mTriggerColor = document.getElementById('m-trigger-color');
+  const mTriggerCustom = document.getElementById('m-trigger-custom');
+  const mPopBrush = document.getElementById('m-pop-brush');
+  const mPopColor = document.getElementById('m-pop-color');
+  const btnMore = document.getElementById('btn-more');
+  const dropdownMore = document.getElementById('dropdown-more');
+  const moreGuidesLabel = document.getElementById('more-guides-label');
 
   // ===== 화면 전환 =====
   function showScreen(name) {
@@ -152,6 +165,10 @@
     document.querySelectorAll('.size-btn').forEach(b => {
       b.classList.toggle('active', parseInt(b.dataset.brush, 10) === state.brushSize);
     });
+    if (mBrushIndicator) {
+      mBrushIndicator.classList.remove('dot-1', 'dot-2', 'dot-3');
+      mBrushIndicator.classList.add('dot-' + state.brushSize);
+    }
   }
 
   // 홈 / 이전 단계
@@ -171,16 +188,22 @@
 
   // ===== 팔레트 =====
   function buildPalette() {
-    palette.innerHTML = '';
-    PALETTE.forEach(color => {
-      const s = document.createElement('button');
-      s.type = 'button';
-      s.className = 'color-swatch';
-      s.style.background = color;
-      s.dataset.color = color;
-      if (color === state.currentColor) s.classList.add('active');
-      s.addEventListener('click', () => selectColor(color));
-      palette.appendChild(s);
+    [palette, mPalette].forEach(container => {
+      if (!container) return;
+      container.innerHTML = '';
+      PALETTE.forEach(color => {
+        const s = document.createElement('button');
+        s.type = 'button';
+        s.className = 'color-swatch';
+        s.style.background = color;
+        s.dataset.color = color;
+        if (color === state.currentColor) s.classList.add('active');
+        s.addEventListener('click', () => {
+          selectColor(color);
+          closeAllMobilePopovers();
+        });
+        container.appendChild(s);
+      });
     });
   }
   function selectColor(color) {
@@ -196,7 +219,8 @@
     });
   }
   function updateCurrentColorChip() {
-    currentColorChip.style.background = state.currentColor;
+    if (currentColorChip) currentColorChip.style.background = state.currentColor;
+    if (mColorIndicator) mColorIndicator.style.background = state.currentColor;
   }
 
   btnCustomColor.addEventListener('click', () => inputCustomColor.click());
@@ -352,6 +376,7 @@
       state.brushSize = parseInt(btn.dataset.brush, 10);
       syncSizeButtons();
       saveLocal();
+      closeAllMobilePopovers();
     });
   });
 
@@ -409,6 +434,9 @@
     canvasWrapper.classList.toggle('guides-hidden', !state.guidesVisible);
     btnGuides.classList.toggle('active', state.guidesVisible);
     btnGuides.title = state.guidesVisible ? '중앙 가이드라인 숨기기' : '중앙 가이드라인 보기';
+    if (moreGuidesLabel) {
+      moreGuidesLabel.textContent = state.guidesVisible ? '가이드라인 숨기기' : '가이드라인 보기';
+    }
   }
   btnGuides.addEventListener('click', () => {
     state.guidesVisible = !state.guidesVisible;
@@ -455,6 +483,76 @@
       dropdownDisk.classList.remove('open');
     }
   });
+
+  // ===== 모바일 트리거 / 팝오버 =====
+  function closeAllMobilePopovers() {
+    [mPopBrush, mPopColor].forEach(p => p && p.classList.remove('open'));
+    [mTriggerBrush, mTriggerColor].forEach(t => t && t.classList.remove('open'));
+  }
+  function toggleMobilePopover(triggerEl, popoverEl) {
+    const willOpen = !popoverEl.classList.contains('open');
+    closeAllMobilePopovers();
+    if (willOpen) {
+      popoverEl.classList.add('open');
+      triggerEl.classList.add('open');
+    }
+  }
+  if (mTriggerBrush) {
+    mTriggerBrush.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobilePopover(mTriggerBrush, mPopBrush);
+    });
+  }
+  if (mTriggerColor) {
+    mTriggerColor.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobilePopover(mTriggerColor, mPopColor);
+    });
+  }
+  if (mTriggerCustom) {
+    mTriggerCustom.addEventListener('click', () => {
+      closeAllMobilePopovers();
+      inputCustomColor.click();
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const insideBrush = mPopBrush && (mPopBrush.contains(e.target) || (mTriggerBrush && mTriggerBrush.contains(e.target)));
+    const insideColor = mPopColor && (mPopColor.contains(e.target) || (mTriggerColor && mTriggerColor.contains(e.target)));
+    if (!insideBrush && !insideColor) closeAllMobilePopovers();
+  });
+
+  // ===== 더보기 메뉴 (모바일) =====
+  if (btnMore && dropdownMore) {
+    btnMore.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMore.classList.toggle('open');
+      closeAllMobilePopovers();
+    });
+    document.addEventListener('click', (e) => {
+      if (!dropdownMore.contains(e.target) && e.target !== btnMore && !btnMore.contains(e.target)) {
+        dropdownMore.classList.remove('open');
+      }
+    });
+    dropdownMore.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      dropdownMore.classList.remove('open');
+      const dispatch = {
+        'toggle-reference': () => document.getElementById('btn-reference').click(),
+        'toggle-guides': () => btnGuides.click(),
+        'save-json': () => document.getElementById('btn-save-json').click(),
+        'load-json': () => document.getElementById('btn-load-json').click(),
+        'export-jpg': () => document.getElementById('btn-export-jpg').click(),
+        'copy-jpg': () => document.getElementById('btn-copy-jpg').click(),
+        'share-link': () => document.getElementById('btn-share-link').click(),
+        'clear': () => document.getElementById('btn-clear').click(),
+        'back-step': () => document.getElementById('btn-back-step').click()
+      };
+      const fn = dispatch[action];
+      if (fn) fn();
+    });
+  }
 
   // ===== 저장 / 불러오기 (JSON) =====
   document.getElementById('btn-save-json').addEventListener('click', () => {

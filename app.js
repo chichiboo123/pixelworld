@@ -27,7 +27,8 @@
     pixels: [],
     currentColor: '#4c8dff',
     brushSize: 1,
-    guidesVisible: true
+    guidesVisible: true,
+    currentScreen: null
   };
 
   let undoStack = [];
@@ -79,6 +80,8 @@
     Object.entries(screens).forEach(([k, el]) => {
       el.classList.toggle('active', k === name);
     });
+    state.currentScreen = name;
+    saveLocal();
     if (name === 'editor') {
       requestAnimationFrame(() => resizeCanvas());
     }
@@ -156,6 +159,16 @@
     updateGuidesUI();
     saveLocal();
     showScreen('editor');
+    maybeShowEraseHint();
+  }
+  function maybeShowEraseHint() {
+    try {
+      if (localStorage.getItem('pixelworld:eraseHintShown')) return;
+      setTimeout(() => {
+        toast('같은 칸을 다시 누르면 지워져요!');
+        localStorage.setItem('pixelworld:eraseHintShown', '1');
+      }, 1200);
+    } catch (_) {}
   }
   const BRUSH_BADGE = { 1: '1', 2: '4', 3: '9' };
   function syncSizeButtons() {
@@ -219,6 +232,12 @@
       referencePanel.style.right = '';
     }
   }
+  function todayStr() {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${m}-${day}`;
+  }
   function handleSaveJson() {
     const data = {
       app: 'pixelworld',
@@ -234,14 +253,19 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `pixelworld-${Date.now()}.json`;
+    a.download = `내그림-${todayStr()}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
     toast('저장했어요!');
   }
-  function handleLoadJson() {
+  async function handleLoadJson() {
+    const hasContent = Array.isArray(state.pixels) && state.pixels.some(p => p !== null);
+    if (hasContent) {
+      const ok = await showConfirm('불러오기', '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?');
+      if (!ok) return;
+    }
     inputLoadJson.click();
   }
   function handleExportJpg() {
@@ -250,12 +274,12 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `pixelworld-${Date.now()}.jpg`;
+      a.download = `내그림-${todayStr()}.jpg`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      toast('JPG로 저장했어요!');
+      toast('이미지로 저장했어요!');
     }, 'image/jpeg', 0.92);
   }
   function handleCopyJpg() {
@@ -770,7 +794,8 @@
         pixels: state.pixels,
         currentColor: state.currentColor,
         brushSize: state.brushSize,
-        guidesVisible: state.guidesVisible
+        guidesVisible: state.guidesVisible,
+        currentScreen: state.currentScreen
       }));
     } catch (_) {}
   }
@@ -807,10 +832,22 @@
     }
 
     const saved = loadLocal();
-    if (saved && saved.cols && saved.rows && saved.pixels.length === saved.cols * saved.rows) {
+    if (saved) {
       Object.assign(state, saved);
       if (typeof state.guidesVisible !== 'boolean') state.guidesVisible = true;
+    }
+
+    const screen = saved && saved.currentScreen;
+    const hasValidCanvas = saved && saved.cols && saved.rows
+      && Array.isArray(saved.pixels) && saved.pixels.length === saved.cols * saved.rows;
+
+    if (screen === 'editor' && hasValidCanvas) {
       enterEditor();
+      return;
+    }
+    if (screen === 'size') {
+      updateSizeLabels();
+      showScreen('size');
       return;
     }
 

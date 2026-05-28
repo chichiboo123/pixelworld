@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=5" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -85,9 +85,8 @@
       <div class="topbar-tools">
         <div class="dropdown-wrap m-pop-wrap">
           <button type="button" class="m-trigger" id="m-trigger-brush" title="붓 크기">
-            <span class="m-trigger-dot-slot">
-              <span class="size-dot m-trigger-dot dot-1" id="m-brush-indicator"></span>
-            </span>
+            <span class="material-icons">brush</span>
+            <span class="m-trigger-badge m-trigger-badge-text" id="m-brush-indicator">1</span>
           </button>
           <div class="dropdown m-popover" id="m-pop-brush">
             <div class="m-popover-title">붓 크기</div>
@@ -110,8 +109,9 @@
         </div>
 
         <div class="dropdown-wrap m-pop-wrap">
-          <button type="button" class="m-trigger m-trigger-color" id="m-trigger-color" title="색상">
-            <span class="m-trigger-chip" id="m-color-indicator"></span>
+          <button type="button" class="m-trigger" id="m-trigger-color" title="색상">
+            <span class="material-icons">palette</span>
+            <span class="m-trigger-badge m-trigger-badge-chip" id="m-color-indicator"></span>
           </button>
           <div class="dropdown m-popover m-popover-wide" id="m-pop-color">
             <div class="m-popover-title">색상</div>
@@ -120,7 +120,7 @@
         </div>
 
         <button type="button" class="m-trigger" id="m-trigger-custom" title="사용자 지정 색">
-          <span class="material-icons">colorize</span>
+          <span class="material-icons">gradient</span>
         </button>
         <input type="color" id="input-custom-color" value="#ff7eb6" class="hidden-color-input" aria-hidden="true" tabindex="-1" />
       </div>
@@ -231,6 +231,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

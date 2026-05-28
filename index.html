@@ -2,8 +2,11 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#4c8dff" />
   <title>픽셀월드 | Pixel World</title>
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +17,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- 초기 화면: 비율 선택 -->
+  <!-- 1단계: 비율 선택 -->
   <div id="screen-ratio" class="screen active">
     <div class="screen-inner">
       <h1 class="brand">픽셀월드</h1>
@@ -38,7 +41,7 @@
     </div>
   </div>
 
-  <!-- 픽셀 수 선택 -->
+  <!-- 2단계: 픽셀 수 선택 -->
   <div id="screen-size" class="screen">
     <div class="screen-inner">
       <h1 class="brand">픽셀월드</h1>
@@ -69,15 +72,29 @@
     </div>
   </div>
 
-  <!-- 메인 작업 화면 -->
+  <!-- 3단계: 에디터 -->
   <div id="screen-editor" class="screen">
     <header class="topbar">
       <div class="topbar-left">
+        <button class="icon-btn" id="btn-home" title="홈으로">
+          <span class="material-icons">home</span>
+        </button>
+        <button class="icon-btn icon-btn-secondary" id="btn-back-step" title="이전 단계">
+          <span class="material-icons">arrow_back</span>
+        </button>
         <h1 class="brand brand-small">픽셀월드</h1>
       </div>
       <div class="topbar-right">
-        <button class="icon-btn" id="btn-new" title="새로 만들기">
-          <span class="material-icons">refresh</span>
+        <div class="history-group">
+          <button class="icon-btn icon-btn-secondary" id="btn-undo" title="되돌리기" disabled>
+            <span class="material-icons">undo</span>
+          </button>
+          <button class="icon-btn icon-btn-secondary" id="btn-redo" title="다시 실행" disabled>
+            <span class="material-icons">redo</span>
+          </button>
+        </div>
+        <button class="icon-btn icon-btn-danger" id="btn-clear" title="전체 지우기">
+          <span class="material-icons">delete_sweep</span>
         </button>
         <div class="dropdown-wrap">
           <button class="icon-btn" id="btn-disk" title="저장 / 불러오기">
@@ -99,24 +116,10 @@
     </header>
 
     <main class="editor-main">
-      <!-- 사이드바: 도구 -->
+      <!-- 사이드바: 색상 + 크기 + 내보내기 -->
       <aside class="sidebar">
         <div class="tool-section">
-          <div class="tool-title">도구</div>
-          <div class="tool-group">
-            <button class="tool-btn active" id="tool-brush" data-tool="brush" title="붓">
-              <span class="material-icons">brush</span>
-              <span class="tool-name">붓</span>
-            </button>
-            <button class="tool-btn" id="tool-eraser" data-tool="eraser" title="지우개">
-              <span class="material-icons">ink_eraser</span>
-              <span class="tool-name">지우개</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="tool-section">
-          <div class="tool-title">크기</div>
+          <div class="tool-title">붓 크기</div>
           <div class="size-toggle" id="size-toggle">
             <button class="size-btn active" data-brush="1">
               <div class="size-dot dot-1"></div>
@@ -131,16 +134,17 @@
               <span>9칸</span>
             </button>
           </div>
+          <p class="tool-hint">같은 칸을 다시 누르면 지워져요</p>
         </div>
 
         <div class="tool-section">
           <div class="tool-title">색상</div>
           <div class="palette" id="palette"></div>
-          <button class="custom-color-btn" id="btn-custom-color">
+          <button type="button" class="custom-color-btn" id="btn-custom-color">
             <span class="material-icons">colorize</span>
             <span>사용자 지정</span>
-            <input type="color" id="input-custom-color" value="#ff7eb6" />
           </button>
+          <input type="color" id="input-custom-color" value="#ff7eb6" class="hidden-color-input" aria-hidden="true" tabindex="-1" />
           <div class="current-color-row">
             <div class="current-color-label">현재 색</div>
             <div class="current-color-chip" id="current-color-chip"></div>
@@ -149,21 +153,24 @@
 
         <div class="tool-section">
           <div class="tool-title">내보내기</div>
-          <div class="export-group">
-            <button class="btn btn-soft" id="btn-export-jpg">
-              <span class="material-icons">download</span> JPG 다운로드
+          <div class="export-row">
+            <button class="export-btn" id="btn-export-jpg" title="JPG 다운로드">
+              <span class="material-icons">download</span>
+              <span class="export-label">JPG</span>
             </button>
-            <button class="btn btn-soft" id="btn-copy-jpg">
-              <span class="material-icons">content_copy</span> 클립보드 복사
+            <button class="export-btn" id="btn-copy-jpg" title="이미지 복사">
+              <span class="material-icons">content_copy</span>
+              <span class="export-label">복사</span>
             </button>
-            <button class="btn btn-soft" id="btn-share-link">
-              <span class="material-icons">link</span> 링크 공유
+            <button class="export-btn" id="btn-share-link" title="링크 공유">
+              <span class="material-icons">link</span>
+              <span class="export-label">링크</span>
             </button>
           </div>
         </div>
       </aside>
 
-      <!-- 캔버스 영역 -->
+      <!-- 캔버스 -->
       <section class="canvas-area">
         <div class="canvas-wrapper">
           <div id="pixel-grid" class="pixel-grid"></div>
@@ -195,7 +202,7 @@
     </main>
   </div>
 
-  <!-- 모달: 알림 / 확인 -->
+  <!-- 모달 -->
   <div class="modal" id="modal-confirm">
     <div class="modal-card">
       <div class="modal-icon"><span class="material-icons">help_outline</span></div>
@@ -211,10 +218,9 @@
   <!-- 토스트 -->
   <div class="toast" id="toast"></div>
 
-  <!-- 숨김 input (JSON 불러오기) -->
   <input type="file" id="input-load-json" accept="application/json" hidden />
 
-  <!-- Footer -->
+  <!-- Footer (뷰포트 고정) -->
   <footer class="app-footer">
     <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer">
       Created by. 교육뮤지컬 꿈꾸는 치수쌤

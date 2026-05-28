@@ -5,20 +5,28 @@
  *  - GET  ?action=list   → 저장된 도안 목록(JSON 배열) 반환
  *  - POST (JSON body)     → 새 도안 한 개 저장
  *
- * 배포 방법은 같은 폴더의 README.md 를 참고하세요.
+ * ★ 필수 설정 ★
+ * 아래 SPREADSHEET_ID 에 본인의 스프레드시트 ID를 입력하세요.
+ * 스프레드시트 URL에서 /d/ 와 /edit 사이의 긴 문자열이 ID입니다.
+ * 예) https://docs.google.com/spreadsheets/d/★이_부분★/edit
  */
+var SPREADSHEET_ID = '여기에_스프레드시트_ID_붙여넣기';
 
-// 도안을 저장할 시트 이름
+// 도안을 저장할 시트 이름 (자동 생성됨)
 var SHEET_NAME = 'patterns';
 // 한 번에 내려줄 최대 도안 수 (최신순)
 var MAX_LIST = 100;
 
 function doGet(e) {
-  var action = (e && e.parameter && e.parameter.action) || 'list';
-  if (action === 'list') {
-    return jsonOutput_(listPatterns_());
+  try {
+    var action = (e && e.parameter && e.parameter.action) || 'list';
+    if (action === 'list') {
+      return jsonOutput_(listPatterns_());
+    }
+    return jsonOutput_({ error: 'unknown action: ' + action });
+  } catch (err) {
+    return jsonOutput_({ error: String(err) });
   }
-  return jsonOutput_({ error: 'unknown action: ' + action });
 }
 
 function doPost(e) {
@@ -32,7 +40,8 @@ function doPost(e) {
 }
 
 function getSheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  // openById를 사용해 독립형 웹앱에서도 스프레드시트를 열 수 있음
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
@@ -80,6 +89,19 @@ function savePattern_(data) {
   };
   sh.appendRow([id, title, createdAt, JSON.stringify(payload)]);
   return { id: id };
+}
+
+/**
+ * 스크립트 에디터에서 직접 실행해 연결이 잘 됐는지 확인하는 테스트 함수.
+ * 실행 후 로그(Ctrl+Enter → 실행 로그)에 "연결 성공" 이 뜨면 OK.
+ */
+function testConnection() {
+  try {
+    var sh = getSheet_();
+    Logger.log('연결 성공! 시트 이름: ' + sh.getName() + ', 마지막 행: ' + sh.getLastRow());
+  } catch (err) {
+    Logger.log('오류: ' + err);
+  }
 }
 
 function jsonOutput_(obj) {

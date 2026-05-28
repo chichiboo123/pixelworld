@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>픽셀월드 | Pixel World</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 초기 화면: 비율 선택 -->
+  <div id="screen-ratio" class="screen active">
+    <div class="screen-inner">
+      <h1 class="brand">픽셀월드</h1>
+      <p class="brand-sub">나만의 픽셀아트를 만들어 보아요!</p>
+
+      <h2 class="screen-title">1단계 · 캔버스 모양을 골라요</h2>
+      <div class="choice-grid">
+        <button class="choice-card" data-ratio="landscape">
+          <div class="choice-preview preview-landscape"></div>
+          <div class="choice-label"><span class="material-icons">crop_landscape</span> 가로 모드</div>
+        </button>
+        <button class="choice-card" data-ratio="square">
+          <div class="choice-preview preview-square"></div>
+          <div class="choice-label"><span class="material-icons">crop_square</span> 정사각형 모드</div>
+        </button>
+        <button class="choice-card" data-ratio="portrait">
+          <div class="choice-preview preview-portrait"></div>
+          <div class="choice-label"><span class="material-icons">crop_portrait</span> 세로 모드</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 픽셀 수 선택 -->
+  <div id="screen-size" class="screen">
+    <div class="screen-inner">
+      <h1 class="brand">픽셀월드</h1>
+      <p class="brand-sub">픽셀 칸 수를 정해요</p>
+
+      <h2 class="screen-title">2단계 · 그림 크기를 골라요</h2>
+      <div class="choice-grid">
+        <button class="choice-card" data-size="small">
+          <div class="choice-preview-size size-small"></div>
+          <div class="choice-label"><span class="material-icons">grid_view</span> 소 (작게)</div>
+          <div class="choice-desc" id="desc-small">16 × 16</div>
+        </button>
+        <button class="choice-card" data-size="medium">
+          <div class="choice-preview-size size-medium"></div>
+          <div class="choice-label"><span class="material-icons">grid_on</span> 중 (보통)</div>
+          <div class="choice-desc" id="desc-medium">24 × 24</div>
+        </button>
+        <button class="choice-card" data-size="large">
+          <div class="choice-preview-size size-large"></div>
+          <div class="choice-label"><span class="material-icons">grid_4x4</span> 대 (크게)</div>
+          <div class="choice-desc" id="desc-large">32 × 32</div>
+        </button>
+      </div>
+
+      <button class="btn btn-ghost btn-back" id="btn-back-to-ratio">
+        <span class="material-icons">arrow_back</span> 이전 단계
+      </button>
+    </div>
+  </div>
+
+  <!-- 메인 작업 화면 -->
+  <div id="screen-editor" class="screen">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="brand brand-small">픽셀월드</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="btn-new" title="새로 만들기">
+          <span class="material-icons">refresh</span>
+        </button>
+        <div class="dropdown-wrap">
+          <button class="icon-btn" id="btn-disk" title="저장 / 불러오기">
+            <span class="material-icons">save</span>
+          </button>
+          <div class="dropdown" id="dropdown-disk">
+            <button class="dropdown-item" id="btn-save-json">
+              <span class="material-icons">file_download</span> 저장하기
+            </button>
+            <button class="dropdown-item" id="btn-load-json">
+              <span class="material-icons">file_upload</span> 불러오기
+            </button>
+          </div>
+        </div>
+        <button class="icon-btn" id="btn-reference" title="그림 참고하기">
+          <span class="material-icons">image</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="editor-main">
+      <!-- 사이드바: 도구 -->
+      <aside class="sidebar">
+        <div class="tool-section">
+          <div class="tool-title">도구</div>
+          <div class="tool-group">
+            <button class="tool-btn active" id="tool-brush" data-tool="brush" title="붓">
+              <span class="material-icons">brush</span>
+              <span class="tool-name">붓</span>
+            </button>
+            <button class="tool-btn" id="tool-eraser" data-tool="eraser" title="지우개">
+              <span class="material-icons">ink_eraser</span>
+              <span class="tool-name">지우개</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-title">크기</div>
+          <div class="size-toggle" id="size-toggle">
+            <button class="size-btn active" data-brush="1">
+              <div class="size-dot dot-1"></div>
+              <span>1칸</span>
+            </button>
+            <button class="size-btn" data-brush="2">
+              <div class="size-dot dot-2"></div>
+              <span>4칸</span>
+            </button>
+            <button class="size-btn" data-brush="3">
+              <div class="size-dot dot-3"></div>
+              <span>9칸</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-title">색상</div>
+          <div class="palette" id="palette"></div>
+          <button class="custom-color-btn" id="btn-custom-color">
+            <span class="material-icons">colorize</span>
+            <span>사용자 지정</span>
+            <input type="color" id="input-custom-color" value="#ff7eb6" />
+          </button>
+          <div class="current-color-row">
+            <div class="current-color-label">현재 색</div>
+            <div class="current-color-chip" id="current-color-chip"></div>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-title">내보내기</div>
+          <div class="export-group">
+            <button class="btn btn-soft" id="btn-export-jpg">
+              <span class="material-icons">download</span> JPG 다운로드
+            </button>
+            <button class="btn btn-soft" id="btn-copy-jpg">
+              <span class="material-icons">content_copy</span> 클립보드 복사
+            </button>
+            <button class="btn btn-soft" id="btn-share-link">
+              <span class="material-icons">link</span> 링크 공유
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 캔버스 영역 -->
+      <section class="canvas-area">
+        <div class="canvas-wrapper">
+          <div id="pixel-grid" class="pixel-grid"></div>
+        </div>
+      </section>
+
+      <!-- 참고 이미지 패널 -->
+      <aside class="reference-panel" id="reference-panel">
+        <div class="reference-header">
+          <h3><span class="material-icons">image</span> 그림 참고하기</h3>
+          <button class="icon-btn icon-btn-sm" id="btn-close-reference" title="닫기">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="reference-body">
+          <label for="input-reference" class="reference-upload">
+            <span class="material-icons">cloud_upload</span>
+            <span>이미지를 선택하세요</span>
+          </label>
+          <input type="file" id="input-reference" accept="image/*" hidden />
+          <div class="reference-preview" id="reference-preview">
+            <p class="reference-hint">참고할 이미지를 올리면<br />여기에 보여요!</p>
+          </div>
+          <button class="btn btn-ghost btn-small" id="btn-remove-reference" style="display:none;">
+            <span class="material-icons">delete</span> 이미지 지우기
+          </button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- 모달: 알림 / 확인 -->
+  <div class="modal" id="modal-confirm">
+    <div class="modal-card">
+      <div class="modal-icon"><span class="material-icons">help_outline</span></div>
+      <h3 class="modal-title" id="modal-title">확인</h3>
+      <p class="modal-message" id="modal-message">정말 진행할까요?</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modal-cancel">취소</button>
+        <button class="btn btn-primary" id="modal-ok">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 -->
+  <div class="toast" id="toast"></div>
+
+  <!-- 숨김 input (JSON 불러오기) -->
+  <input type="file" id="input-load-json" accept="application/json" hidden />
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer">
+      Created by. 교육뮤지컬 꿈꾸는 치수쌤
+    </a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

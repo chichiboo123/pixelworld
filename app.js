@@ -20,7 +20,7 @@
 
   // 도안 갤러리 서버 (Google Apps Script 웹앱 URL).
   // 비워두면 갤러리는 설정 안내만 표시됩니다. apps-script/Code.gs 참고.
-  const GALLERY_API_URL = '';
+  const GALLERY_API_URL = 'https://script.google.com/macros/s/AKfycbyJslq6cMLVZpxeXqQ6ropJ7PRPJ-b45-8HIA9i1saDsVzk8sxfJeui7pi3hwx8EELj/exec';
 
   // ===== 상태 =====
   let state = {

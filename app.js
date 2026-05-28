@@ -157,13 +157,13 @@
     saveLocal();
     showScreen('editor');
   }
+  const BRUSH_BADGE = { 1: '1', 2: '4', 3: '9' };
   function syncSizeButtons() {
     document.querySelectorAll('.size-btn').forEach(b => {
       b.classList.toggle('active', parseInt(b.dataset.brush, 10) === state.brushSize);
     });
     if (mBrushIndicator) {
-      mBrushIndicator.classList.remove('dot-1', 'dot-2', 'dot-3');
-      mBrushIndicator.classList.add('dot-' + state.brushSize);
+      mBrushIndicator.textContent = BRUSH_BADGE[state.brushSize] || '1';
     }
   }
 

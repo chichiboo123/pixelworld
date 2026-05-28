@@ -639,6 +639,7 @@ body { padding-bottom: var(--footer-h); }
 .m-pop-wrap { position: relative; flex-shrink: 0; }
 
 .m-trigger {
+  position: relative;
   width: 40px;
   height: 40px;
   border: none;
@@ -656,23 +657,35 @@ body { padding-bottom: var(--footer-h); }
 .m-trigger:active { transform: scale(0.95); }
 .m-trigger:hover { background: #e7ecfa; }
 .m-trigger.open { background: var(--primary-soft); box-shadow: inset 0 0 0 2px var(--primary); }
-.m-trigger .material-icons { font-size: 20px; color: var(--primary-dark); }
+.m-trigger .material-icons { font-size: 22px; color: var(--primary-dark); }
 
-.m-trigger-dot-slot {
-  width: 22px; height: 22px;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #fff;
-  border-radius: 6px;
-  border: 1px solid var(--line);
-}
-.m-trigger-dot { background: var(--primary-dark); border-radius: 2px; display: block; }
-
-.m-trigger-chip {
-  width: 22px; height: 22px;
-  border-radius: 6px;
-  background: #ff7eb6;
+/* 트리거 우하단 상태 뱃지 */
+.m-trigger-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 2px solid #fff;
-  box-shadow: 0 0 0 1px var(--line);
+  box-shadow: 0 1px 3px rgba(31, 42, 68, 0.2);
+  pointer-events: none;
+}
+.m-trigger-badge-chip {
+  padding: 0;
+  width: 14px;
+  min-width: 0;
+  height: 14px;
+  background: #ff7eb6;
 }
 
 /* ===== 모바일 팝오버 (붓·색상) ===== */
@@ -750,10 +763,11 @@ body { padding-bottom: var(--footer-h); }
   .icon-btn { width: 36px; height: 36px; }
   .icon-btn .material-icons { font-size: 20px; }
   .history-group { padding: 0 3px; }
-  .topbar-tools { gap: 4px; }
+  .topbar-tools { gap: 6px; }
   .m-trigger { width: 36px; height: 36px; }
-  .m-trigger-dot-slot { width: 20px; height: 20px; }
-  .m-trigger-chip { width: 20px; height: 20px; }
+  .m-trigger .material-icons { font-size: 20px; }
+  .m-trigger-badge { min-width: 15px; height: 15px; font-size: 9px; bottom: -3px; right: -3px; }
+  .m-trigger-badge-chip { width: 13px; height: 13px; }
 }
 
 @media (max-width: 420px) {
@@ -762,10 +776,10 @@ body { padding-bottom: var(--footer-h); }
   .icon-btn .material-icons { font-size: 18px; }
   .history-group { padding: 0 2px; gap: 2px; }
   .m-trigger { width: 32px; height: 32px; border-radius: 10px; }
-  .m-trigger-dot-slot { width: 18px; height: 18px; border-radius: 5px; }
-  .m-trigger-chip { width: 18px; height: 18px; border-radius: 5px; }
   .m-trigger .material-icons { font-size: 18px; }
-  .topbar-tools { gap: 3px; }
+  .m-trigger-badge { min-width: 14px; height: 14px; font-size: 9px; border-width: 1.5px; }
+  .m-trigger-badge-chip { width: 12px; height: 12px; }
+  .topbar-tools { gap: 5px; }
 }
 
 /* 가로 모드 (낮은 높이) — 푸터·토피바 더 슬림하게 */

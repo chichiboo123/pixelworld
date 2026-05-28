@@ -57,7 +57,7 @@ body { padding-bottom: var(--footer-h); }
 #screen-size .screen-inner {
   max-width: 920px;
   margin: 0 auto;
-  padding: 44px 20px 28px;
+  padding: 32px 20px 14px;
   text-align: center;
 }
 
@@ -605,15 +605,16 @@ body { padding-bottom: var(--footer-h); }
   align-items: center;
   justify-content: center;
   z-index: 100;
-  padding: 8px 12px;
-  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  padding: 3px 12px;
+  padding-bottom: calc(3px + env(safe-area-inset-bottom, 0px));
+  line-height: 1;
 }
 .app-footer a {
   color: var(--text-soft);
   text-decoration: none;
   font-weight: 600;
-  font-size: 13px;
-  line-height: 1.3;
+  font-size: 12px;
+  line-height: 1.2;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -623,7 +624,7 @@ body { padding-bottom: var(--footer-h); }
 .app-footer a:hover { color: var(--primary-dark); text-decoration: underline; }
 
 @media (max-width: 420px) {
-  .app-footer a { font-size: 12px; }
+  .app-footer a { font-size: 11px; }
 }
 
 /* ===== 토피바 도구 트리거 (가운데 그룹) — 모든 뷰포트 공통 ===== */

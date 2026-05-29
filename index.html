@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <link rel="stylesheet" href="styles.css?v=11" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -26,19 +26,19 @@
       <h2 class="screen-title">1단계 · 캔버스 모양을 골라요</h2>
       <div class="choice-grid choice-grid-home">
         <button class="choice-card" data-ratio="landscape">
-          <div class="choice-preview preview-landscape"></div>
+          <div class="choice-figure"><div class="choice-preview preview-landscape"></div></div>
           <div class="choice-label"><span class="material-icons">crop_landscape</span> 가로 모드</div>
         </button>
         <button class="choice-card" data-ratio="square">
-          <div class="choice-preview preview-square"></div>
+          <div class="choice-figure"><div class="choice-preview preview-square"></div></div>
           <div class="choice-label"><span class="material-icons">crop_square</span> 정사각형 모드</div>
         </button>
         <button class="choice-card" data-ratio="portrait">
-          <div class="choice-preview preview-portrait"></div>
+          <div class="choice-figure"><div class="choice-preview preview-portrait"></div></div>
           <div class="choice-label"><span class="material-icons">crop_portrait</span> 세로 모드</div>
         </button>
         <button class="choice-card choice-card-gallery" id="btn-gallery-home" type="button">
-          <div class="choice-preview preview-gallery"><span class="material-icons">collections</span></div>
+          <div class="choice-figure"><div class="choice-preview preview-gallery"><span class="material-icons">collections</span></div></div>
           <div class="choice-label"><span class="material-icons">collections</span> 도안 갤러리</div>
           <div class="choice-desc">친구들이 공유한 도안을 골라 색칠해요</div>
         </button>
@@ -269,10 +269,11 @@
         </button>
       </div>
       <ol class="help-list">
-        <li><strong>모양/크기</strong><span>새 캔버스 또는 도안 갤러리 선택</span></li>
-        <li><strong>색칠</strong><span>색 선택 후 칸 터치, 같은 색은 한 번 더 터치해 지우기</span></li>
-        <li><strong>도안</strong><span>갤러리 도안을 누르면 번호 색칠로 바로 열림</span></li>
-        <li><strong>저장/공유</strong><span>더보기(⋮)에서 이미지 저장·링크 공유·갤러리 올리기</span></li>
+        <li><strong>모양·크기</strong><span>캔버스 모양과 픽셀 칸 수를 골라요. 도안 갤러리에서 바로 시작할 수도 있어요</span></li>
+        <li><strong>붓·색상</strong><span>붓 크기와 색을 고른 뒤 칸을 터치해요. 같은 색을 다시 누르면 지워져요</span></li>
+        <li><strong>도안 색칠</strong><span>갤러리 도안을 누르면 번호대로 색칠하는 화면이 바로 열려요</span></li>
+        <li><strong>참고·편집</strong><span>더보기(⋮)에서 그림 참고하기·가이드라인, 되돌리기·다시 실행을 써요</span></li>
+        <li><strong>저장·공유</strong><span>더보기(⋮)에서 이미지 저장·복사, 링크 공유, 갤러리에 올리기를 해요</span></li>
       </ol>
     </div>
   </div>

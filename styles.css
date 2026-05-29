@@ -44,6 +44,21 @@ html, body {
 
 button { font-family: inherit; }
 
+.brand-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: transform .12s ease, filter .15s ease;
+}
+.brand-link:hover { filter: brightness(1.08); }
+.brand-link:active { transform: scale(0.98); }
+.brand-link:focus-visible {
+  outline: 3px solid rgba(76, 141, 255, 0.45);
+  outline-offset: 6px;
+  border-radius: var(--radius-sm);
+}
+
 /* ===== 스크린 공통 ===== */
 .screen { display: none; }
 .screen.active { display: block; }
@@ -97,6 +112,12 @@ body { padding-bottom: var(--footer-h); }
   color: transparent;
   -webkit-text-fill-color: transparent;
   white-space: nowrap;
+}
+.brand-small-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.4;
+  text-align: left;
 }
 
 /* ===== 선택 카드 ===== */

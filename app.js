@@ -730,7 +730,19 @@
   galleryUploadModal.addEventListener('click', (e) => { if (e.target === galleryUploadModal) closeGalleryUpload(); });
   galleryUploadForm.addEventListener('submit', handleGalleryUploadSubmit);
 
+  function goFirstScreen() {
+    if (state.currentScreen === 'editor') {
+      handleHome();
+      return;
+    }
+    showScreen('ratio');
+  }
+
   document.getElementById('btn-home').addEventListener('click', handleHome);
+  document.getElementById('btn-back-step').addEventListener('click', handleBackStep);
+  document.querySelectorAll('[data-go-home]').forEach(el => {
+    el.addEventListener('click', goFirstScreen);
+  });
 
   function openHelp() { helpModal.classList.add('open'); }
   function closeHelp() { helpModal.classList.remove('open'); }

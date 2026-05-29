@@ -14,13 +14,13 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
   <div id="screen-ratio" class="screen active">
     <div class="screen-inner">
-      <h1 class="brand">PIXEL WORLD</h1>
+      <button type="button" class="brand brand-link" data-go-home aria-label="첫 화면으로 이동">PIXEL WORLD</button>
       <p class="brand-sub">나만의 픽셀아트를 만들어 보아요!</p>
 
       <h2 class="screen-title">1단계 · 캔버스 모양을 골라요</h2>
@@ -49,7 +49,7 @@
   <!-- 2단계: 픽셀 수 선택 -->
   <div id="screen-size" class="screen">
     <div class="screen-inner">
-      <h1 class="brand">PIXEL WORLD</h1>
+      <button type="button" class="brand brand-link" data-go-home aria-label="첫 화면으로 이동">PIXEL WORLD</button>
       <p class="brand-sub">픽셀 칸 수를 정해요</p>
 
       <h2 class="screen-title">2단계 · 그림 크기를 골라요</h2>
@@ -81,10 +81,13 @@
   <div id="screen-editor" class="screen">
     <header class="topbar">
       <div class="topbar-left">
-        <button class="icon-btn" id="btn-home" title="홈으로">
+        <button class="icon-btn" id="btn-back-step" title="이전 단계" aria-label="이전 단계로 이동">
+          <span class="material-icons">arrow_back</span>
+        </button>
+        <button class="icon-btn" id="btn-home" title="홈으로" aria-label="홈으로 이동">
           <span class="material-icons">home</span>
         </button>
-        <h1 class="brand-small">PIXEL WORLD</h1>
+        <button type="button" class="brand-small brand-link brand-small-link" data-go-home aria-label="첫 화면으로 이동">PIXEL WORLD</button>
       </div>
 
       <div class="topbar-tools">
@@ -370,6 +373,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>

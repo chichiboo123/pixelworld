@@ -582,7 +582,14 @@
       btn.type = 'button';
       btn.className = 'gallery-tab';
       btn.classList.toggle('active', galleryRatioFilter === key);
-      btn.textContent = `${label} ${counts[key] || 0}`;
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'gallery-tab-label';
+      labelSpan.textContent = label;
+      const countSpan = document.createElement('span');
+      countSpan.className = 'gallery-tab-count';
+      countSpan.textContent = counts[key] || 0;
+      btn.appendChild(labelSpan);
+      btn.appendChild(countSpan);
       btn.addEventListener('click', () => {
         galleryRatioFilter = key;
         renderGalleryList();

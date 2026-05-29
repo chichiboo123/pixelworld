@@ -104,7 +104,7 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 
 | 요청 | 설명 | 반환 예시 |
 |------|------|----------|
-| `GET ?action=list` | 최신 도안 목록 | `[{ cols, rows, legend, cells, title, ... }]` |
+| `GET ?action=list` | 최신 도안 목록 | `[{ cols, rows, legend, cells, title, author, ratio, ... }]` |
 | `POST` (text/plain JSON) | 도안 저장 | `{ ok: true, id: "uuid" }` |
 
 > 앱은 CORS preflight를 피하기 위해 `Content-Type: text/plain`으로 POST를 보냅니다.
@@ -113,6 +113,8 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 
 ## 저장되는 스프레드시트 형식
 
-| A열: id | B열: title | C열: createdAt | D열: payload (JSON) |
-|---------|-----------|----------------|---------------------|
-| uuid | 도안 이름 | ISO 날짜 | `{ type, cols, rows, legend, cells, ... }` |
+| A열: id | B열: title | C열: author | D열: createdAt | E열: payload (JSON) |
+|---------|-----------|----------------|----------------|---------------------|
+| uuid | 도안 이름 | 작가(만든이) | ISO 날짜 | `{ type, title, author, ratio, cols, rows, legend, cells, ... }` |
+
+기존 4열(`id/title/createdAt/payload`) 형식으로 만들어진 시트는 새 코드 실행 시 `author` 열이 자동으로 추가됩니다.

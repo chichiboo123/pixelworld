@@ -45,23 +45,34 @@ function getSheet_() {
   var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
-    sh.appendRow(['id', 'title', 'createdAt', 'payload']);
+    sh.appendRow(['id', 'title', 'author', 'createdAt', 'payload']);
   }
+  migrateSheet_(sh);
   return sh;
+}
+
+function migrateSheet_(sh) {
+  var lastCol = Math.max(sh.getLastColumn(), 4);
+  var header = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+  if (header[0] === 'id' && header[1] === 'title' && header[2] === 'createdAt' && header[3] === 'payload') {
+    sh.insertColumnAfter(2);
+    sh.getRange(1, 3).setValue('author');
+  }
 }
 
 function listPatterns_() {
   var sh = getSheet_();
   var last = sh.getLastRow();
   if (last < 2) return [];
-  var rows = sh.getRange(2, 1, last - 1, 4).getValues();
+  var rows = sh.getRange(2, 1, last - 1, 5).getValues();
   var out = [];
   for (var i = rows.length - 1; i >= 0 && out.length < MAX_LIST; i--) {
     try {
-      var payload = JSON.parse(rows[i][3]);
+      var payload = JSON.parse(rows[i][4]);
       payload.id = rows[i][0];
       payload.title = rows[i][1];
-      payload.createdAt = rows[i][2];
+      payload.author = rows[i][2] || payload.author || '';
+      payload.createdAt = rows[i][3];
       out.push(payload);
     } catch (err) { /* 잘못된 행은 건너뜀 */ }
   }
@@ -76,10 +87,13 @@ function savePattern_(data) {
   var id = Utilities.getUuid();
   var createdAt = new Date().toISOString();
   var title = String(data.title || '제목 없음').slice(0, 60);
+  var author = String(data.author || '익명').slice(0, 40);
   var payload = {
     app: 'pixelworld',
     type: 'pattern',
     version: 1,
+    title: title,
+    author: author,
     ratio: data.ratio || 'square',
     sizeKey: data.sizeKey || 'medium',
     cols: data.cols,
@@ -87,7 +101,7 @@ function savePattern_(data) {
     legend: data.legend,
     cells: data.cells
   };
-  sh.appendRow([id, title, createdAt, JSON.stringify(payload)]);
+  sh.appendRow([id, title, author, createdAt, JSON.stringify(payload)]);
   return { id: id };
 }
 

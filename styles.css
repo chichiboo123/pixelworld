@@ -147,6 +147,12 @@ body { padding-bottom: var(--footer-h); }
   border-color: var(--primary);
   box-shadow: 0 10px 24px rgba(76, 141, 255, 0.22);
 }
+.choice-figure {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .choice-preview {
   background: repeating-conic-gradient(#eef3ff 0% 25%, #fff 0% 50%) 50% / 14px 14px;
   border: 2px dashed var(--primary-soft);
@@ -174,7 +180,14 @@ body { padding-bottom: var(--footer-h); }
   align-items: center;
   gap: 6px;
 }
-.choice-desc { font-size: 14px; color: var(--text-soft); }
+.choice-desc {
+  font-size: 14px;
+  color: var(--text-soft);
+  text-align: center;
+  line-height: 1.45;
+  word-break: keep-all;
+  text-wrap: balance;
+}
 .btn-back { margin-top: 22px; }
 
 /* ===== 기본 버튼 ===== */
@@ -1071,18 +1084,18 @@ body { padding-bottom: var(--footer-h); }
   list-style: none;
   counter-reset: help-step;
   color: var(--text-soft);
-  line-height: 1.35;
+  line-height: 1.5;
   font-size: 13.5px;
 }
 .help-list li {
   counter-increment: help-step;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 10px;
   min-height: 34px;
-  padding: 7px 10px;
+  padding: 10px 12px;
   border-radius: 12px;
-  white-space: nowrap;
+  white-space: normal;
 }
 .help-list li:nth-child(odd) { background: #f7f9ff; }
 .help-list li::before {

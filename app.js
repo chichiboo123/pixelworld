@@ -47,6 +47,7 @@
   let referenceFloatPos = null; // 세로모드 플로팅 패널 위치 (세션 한정)
   let galleryItems = [];
   let galleryRatioFilter = 'all';
+  let adminPassword = '';
 
   // ===== DOM =====
   const screens = {
@@ -79,6 +80,12 @@
   const galleryUploadAuthor = document.getElementById('gallery-upload-author');
   const galleryUploadAgree = document.getElementById('gallery-upload-agree');
   const helpModal = document.getElementById('help-modal');
+  const adminModal = document.getElementById('admin-modal');
+  const adminLoginForm = document.getElementById('admin-login-form');
+  const adminPasswordInput = document.getElementById('admin-password');
+  const adminDashboard = document.getElementById('admin-dashboard');
+  const adminSummary = document.getElementById('admin-summary');
+  const adminList = document.getElementById('admin-list');
   const toastEl = document.getElementById('toast');
   const modalEl = document.getElementById('modal-confirm');
   const modalTitle = document.getElementById('modal-title');
@@ -731,6 +738,163 @@
   document.getElementById('btn-help-top').addEventListener('click', openHelp);
   document.getElementById('help-close').addEventListener('click', closeHelp);
   helpModal.addEventListener('click', (e) => { if (e.target === helpModal) closeHelp(); });
+
+  // ===== 관리자 모드 =====
+  function openAdmin() {
+    if (!GALLERY_API_URL) { toast('갤러리 서버가 설정되지 않았어요.'); return; }
+    adminModal.classList.add('open');
+    if (adminPassword) {
+      showAdminDashboard();
+      loadAdminList();
+    } else {
+      adminLoginForm.hidden = false;
+      adminDashboard.hidden = true;
+      adminPasswordInput.value = '';
+      setTimeout(() => adminPasswordInput.focus(), 0);
+    }
+  }
+
+  function closeAdmin() {
+    adminModal.classList.remove('open');
+  }
+
+  function showAdminDashboard() {
+    adminLoginForm.hidden = true;
+    adminDashboard.hidden = false;
+  }
+
+  async function adminApi(action, payload = {}) {
+    const res = await fetch(GALLERY_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, password: adminPassword, ...payload })
+    });
+    const json = await res.json();
+    if (!res.ok || !json || json.ok === false) {
+      throw new Error(json && json.error ? json.error : 'admin api failed');
+    }
+    return json;
+  }
+
+  async function handleAdminLogin(e) {
+    e.preventDefault();
+    adminPassword = adminPasswordInput.value.trim();
+    if (!adminPassword) return;
+    showAdminDashboard();
+    await loadAdminList();
+  }
+
+  async function loadAdminList() {
+    adminSummary.textContent = '도안을 불러오는 중...';
+    adminList.innerHTML = '';
+    try {
+      const json = await adminApi('admin-list');
+      renderAdminList(Array.isArray(json.items) ? json.items : []);
+    } catch (err) {
+      adminPassword = '';
+      adminLoginForm.hidden = false;
+      adminDashboard.hidden = true;
+      toast('관리자 비밀번호를 확인해 주세요.');
+      setTimeout(() => adminPasswordInput.focus(), 0);
+    }
+  }
+
+  function renderAdminList(items) {
+    adminSummary.textContent = `총 ${items.length}개의 도안`;
+    adminList.innerHTML = '';
+    if (!items.length) {
+      const empty = document.createElement('p');
+      empty.className = 'gallery-msg';
+      empty.textContent = '관리할 도안이 아직 없어요.';
+      adminList.appendChild(empty);
+      return;
+    }
+    items.forEach(item => {
+      const row = document.createElement('form');
+      row.className = 'admin-item';
+      row.dataset.id = item.id || '';
+
+      const img = document.createElement('img');
+      img.className = 'admin-thumb';
+      img.alt = `${item.title || '도안'} 미리보기`;
+      try { img.src = renderPatternThumb(item, 96); } catch (_) {}
+
+      const fields = document.createElement('div');
+      fields.className = 'admin-fields';
+      fields.innerHTML =
+        '<label class="field-label">작품명</label>' +
+        '<input class="text-field admin-title-input" maxlength="60" required />' +
+        '<label class="field-label">작가(만든이)</label>' +
+        '<input class="text-field admin-author-input" maxlength="40" required />' +
+        '<p class="admin-meta"></p>';
+      fields.querySelector('.admin-title-input').value = item.title || '';
+      fields.querySelector('.admin-author-input').value = item.author || '';
+      fields.querySelector('.admin-meta').textContent = `${ratioLabel(getPatternRatio(item))} · ${item.cols || '?'}×${item.rows || '?'} · ${item.createdAt || '날짜 없음'}`;
+
+      const actions = document.createElement('div');
+      actions.className = 'admin-actions';
+      const saveBtn = document.createElement('button');
+      saveBtn.type = 'submit';
+      saveBtn.className = 'btn btn-primary btn-small';
+      saveBtn.innerHTML = '<span class="material-icons">save</span> 수정';
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'btn btn-ghost btn-small admin-delete';
+      deleteBtn.innerHTML = '<span class="material-icons">delete</span> 삭제';
+      actions.appendChild(saveBtn);
+      actions.appendChild(deleteBtn);
+
+      row.appendChild(img);
+      row.appendChild(fields);
+      row.appendChild(actions);
+      adminList.appendChild(row);
+    });
+  }
+
+  async function handleAdminListSubmit(e) {
+    const row = e.target.closest('.admin-item');
+    if (!row) return;
+    e.preventDefault();
+    const id = row.dataset.id;
+    const title = row.querySelector('.admin-title-input').value.trim();
+    const author = row.querySelector('.admin-author-input').value.trim();
+    if (!id || !title || !author) { toast('작품명과 작가를 확인해 주세요.'); return; }
+    try {
+      await adminApi('admin-update', { id, title, author });
+      toast('도안을 수정했어요.');
+      loadAdminList();
+      if (galleryModal.classList.contains('open')) loadGalleryList();
+    } catch (err) {
+      toast('도안을 수정하지 못했어요.');
+    }
+  }
+
+  async function handleAdminListClick(e) {
+    const btn = e.target.closest('.admin-delete');
+    if (!btn) return;
+    const row = btn.closest('.admin-item');
+    const id = row && row.dataset.id;
+    if (!id) return;
+    const title = row.querySelector('.admin-title-input').value.trim() || '이 도안';
+    const ok = await showConfirm('도안 삭제', `「${title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.`);
+    if (!ok) return;
+    try {
+      await adminApi('admin-delete', { id });
+      toast('도안을 삭제했어요.');
+      loadAdminList();
+      if (galleryModal.classList.contains('open')) loadGalleryList();
+    } catch (err) {
+      toast('도안을 삭제하지 못했어요.');
+    }
+  }
+
+  document.getElementById('btn-admin').addEventListener('click', openAdmin);
+  document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-refresh').addEventListener('click', loadAdminList);
+  adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdmin(); });
+  adminLoginForm.addEventListener('submit', handleAdminLogin);
+  adminList.addEventListener('submit', handleAdminListSubmit);
+  adminList.addEventListener('click', handleAdminListClick);
 
   // ===== 팔레트 =====
   function buildPalette() {

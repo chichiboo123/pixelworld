@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=8" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -266,10 +266,10 @@
         </button>
       </div>
       <ol class="help-list">
-        <li><strong>모양과 크기 선택</strong> — 첫 화면에서 새 캔버스를 만들거나 도안 갤러리를 열어요.</li>
-        <li><strong>색칠하기</strong> — 색을 고르고 칸을 누르면 칠해져요. 같은 색 칸을 다시 누르면 지워져요.</li>
-        <li><strong>도안 사용</strong> — 도안 갤러리에서 원하는 그림을 누르면 번호 색칠 화면으로 바로 열려요.</li>
-        <li><strong>저장·공유</strong> — 더보기(⋮)에서 이미지 저장, 링크 공유, 도안 만들기, 갤러리 올리기를 할 수 있어요.</li>
+        <li><strong>모양/크기</strong><span>새 캔버스 또는 도안 갤러리 선택</span></li>
+        <li><strong>색칠</strong><span>색 선택 후 칸 터치, 같은 색은 한 번 더 터치해 지우기</span></li>
+        <li><strong>도안</strong><span>갤러리 도안을 누르면 번호 색칠로 바로 열림</span></li>
+        <li><strong>저장/공유</strong><span>더보기(⋮)에서 이미지 저장·링크 공유·갤러리 올리기</span></li>
       </ol>
     </div>
   </div>
@@ -321,6 +321,44 @@
     </div>
   </div>
 
+
+  <!-- 관리자 모드 -->
+  <button class="admin-fab" id="btn-admin" type="button" title="관리자 모드" aria-label="관리자 모드 열기">
+    <span class="material-icons">star</span>
+  </button>
+
+  <div class="modal" id="admin-modal">
+    <div class="modal-card admin-card">
+      <div class="gallery-head">
+        <h3 class="modal-title gallery-title-head">
+          <span class="material-icons">admin_panel_settings</span> 관리자 모드
+        </h3>
+        <button class="icon-btn icon-btn-sm" id="admin-close" title="닫기">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <form class="admin-login" id="admin-login-form">
+        <p class="admin-hint">갤러리에 올라온 도안을 스프레드시트에 가지 않고 관리합니다.</p>
+        <label class="field-label" for="admin-password">관리자 비밀번호</label>
+        <input class="text-field" id="admin-password" type="password" autocomplete="current-password" required placeholder="Apps Script 속성의 ADMIN_PASSWORD" />
+        <button class="btn btn-primary" type="submit">
+          <span class="material-icons">login</span> 입장
+        </button>
+      </form>
+
+      <section class="admin-dashboard" id="admin-dashboard" hidden>
+        <div class="admin-toolbar">
+          <p class="admin-hint" id="admin-summary">도안을 불러오는 중...</p>
+          <button class="btn btn-ghost btn-small" type="button" id="admin-refresh">
+            <span class="material-icons">refresh</span> 새로고침
+          </button>
+        </div>
+        <div class="admin-list" id="admin-list"></div>
+      </section>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <input type="file" id="input-load-json" accept="application/json" hidden />
@@ -332,6 +370,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

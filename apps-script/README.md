@@ -81,7 +81,23 @@ PIXEL WORLD의 **도안 갤러리**는 구글 스프레드시트를 저장소로
 
 ---
 
-### 6단계. 앱에 URL 연결
+### 6단계. 관리자 비밀번호 설정
+
+관리자 모드에서 갤러리 도안을 수정·삭제하려면 Apps Script의 **스크립트 속성**에 비밀번호를 저장해야 합니다.
+
+1. Apps Script 왼쪽 메뉴에서 **프로젝트 설정(톱니바퀴)** 을 엽니다.
+2. **스크립트 속성** 섹션에서 **스크립트 속성 추가**를 누릅니다.
+3. 아래처럼 입력하고 저장합니다.
+
+   | 속성 | 값 |
+   |------|-----|
+   | `ADMIN_PASSWORD` | 관리자 모드에서 사용할 비밀번호 |
+
+또는 `Code.gs`의 `setAdminPasswordExample` 함수를 원하는 값으로 바꾼 뒤 한 번 실행해도 됩니다.
+
+---
+
+### 7단계. 앱에 URL 연결
 
 `app.js` 상단의 `GALLERY_API_URL` 상수에 복사한 URL을 붙여넣습니다:
 
@@ -106,6 +122,9 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 |------|------|----------|
 | `GET ?action=list` | 최신 도안 목록 | `[{ cols, rows, legend, cells, title, author, ratio, ... }]` |
 | `POST` (text/plain JSON) | 도안 저장 | `{ ok: true, id: "uuid" }` |
+| `POST` `{ action: "admin-list", password }` | 관리자 도안 목록 | `{ ok: true, items: [...] }` |
+| `POST` `{ action: "admin-update", password, id, title, author }` | 도안 작품명/작가 수정 | `{ ok: true, item: {...} }` |
+| `POST` `{ action: "admin-delete", password, id }` | 도안 삭제 | `{ ok: true }` |
 
 > 앱은 CORS preflight를 피하기 위해 `Content-Type: text/plain`으로 POST를 보냅니다.
 
@@ -118,3 +137,5 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 | uuid | 도안 이름 | 작가(만든이) | ISO 날짜 | `{ type, title, author, ratio, cols, rows, legend, cells, ... }` |
 
 기존 4열(`id/title/createdAt/payload`) 형식으로 만들어진 시트는 새 코드 실행 시 `author` 열이 자동으로 추가됩니다.
+
+> 관리자 수정·삭제 API는 `ADMIN_PASSWORD` 스크립트 속성과 요청 본문의 `password`가 일치할 때만 동작합니다. 수정은 작품명과 작가(만든이) 메타데이터를 바꾸고, 삭제는 해당 행을 스프레드시트에서 제거합니다.

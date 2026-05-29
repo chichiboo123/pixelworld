@@ -45,6 +45,9 @@
   let isPointerDown = false;
   let modalResolver = null;
   let referenceFloatPos = null; // 세로모드 플로팅 패널 위치 (세션 한정)
+  let galleryItems = [];
+  let galleryRatioFilter = 'all';
+  let adminPassword = '';
 
   // ===== DOM =====
   const screens = {
@@ -69,7 +72,20 @@
   const patternLegendActions = document.getElementById('pattern-legend-actions');
   const patternLegendItems = document.getElementById('pattern-legend-items');
   const galleryModal = document.getElementById('gallery-modal');
+  const galleryTabs = document.getElementById('gallery-tabs');
   const galleryBody = document.getElementById('gallery-body');
+  const galleryUploadModal = document.getElementById('gallery-upload-modal');
+  const galleryUploadForm = document.getElementById('gallery-upload-form');
+  const galleryUploadTitle = document.getElementById('gallery-upload-title');
+  const galleryUploadAuthor = document.getElementById('gallery-upload-author');
+  const galleryUploadAgree = document.getElementById('gallery-upload-agree');
+  const helpModal = document.getElementById('help-modal');
+  const adminModal = document.getElementById('admin-modal');
+  const adminLoginForm = document.getElementById('admin-login-form');
+  const adminPasswordInput = document.getElementById('admin-password');
+  const adminDashboard = document.getElementById('admin-dashboard');
+  const adminSummary = document.getElementById('admin-summary');
+  const adminList = document.getElementById('admin-list');
   const toastEl = document.getElementById('toast');
   const modalEl = document.getElementById('modal-confirm');
   const modalTitle = document.getElementById('modal-title');
@@ -133,7 +149,7 @@
   });
 
   // ===== 1단계 =====
-  document.querySelectorAll('#screen-ratio .choice-card').forEach(card => {
+  document.querySelectorAll('#screen-ratio .choice-card[data-ratio]').forEach(card => {
     card.addEventListener('click', () => {
       state.ratio = card.dataset.ratio;
       updateSizeLabels();
@@ -141,6 +157,7 @@
     });
   });
   document.getElementById('btn-back-to-ratio').addEventListener('click', () => showScreen('ratio'));
+  document.getElementById('btn-gallery-home').addEventListener('click', handleGallery);
 
   function updateSizeLabels() {
     const presets = SIZE_PRESETS[state.ratio];
@@ -508,6 +525,7 @@
   // ===== 도안 갤러리 =====
   function handleGallery() {
     galleryModal.classList.add('open');
+    galleryRatioFilter = 'all';
     loadGalleryList();
   }
   function closeGallery() {
@@ -516,53 +534,106 @@
   document.getElementById('gallery-close').addEventListener('click', closeGallery);
   galleryModal.addEventListener('click', (e) => { if (e.target === galleryModal) closeGallery(); });
 
+  function ratioLabel(ratio) {
+    return { landscape: '가로', square: '정사각형', portrait: '세로' }[ratio] || '기타';
+  }
+
+  function getPatternRatio(item) {
+    if (item && ['landscape', 'square', 'portrait'].includes(item.ratio)) return item.ratio;
+    if (!item || !item.cols || !item.rows) return 'square';
+    if (item.cols > item.rows) return 'landscape';
+    if (item.cols < item.rows) return 'portrait';
+    return 'square';
+  }
+
   async function loadGalleryList() {
     if (!GALLERY_API_URL) {
+      if (galleryTabs) galleryTabs.hidden = true;
       galleryBody.innerHTML =
         '<p class="gallery-msg">아직 갤러리 서버가 연결되지 않았어요.<br>' +
         'Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>' +
         '친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)</p>';
       return;
     }
+    if (galleryTabs) galleryTabs.hidden = true;
     galleryBody.innerHTML = '<p class="gallery-msg">도안을 불러오는 중...</p>';
     try {
       const res = await fetch(GALLERY_API_URL + '?action=list');
       const json = await res.json();
-      const list = Array.isArray(json) ? json : (json.items || []);
-      renderGalleryList(list);
+      galleryItems = Array.isArray(json) ? json : (json.items || []);
+      renderGalleryList();
     } catch (err) {
       galleryBody.innerHTML = '<p class="gallery-msg">갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</p>';
     }
   }
 
-  function renderGalleryList(list) {
-    if (!list.length) {
+  function renderGalleryTabs() {
+    if (!galleryTabs) return;
+    const counts = { all: galleryItems.length, landscape: 0, square: 0, portrait: 0 };
+    galleryItems.forEach(item => { counts[getPatternRatio(item)] = (counts[getPatternRatio(item)] || 0) + 1; });
+    galleryTabs.innerHTML = '';
+    [
+      ['all', '전체'],
+      ['landscape', '가로'],
+      ['square', '정사각형'],
+      ['portrait', '세로']
+    ].forEach(([key, label]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gallery-tab';
+      btn.classList.toggle('active', galleryRatioFilter === key);
+      btn.textContent = `${label} ${counts[key] || 0}`;
+      btn.addEventListener('click', () => {
+        galleryRatioFilter = key;
+        renderGalleryList();
+      });
+      galleryTabs.appendChild(btn);
+    });
+    galleryTabs.hidden = false;
+  }
+
+  function renderGalleryList() {
+    renderGalleryTabs();
+    const list = galleryRatioFilter === 'all'
+      ? galleryItems
+      : galleryItems.filter(item => getPatternRatio(item) === galleryRatioFilter);
+    if (!galleryItems.length) {
       galleryBody.innerHTML = '<p class="gallery-msg">아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!</p>';
+      return;
+    }
+    if (!list.length) {
+      galleryBody.innerHTML = `<p class="gallery-msg">${ratioLabel(galleryRatioFilter)} 비율 도안이 아직 없어요.</p>`;
       return;
     }
     galleryBody.innerHTML = '';
     const grid = document.createElement('div');
     grid.className = 'gallery-grid';
     list.forEach(item => {
-      const card = document.createElement('div');
+      const ratio = getPatternRatio(item);
+      const card = document.createElement('button');
+      card.type = 'button';
       card.className = 'gallery-item';
+      card.addEventListener('click', () => {
+        try { loadPatternData(item); closeGallery(); toast('도안을 불러왔어요! 번호에 맞게 색칠해 보세요.'); }
+        catch (_) { toast('이 도안을 불러올 수 없어요.'); }
+      });
       const img = document.createElement('img');
       img.className = 'gallery-thumb';
-      img.alt = '도안 미리보기';
+      img.alt = `${item.title || '도안'} 미리보기`;
       try { img.src = renderPatternThumb(item, 160); } catch (_) {}
       const title = document.createElement('div');
       title.className = 'gallery-title';
       title.textContent = item.title || '도안';
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-primary btn-small';
-      btn.innerHTML = '<span class="material-icons">brush</span> 색칠하기';
-      btn.addEventListener('click', () => {
-        try { loadPatternData(item); closeGallery(); }
-        catch (_) { toast('이 도안을 불러올 수 없어요.'); }
-      });
+      const meta = document.createElement('div');
+      meta.className = 'gallery-meta';
+      meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}`;
+      const action = document.createElement('span');
+      action.className = 'btn btn-primary btn-small gallery-action';
+      action.innerHTML = '<span class="material-icons">brush</span> 색칠하기';
       card.appendChild(img);
       card.appendChild(title);
-      card.appendChild(btn);
+      card.appendChild(meta);
+      card.appendChild(action);
       grid.appendChild(card);
     });
     galleryBody.appendChild(grid);
@@ -594,14 +665,42 @@
     return c.toDataURL('image/png');
   }
 
-  async function submitToGallery() {
+  function submitToGallery() {
     if (!GALLERY_API_URL) { toast('갤러리 서버가 설정되지 않았어요.'); return; }
     if (!state.patternCells || !state.patternLegend) return;
-    const title = prompt('도안 이름을 정해 주세요!', '내 도안');
-    if (title === null) return;
+    galleryUploadForm.reset();
+    galleryUploadTitle.value = '';
+    galleryUploadAuthor.value = '';
+    galleryUploadAgree.checked = false;
+    galleryUploadModal.classList.add('open');
+    setTimeout(() => galleryUploadTitle.focus(), 0);
+  }
+
+  function closeGalleryUpload() {
+    galleryUploadModal.classList.remove('open');
+  }
+
+  async function handleGalleryUploadSubmit(e) {
+    e.preventDefault();
+    if (!galleryUploadAgree.checked) {
+      toast('공유 안내에 동의해야 제출할 수 있어요.');
+      return;
+    }
+    const title = galleryUploadTitle.value.trim();
+    const author = galleryUploadAuthor.value.trim();
+    if (!title || !author) {
+      toast('작품명과 작가를 모두 적어 주세요.');
+      return;
+    }
+    const ok = await showConfirm(
+      '갤러리 공유 확인',
+      '제출하면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료가 아닌지 다시 확인했나요?'
+    );
+    if (!ok) return;
     toast('갤러리에 올리는 중...');
     const payload = {
-      title: title || '내 도안',
+      title,
+      author,
       ratio: state.ratio,
       sizeKey: state.sizeKey,
       cols: state.cols,
@@ -611,18 +710,191 @@
     };
     try {
       // text/plain 으로 보내 CORS preflight 를 피한다 (Apps Script 호환)
-      await fetch(GALLERY_API_URL, {
+      const res = await fetch(GALLERY_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
+      let json = null;
+      try { json = await res.json(); } catch (_) {}
+      if (!res.ok || (json && json.ok === false)) throw new Error(json && json.error ? json.error : 'upload failed');
+      closeGalleryUpload();
       toast('갤러리에 올렸어요!');
     } catch (err) {
       toast('갤러리에 올리지 못했어요.');
     }
   }
 
+  document.getElementById('gallery-upload-close').addEventListener('click', closeGalleryUpload);
+  document.getElementById('gallery-upload-cancel').addEventListener('click', closeGalleryUpload);
+  galleryUploadModal.addEventListener('click', (e) => { if (e.target === galleryUploadModal) closeGalleryUpload(); });
+  galleryUploadForm.addEventListener('submit', handleGalleryUploadSubmit);
+
   document.getElementById('btn-home').addEventListener('click', handleHome);
+
+  function openHelp() { helpModal.classList.add('open'); }
+  function closeHelp() { helpModal.classList.remove('open'); }
+  document.getElementById('btn-help-floating').addEventListener('click', openHelp);
+  document.getElementById('btn-help-top').addEventListener('click', openHelp);
+  document.getElementById('help-close').addEventListener('click', closeHelp);
+  helpModal.addEventListener('click', (e) => { if (e.target === helpModal) closeHelp(); });
+
+  // ===== 관리자 모드 =====
+  function openAdmin() {
+    if (!GALLERY_API_URL) { toast('갤러리 서버가 설정되지 않았어요.'); return; }
+    adminModal.classList.add('open');
+    if (adminPassword) {
+      showAdminDashboard();
+      loadAdminList();
+    } else {
+      adminLoginForm.hidden = false;
+      adminDashboard.hidden = true;
+      adminPasswordInput.value = '';
+      setTimeout(() => adminPasswordInput.focus(), 0);
+    }
+  }
+
+  function closeAdmin() {
+    adminModal.classList.remove('open');
+  }
+
+  function showAdminDashboard() {
+    adminLoginForm.hidden = true;
+    adminDashboard.hidden = false;
+  }
+
+  async function adminApi(action, payload = {}) {
+    const res = await fetch(GALLERY_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, password: adminPassword, ...payload })
+    });
+    const json = await res.json();
+    if (!res.ok || !json || json.ok === false) {
+      throw new Error(json && json.error ? json.error : 'admin api failed');
+    }
+    return json;
+  }
+
+  async function handleAdminLogin(e) {
+    e.preventDefault();
+    adminPassword = adminPasswordInput.value.trim();
+    if (!adminPassword) return;
+    showAdminDashboard();
+    await loadAdminList();
+  }
+
+  async function loadAdminList() {
+    adminSummary.textContent = '도안을 불러오는 중...';
+    adminList.innerHTML = '';
+    try {
+      const json = await adminApi('admin-list');
+      renderAdminList(Array.isArray(json.items) ? json.items : []);
+    } catch (err) {
+      adminPassword = '';
+      adminLoginForm.hidden = false;
+      adminDashboard.hidden = true;
+      toast('관리자 비밀번호를 확인해 주세요.');
+      setTimeout(() => adminPasswordInput.focus(), 0);
+    }
+  }
+
+  function renderAdminList(items) {
+    adminSummary.textContent = `총 ${items.length}개의 도안`;
+    adminList.innerHTML = '';
+    if (!items.length) {
+      const empty = document.createElement('p');
+      empty.className = 'gallery-msg';
+      empty.textContent = '관리할 도안이 아직 없어요.';
+      adminList.appendChild(empty);
+      return;
+    }
+    items.forEach(item => {
+      const row = document.createElement('form');
+      row.className = 'admin-item';
+      row.dataset.id = item.id || '';
+
+      const img = document.createElement('img');
+      img.className = 'admin-thumb';
+      img.alt = `${item.title || '도안'} 미리보기`;
+      try { img.src = renderPatternThumb(item, 96); } catch (_) {}
+
+      const fields = document.createElement('div');
+      fields.className = 'admin-fields';
+      fields.innerHTML =
+        '<label class="field-label">작품명</label>' +
+        '<input class="text-field admin-title-input" maxlength="60" required />' +
+        '<label class="field-label">작가(만든이)</label>' +
+        '<input class="text-field admin-author-input" maxlength="40" required />' +
+        '<p class="admin-meta"></p>';
+      fields.querySelector('.admin-title-input').value = item.title || '';
+      fields.querySelector('.admin-author-input').value = item.author || '';
+      fields.querySelector('.admin-meta').textContent = `${ratioLabel(getPatternRatio(item))} · ${item.cols || '?'}×${item.rows || '?'} · ${item.createdAt || '날짜 없음'}`;
+
+      const actions = document.createElement('div');
+      actions.className = 'admin-actions';
+      const saveBtn = document.createElement('button');
+      saveBtn.type = 'submit';
+      saveBtn.className = 'btn btn-primary btn-small';
+      saveBtn.innerHTML = '<span class="material-icons">save</span> 수정';
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'btn btn-ghost btn-small admin-delete';
+      deleteBtn.innerHTML = '<span class="material-icons">delete</span> 삭제';
+      actions.appendChild(saveBtn);
+      actions.appendChild(deleteBtn);
+
+      row.appendChild(img);
+      row.appendChild(fields);
+      row.appendChild(actions);
+      adminList.appendChild(row);
+    });
+  }
+
+  async function handleAdminListSubmit(e) {
+    const row = e.target.closest('.admin-item');
+    if (!row) return;
+    e.preventDefault();
+    const id = row.dataset.id;
+    const title = row.querySelector('.admin-title-input').value.trim();
+    const author = row.querySelector('.admin-author-input').value.trim();
+    if (!id || !title || !author) { toast('작품명과 작가를 확인해 주세요.'); return; }
+    try {
+      await adminApi('admin-update', { id, title, author });
+      toast('도안을 수정했어요.');
+      loadAdminList();
+      if (galleryModal.classList.contains('open')) loadGalleryList();
+    } catch (err) {
+      toast('도안을 수정하지 못했어요.');
+    }
+  }
+
+  async function handleAdminListClick(e) {
+    const btn = e.target.closest('.admin-delete');
+    if (!btn) return;
+    const row = btn.closest('.admin-item');
+    const id = row && row.dataset.id;
+    if (!id) return;
+    const title = row.querySelector('.admin-title-input').value.trim() || '이 도안';
+    const ok = await showConfirm('도안 삭제', `「${title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.`);
+    if (!ok) return;
+    try {
+      await adminApi('admin-delete', { id });
+      toast('도안을 삭제했어요.');
+      loadAdminList();
+      if (galleryModal.classList.contains('open')) loadGalleryList();
+    } catch (err) {
+      toast('도안을 삭제하지 못했어요.');
+    }
+  }
+
+  document.getElementById('btn-admin').addEventListener('click', openAdmin);
+  document.getElementById('admin-close').addEventListener('click', closeAdmin);
+  document.getElementById('admin-refresh').addEventListener('click', loadAdminList);
+  adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdmin(); });
+  adminLoginForm.addEventListener('submit', handleAdminLogin);
+  adminList.addEventListener('submit', handleAdminListSubmit);
+  adminList.addEventListener('click', handleAdminListClick);
 
   // ===== 팔레트 =====
   function buildPalette() {

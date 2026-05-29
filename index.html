@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -24,7 +24,7 @@
       <p class="brand-sub">나만의 픽셀아트를 만들어 보아요!</p>
 
       <h2 class="screen-title">1단계 · 캔버스 모양을 골라요</h2>
-      <div class="choice-grid">
+      <div class="choice-grid choice-grid-home">
         <button class="choice-card" data-ratio="landscape">
           <div class="choice-preview preview-landscape"></div>
           <div class="choice-label"><span class="material-icons">crop_landscape</span> 가로 모드</div>
@@ -36,6 +36,11 @@
         <button class="choice-card" data-ratio="portrait">
           <div class="choice-preview preview-portrait"></div>
           <div class="choice-label"><span class="material-icons">crop_portrait</span> 세로 모드</div>
+        </button>
+        <button class="choice-card choice-card-gallery" id="btn-gallery-home" type="button">
+          <div class="choice-preview preview-gallery"><span class="material-icons">collections</span></div>
+          <div class="choice-label"><span class="material-icons">collections</span> 도안 갤러리</div>
+          <div class="choice-desc">친구들이 공유한 도안을 골라 색칠해요</div>
         </button>
       </div>
     </div>
@@ -134,6 +139,9 @@
             <span class="material-icons">redo</span>
           </button>
         </div>
+        <button class="icon-btn icon-btn-secondary" id="btn-help-top" title="사용법">
+          <span class="material-icons">help_outline</span>
+        </button>
         <div class="dropdown-wrap">
           <button class="icon-btn icon-btn-secondary" id="btn-more" title="더보기">
             <span class="material-icons">more_vert</span>
@@ -242,6 +250,30 @@
     </div>
   </div>
 
+  <!-- 사용법 -->
+  <button class="help-fab" id="btn-help-floating" type="button" title="사용법" aria-label="사용법 보기">
+    <span class="material-icons">help_outline</span>
+  </button>
+
+  <div class="modal" id="help-modal">
+    <div class="modal-card help-card">
+      <div class="gallery-head">
+        <h3 class="modal-title gallery-title-head">
+          <span class="material-icons">help_outline</span> 사용법
+        </h3>
+        <button class="icon-btn icon-btn-sm" id="help-close" title="닫기">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <ol class="help-list">
+        <li><strong>모양/크기</strong><span>새 캔버스 또는 도안 갤러리 선택</span></li>
+        <li><strong>색칠</strong><span>색 선택 후 칸 터치, 같은 색은 한 번 더 터치해 지우기</span></li>
+        <li><strong>도안</strong><span>갤러리 도안을 누르면 번호 색칠로 바로 열림</span></li>
+        <li><strong>저장/공유</strong><span>더보기(⋮)에서 이미지 저장·링크 공유·갤러리 올리기</span></li>
+      </ol>
+    </div>
+  </div>
+
   <!-- 도안 갤러리 -->
   <div class="modal" id="gallery-modal">
     <div class="modal-card gallery-card">
@@ -253,7 +285,77 @@
           <span class="material-icons">close</span>
         </button>
       </div>
+      <div class="gallery-tabs" id="gallery-tabs" hidden></div>
       <div class="gallery-body" id="gallery-body"></div>
+    </div>
+  </div>
+
+  <!-- 갤러리 업로드 -->
+  <div class="modal" id="gallery-upload-modal">
+    <div class="modal-card upload-card">
+      <div class="gallery-head">
+        <h3 class="modal-title gallery-title-head">
+          <span class="material-icons">cloud_upload</span> 갤러리에 올리기
+        </h3>
+        <button class="icon-btn icon-btn-sm" id="gallery-upload-close" title="닫기">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form class="upload-form" id="gallery-upload-form">
+        <label class="field-label" for="gallery-upload-title">작품명</label>
+        <input class="text-field" id="gallery-upload-title" name="title" type="text" maxlength="60" required placeholder="예: 무지개 고양이" />
+
+        <label class="field-label" for="gallery-upload-author">작가(만든이)</label>
+        <input class="text-field" id="gallery-upload-author" name="author" type="text" maxlength="40" required placeholder="예: 3학년 김픽셀" />
+
+        <label class="upload-agree">
+          <input type="checkbox" id="gallery-upload-agree" required />
+          <span>올리면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료를 올리지 않겠습니다.</span>
+        </label>
+
+        <div class="modal-actions">
+          <button class="btn btn-ghost" type="button" id="gallery-upload-cancel">취소</button>
+          <button class="btn btn-primary" type="submit">동의하고 제출</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- 관리자 모드 -->
+  <button class="admin-fab" id="btn-admin" type="button" title="관리자 모드" aria-label="관리자 모드 열기">
+    <span class="material-icons">star</span>
+  </button>
+
+  <div class="modal" id="admin-modal">
+    <div class="modal-card admin-card">
+      <div class="gallery-head">
+        <h3 class="modal-title gallery-title-head">
+          <span class="material-icons">admin_panel_settings</span> 관리자 모드
+        </h3>
+        <button class="icon-btn icon-btn-sm" id="admin-close" title="닫기">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <form class="admin-login" id="admin-login-form">
+        <p class="admin-hint">갤러리에 올라온 도안을 스프레드시트에 가지 않고 관리합니다.</p>
+        <label class="field-label" for="admin-password">관리자 비밀번호</label>
+        <input class="text-field" id="admin-password" type="password" autocomplete="current-password" required placeholder="Apps Script 속성의 ADMIN_PASSWORD" />
+        <button class="btn btn-primary" type="submit">
+          <span class="material-icons">login</span> 입장
+        </button>
+      </form>
+
+      <section class="admin-dashboard" id="admin-dashboard" hidden>
+        <div class="admin-toolbar">
+          <p class="admin-hint" id="admin-summary">도안을 불러오는 중...</p>
+          <button class="btn btn-ghost btn-small" type="button" id="admin-refresh">
+            <span class="material-icons">refresh</span> 새로고침
+          </button>
+        </div>
+        <div class="admin-list" id="admin-list"></div>
+      </section>
     </div>
   </div>
 
@@ -268,6 +370,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

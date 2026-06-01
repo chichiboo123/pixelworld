@@ -325,6 +325,31 @@ body { padding-bottom: var(--footer-h); }
   .pattern-return-btn { top: 14px; left: 14px; }
 }
 
+/* 도안 보기(읽기 전용) 캔버스 위 플로팅 기능 버튼 묶음 */
+.pattern-fab {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 14;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.pattern-fab[hidden] { display: none; }
+.pattern-fab .legend-action {
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(31, 42, 68, 0.24);
+}
+.pattern-fab .btn-ghost {
+  background: #fff;
+  border-color: var(--primary-soft);
+}
+.pattern-fab .btn-ghost:hover { background: #f0f4ff; }
+@media (max-width: 520px) {
+  .pattern-fab { right: 12px; bottom: 12px; gap: 8px; }
+}
+
 /* 기본(폴백): 캔버스 하단 짧은 스트립 */
 .editor-main.reference-open {
   grid-template-columns: 1fr;
@@ -483,12 +508,14 @@ body { padding-bottom: var(--footer-h); }
 .legend-action .material-icons { font-size: 16px; }
 .pattern-legend-items {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   min-width: 0;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 2px;
+  max-height: clamp(56px, 16vh, 148px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 2px 2px 2px 0;
   -webkit-overflow-scrolling: touch;
 }
 .legend-chip {

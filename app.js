@@ -71,6 +71,7 @@
   const patternLegendLabel = document.getElementById('pattern-legend-label');
   const patternLegendActions = document.getElementById('pattern-legend-actions');
   const patternLegendItems = document.getElementById('pattern-legend-items');
+  const btnReturnToDrawing = document.getElementById('btn-return-to-drawing');
   const galleryModal = document.getElementById('gallery-modal');
   const galleryTabs = document.getElementById('gallery-tabs');
   const galleryBody = document.getElementById('gallery-body');
@@ -392,7 +393,7 @@
     state.patternLegend = legend;
     applyPatternUI();
     saveLocal();
-    toast(`색상 ${legend.length}개로 도안을 만들었어요!`);
+    toast(`색상 ${legend.length}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.`);
   }
 
   function handleLoadPattern() {
@@ -443,6 +444,7 @@
     canvasWrapper.classList.toggle('pattern-chart', state.patternMode === 'chart');
     canvasWrapper.classList.toggle('pattern-color', state.patternMode === 'color');
     patternLegendEl.hidden = false;
+    btnReturnToDrawing.hidden = state.patternMode !== 'chart';
     buildLegendBar();
     renderPatternNumbers();
     requestAnimationFrame(() => resizeCanvas());
@@ -452,6 +454,7 @@
     editorMain.classList.remove('pattern-active');
     canvasWrapper.classList.remove('pattern-chart', 'pattern-color');
     if (patternLegendEl) patternLegendEl.hidden = true;
+    btnReturnToDrawing.hidden = true;
     const cells = pixelGrid.children;
     for (let i = 0; i < cells.length; i++) {
       if (cells[i].dataset) delete cells[i].dataset.num;
@@ -476,7 +479,7 @@
     if (state.patternMode === 'chart') {
       addLegendAction('download', '도안 저장', downloadPattern);
       if (GALLERY_API_URL) addLegendAction('cloud_upload', '갤러리에 올리기', submitToGallery);
-      addLegendAction('edit', '그림으로 돌아가기', exitPatternMode);
+      addLegendAction('edit', '그림으로 돌아가기', exitPatternMode, true);
     } else {
       addLegendAction('check_circle', '도안 끝내기', exitPatternMode);
     }
@@ -502,14 +505,16 @@
     });
   }
 
-  function addLegendAction(icon, label, fn) {
+  function addLegendAction(icon, label, fn, isPrimary = false) {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'legend-action btn btn-ghost btn-small';
+    b.className = `legend-action btn ${isPrimary ? 'btn-primary' : 'btn-ghost'} btn-small`;
     b.innerHTML = `<span class="material-icons">${icon}</span> ${label}`;
     b.addEventListener('click', fn);
     patternLegendActions.appendChild(b);
   }
+
+  btnReturnToDrawing.addEventListener('click', exitPatternMode);
 
   function downloadPattern() {
     if (!state.patternCells || !state.patternLegend) return;

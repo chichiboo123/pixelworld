@@ -310,8 +310,20 @@ body { padding-bottom: var(--footer-h); }
   padding: 8px;
   overflow: hidden;
 }
-.canvas-area { grid-area: canvas; min-width: 0; min-height: 0; }
+.canvas-area { grid-area: canvas; position: relative; min-width: 0; min-height: 0; }
 .reference-panel { grid-area: reference; }
+
+.pattern-return-btn {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 10;
+  box-shadow: 0 5px 16px rgba(76, 141, 255, 0.42);
+}
+.pattern-return-btn[hidden] { display: none; }
+@media (max-width: 520px) {
+  .pattern-return-btn { top: 14px; left: 14px; }
+}
 
 /* 기본(폴백): 캔버스 하단 짧은 스트립 */
 .editor-main.reference-open {

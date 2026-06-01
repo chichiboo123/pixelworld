@@ -273,6 +273,24 @@
     const day = String(d.getDate()).padStart(2, '0');
     return `${d.getFullYear()}-${m}-${day}`;
   }
+  function downloadJsonFile(data, filename) {
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
+    if (typeof navigator.msSaveOrOpenBlob === 'function') {
+      navigator.msSaveOrOpenBlob(blob, filename);
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    // 일부 모바일 브라우저는 click 이후 비동기로 Blob을 읽는다.
+    // 즉시 revoke하면 다운로드가 시작되기 전에 URL이 사라질 수 있다.
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+
   function handleSaveJson() {
     const data = {
       app: 'pixelworld',
@@ -282,17 +300,12 @@
       cols: state.cols,
       rows: state.rows,
       pixels: state.pixels,
+      patternMode: state.patternMode,
+      patternCells: state.patternCells,
+      patternLegend: state.patternLegend,
       savedAt: new Date().toISOString()
     };
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `내그림-${todayStr()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadJsonFile(data, `내그림-${todayStr()}.json`);
     toast('저장했어요!');
   }
   async function handleLoadJson() {
@@ -301,6 +314,7 @@
       const ok = await showConfirm('불러오기', '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?');
       if (!ok) return;
     }
+    inputLoadJson.value = '';
     inputLoadJson.click();
   }
   function handleExportJpg() {
@@ -382,6 +396,7 @@
   }
 
   function handleLoadPattern() {
+    inputLoadPattern.value = '';
     inputLoadPattern.click();
   }
 
@@ -510,15 +525,7 @@
       cells: state.patternCells,
       savedAt: new Date().toISOString()
     };
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `도안-${todayStr()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadJsonFile(data, `도안-${todayStr()}.json`);
     toast('도안 파일을 저장했어요!');
   }
 
@@ -1320,6 +1327,10 @@
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
+    reader.onerror = () => {
+      toast('파일을 읽을 수 없어요.');
+      inputLoadJson.value = '';
+    };
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
@@ -1330,13 +1341,18 @@
         state.rows = data.rows;
         state.pixels = data.pixels.slice(0, data.cols * data.rows);
         while (state.pixels.length < data.cols * data.rows) state.pixels.push(null);
-        state.patternMode = null;
-        state.patternCells = null;
-        state.patternLegend = null;
+        const hasPattern = (data.patternMode === 'chart' || data.patternMode === 'color')
+          && Array.isArray(data.patternCells) && Array.isArray(data.patternLegend);
+        state.patternMode = hasPattern ? data.patternMode : null;
+        state.patternCells = hasPattern ? data.patternCells.slice(0, data.cols * data.rows) : null;
+        if (state.patternCells) {
+          while (state.patternCells.length < data.cols * data.rows) state.patternCells.push(0);
+        }
+        state.patternLegend = hasPattern ? data.patternLegend.map(l => ({ num: l.num, color: l.color })) : null;
         undoStack = [];
         redoStack = [];
         buildGrid();
-        clearPatternUI();
+        if (state.patternMode) applyPatternUI(); else clearPatternUI();
         updateHistoryButtons();
         saveLocal();
         toast('불러왔어요!');
@@ -1353,6 +1369,10 @@
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
+    reader.onerror = () => {
+      toast('도안 파일을 읽을 수 없어요.');
+      inputLoadPattern.value = '';
+    };
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);

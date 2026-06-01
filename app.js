@@ -71,6 +71,7 @@
   const patternLegendLabel = document.getElementById('pattern-legend-label');
   const patternLegendActions = document.getElementById('pattern-legend-actions');
   const patternLegendItems = document.getElementById('pattern-legend-items');
+  const patternFab = document.getElementById('pattern-fab');
   const btnReturnToDrawing = document.getElementById('btn-return-to-drawing');
   const galleryModal = document.getElementById('gallery-modal');
   const galleryTabs = document.getElementById('gallery-tabs');
@@ -417,12 +418,55 @@
     state.patternMode = 'color';
     undoStack = [];
     redoStack = [];
+    buildPalette();
     buildGrid();
+    syncSizeButtons();
+    updateGuidesUI();
     updateHistoryButtons();
     applyPatternUI();
     if (state.patternLegend[0]) selectColor(state.patternLegend[0].color);
     showScreen('editor');
     saveLocal();
+  }
+
+  // 일반 그림(픽셀) 데이터 불러오기
+  function loadDrawingData(data) {
+    if (!data || !Array.isArray(data.pixels) || !data.cols || !data.rows) {
+      throw new Error('형식 오류');
+    }
+    const total = data.cols * data.rows;
+    state.ratio = data.ratio || 'square';
+    state.sizeKey = data.sizeKey || 'medium';
+    state.cols = data.cols;
+    state.rows = data.rows;
+    state.pixels = data.pixels.slice(0, total);
+    while (state.pixels.length < total) state.pixels.push(null);
+    const hasPattern = (data.patternMode === 'chart' || data.patternMode === 'color')
+      && Array.isArray(data.patternCells) && Array.isArray(data.patternLegend);
+    state.patternMode = hasPattern ? data.patternMode : null;
+    state.patternCells = hasPattern ? data.patternCells.slice(0, total) : null;
+    if (state.patternCells) {
+      while (state.patternCells.length < total) state.patternCells.push(0);
+    }
+    state.patternLegend = hasPattern ? data.patternLegend.map(l => ({ num: l.num, color: l.color })) : null;
+    undoStack = [];
+    redoStack = [];
+    buildPalette();
+    buildGrid();
+    syncSizeButtons();
+    updateGuidesUI();
+    if (state.patternMode) applyPatternUI(); else clearPatternUI();
+    updateHistoryButtons();
+    showScreen('editor');
+    saveLocal();
+  }
+
+  // 파일 종류(그림/도안)를 자동 판별해 알맞은 방식으로 불러온다.
+  function loadProjectFile(data) {
+    const isPattern = data && (data.type === 'pattern'
+      || (!Array.isArray(data.pixels) && Array.isArray(data.cells) && Array.isArray(data.legend)));
+    if (isPattern) loadPatternData(data);
+    else loadDrawingData(data);
   }
 
   async function exitPatternMode() {
@@ -454,6 +498,7 @@
     editorMain.classList.remove('pattern-active');
     canvasWrapper.classList.remove('pattern-chart', 'pattern-color');
     if (patternLegendEl) patternLegendEl.hidden = true;
+    if (patternFab) { patternFab.hidden = true; patternFab.innerHTML = ''; }
     btnReturnToDrawing.hidden = true;
     const cells = pixelGrid.children;
     for (let i = 0; i < cells.length; i++) {
@@ -476,12 +521,16 @@
     patternLegendLabel.textContent = isColor ? '번호에 맞게 색칠해요!' : '색칠 도안 (숫자 = 색깔)';
 
     patternLegendActions.innerHTML = '';
+    if (patternFab) patternFab.innerHTML = '';
     if (state.patternMode === 'chart') {
-      addLegendAction('download', '도안 저장', downloadPattern);
-      if (GALLERY_API_URL) addLegendAction('cloud_upload', '갤러리에 올리기', submitToGallery);
-      addLegendAction('edit', '그림으로 돌아가기', exitPatternMode, true);
+      // 도안 보기(읽기 전용) — 기능 버튼을 캔버스 위 플로팅 버튼으로 제공
+      addLegendAction(patternFab, 'download', '도안 저장', downloadPattern, true);
+      if (GALLERY_API_URL) addLegendAction(patternFab, 'cloud_upload', '갤러리에 올리기', submitToGallery);
+      if (patternFab) patternFab.hidden = false;
+      // '그림으로 돌아가기'는 좌측 상단 플로팅 버튼(btn-return-to-drawing)으로 제공
     } else {
-      addLegendAction('check_circle', '도안 끝내기', exitPatternMode);
+      if (patternFab) patternFab.hidden = true;
+      addLegendAction(patternLegendActions, 'check_circle', '도안 끝내기', exitPatternMode, true);
     }
 
     patternLegendItems.innerHTML = '';
@@ -505,13 +554,14 @@
     });
   }
 
-  function addLegendAction(icon, label, fn, isPrimary = false) {
+  function addLegendAction(container, icon, label, fn, isPrimary = false) {
+    if (!container) return;
     const b = document.createElement('button');
     b.type = 'button';
     b.className = `legend-action btn ${isPrimary ? 'btn-primary' : 'btn-ghost'} btn-small`;
     b.innerHTML = `<span class="material-icons">${icon}</span> ${label}`;
     b.addEventListener('click', fn);
-    patternLegendActions.appendChild(b);
+    container.appendChild(b);
   }
 
   btnReturnToDrawing.addEventListener('click', exitPatternMode);
@@ -1339,28 +1389,10 @@
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        if (!data || !Array.isArray(data.pixels) || !data.cols || !data.rows) throw new Error('형식 오류');
-        state.ratio = data.ratio || 'square';
-        state.sizeKey = data.sizeKey || 'medium';
-        state.cols = data.cols;
-        state.rows = data.rows;
-        state.pixels = data.pixels.slice(0, data.cols * data.rows);
-        while (state.pixels.length < data.cols * data.rows) state.pixels.push(null);
-        const hasPattern = (data.patternMode === 'chart' || data.patternMode === 'color')
-          && Array.isArray(data.patternCells) && Array.isArray(data.patternLegend);
-        state.patternMode = hasPattern ? data.patternMode : null;
-        state.patternCells = hasPattern ? data.patternCells.slice(0, data.cols * data.rows) : null;
-        if (state.patternCells) {
-          while (state.patternCells.length < data.cols * data.rows) state.patternCells.push(0);
-        }
-        state.patternLegend = hasPattern ? data.patternLegend.map(l => ({ num: l.num, color: l.color })) : null;
-        undoStack = [];
-        redoStack = [];
-        buildGrid();
-        if (state.patternMode) applyPatternUI(); else clearPatternUI();
-        updateHistoryButtons();
-        saveLocal();
-        toast('불러왔어요!');
+        loadProjectFile(data);
+        toast(state.patternMode === 'color'
+          ? '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.'
+          : '불러왔어요!');
       } catch (err) {
         toast('파일을 읽을 수 없어요.');
       }
@@ -1381,8 +1413,10 @@
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        loadPatternData(data);
-        toast('도안을 불러왔어요! 번호에 맞게 색칠해 보세요.');
+        loadProjectFile(data);
+        toast(state.patternMode === 'color'
+          ? '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.'
+          : '불러왔어요!');
       } catch (err) {
         toast('도안 파일을 읽을 수 없어요.');
       }

@@ -10,9 +10,9 @@
   ];
 
   const SIZE_PRESETS = {
-    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [40, 23] },
-    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [40, 40] },
-    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [23, 40] }
+    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [64, 36] },
+    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [64, 64] },
+    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [36, 64] }
   };
 
   const STORAGE_KEY = 'pixelworld:v1';

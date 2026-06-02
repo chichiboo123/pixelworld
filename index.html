@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=14" />
+  <link rel="stylesheet" href="styles.css?v=15" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -68,6 +68,11 @@
           <div class="choice-preview-size size-large"></div>
           <div class="choice-label"><span class="material-icons">grid_4x4</span> 대 (크게)</div>
           <div class="choice-desc" id="desc-large">32 × 32</div>
+        </button>
+        <button class="choice-card" data-size="xlarge">
+          <div class="choice-preview-size size-xlarge"></div>
+          <div class="choice-label"><span class="material-icons">apps</span> 특대 (아주 크게)</div>
+          <div class="choice-desc" id="desc-xlarge">40 × 40</div>
         </button>
       </div>
 
@@ -131,6 +136,10 @@
           <span class="material-icons">gradient</span>
         </button>
         <input type="color" id="input-custom-color" value="#ff7eb6" class="hidden-color-input" aria-hidden="true" tabindex="-1" />
+
+        <button type="button" class="m-trigger" id="m-trigger-eyedropper" title="스포이트 (색 추출)">
+          <span class="material-icons">colorize</span>
+        </button>
       </div>
 
       <div class="topbar-right">
@@ -295,6 +304,11 @@
         </button>
       </div>
       <div class="gallery-tabs" id="gallery-tabs" hidden></div>
+      <div class="gallery-sort" id="gallery-sort" hidden>
+        <span class="gallery-sort-label"><span class="material-icons">sort</span> 정렬</span>
+        <button type="button" class="gallery-sort-btn active" data-sort="recent">최신순</button>
+        <button type="button" class="gallery-sort-btn" data-sort="popular">인기순</button>
+      </div>
       <div class="gallery-body" id="gallery-body"></div>
     </div>
   </div>
@@ -379,6 +393,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

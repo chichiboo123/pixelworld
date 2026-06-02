@@ -10,9 +10,9 @@
   ];
 
   const SIZE_PRESETS = {
-    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18] },
-    square:    { small: [16, 16], medium: [24, 24], large: [32, 32] },
-    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32] }
+    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [40, 23] },
+    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [40, 40] },
+    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [23, 40] }
   };
 
   const STORAGE_KEY = 'pixelworld:v1';
@@ -31,6 +31,7 @@
     pixels: [],
     currentColor: '#4c8dff',
     brushSize: 1,
+    eyedropper: false,     // 스포이트(색 추출) 모드 여부
     guidesVisible: true,
     currentScreen: null,
     patternMode: null,     // null | 'chart'(도안 보기) | 'color'(번호대로 색칠)
@@ -47,6 +48,8 @@
   let referenceFloatPos = null; // 세로모드 플로팅 패널 위치 (세션 한정)
   let galleryItems = [];
   let galleryRatioFilter = 'all';
+  let gallerySort = 'recent';   // 'recent'(최신순) | 'popular'(인기순)
+  let viewedGalleryIds = new Set(); // 한 세션에서 중복 조회수 증가 방지
   let adminPassword = '';
 
   // ===== DOM =====
@@ -75,6 +78,7 @@
   const btnReturnToDrawing = document.getElementById('btn-return-to-drawing');
   const galleryModal = document.getElementById('gallery-modal');
   const galleryTabs = document.getElementById('gallery-tabs');
+  const gallerySortEl = document.getElementById('gallery-sort');
   const galleryBody = document.getElementById('gallery-body');
   const galleryUploadModal = document.getElementById('gallery-upload-modal');
   const galleryUploadForm = document.getElementById('gallery-upload-form');
@@ -101,6 +105,7 @@
   const mTriggerBrush = document.getElementById('m-trigger-brush');
   const mTriggerColor = document.getElementById('m-trigger-color');
   const mTriggerCustom = document.getElementById('m-trigger-custom');
+  const mTriggerEyedropper = document.getElementById('m-trigger-eyedropper');
   const mPopBrush = document.getElementById('m-pop-brush');
   const mPopColor = document.getElementById('m-pop-color');
   const btnMore = document.getElementById('btn-more');
@@ -166,6 +171,8 @@
     document.getElementById('desc-small').textContent  = `${presets.small[0]} × ${presets.small[1]}`;
     document.getElementById('desc-medium').textContent = `${presets.medium[0]} × ${presets.medium[1]}`;
     document.getElementById('desc-large').textContent  = `${presets.large[0]} × ${presets.large[1]}`;
+    const descXlarge = document.getElementById('desc-xlarge');
+    if (descXlarge) descXlarge.textContent = `${presets.xlarge[0]} × ${presets.xlarge[1]}`;
   }
 
   // ===== 2단계 =====
@@ -187,6 +194,7 @@
 
   // ===== 에디터 진입 =====
   function enterEditor() {
+    setEyedropper(false);
     buildPalette();
     buildGrid();
     updateCurrentColorChip();
@@ -596,6 +604,33 @@
   document.getElementById('gallery-close').addEventListener('click', closeGallery);
   galleryModal.addEventListener('click', (e) => { if (e.target === galleryModal) closeGallery(); });
 
+  if (gallerySortEl) {
+    gallerySortEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.gallery-sort-btn');
+      if (!btn) return;
+      gallerySort = btn.dataset.sort === 'popular' ? 'popular' : 'recent';
+      renderGalleryList();
+    });
+  }
+
+  // 도안을 열어 색칠하기 시작하면 조회수(클릭수)를 1 올린다.
+  // 같은 도안은 한 세션에서 한 번만 서버로 전송한다.
+  function recordGalleryView(item) {
+    if (!GALLERY_API_URL || !item || !item.id) return;
+    if (viewedGalleryIds.has(item.id)) return;
+    viewedGalleryIds.add(item.id);
+    item.views = getViews(item) + 1;
+    try {
+      // text/plain 으로 보내 CORS preflight 를 피한다 (Apps Script 호환)
+      fetch(GALLERY_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'view', id: item.id }),
+        keepalive: true
+      }).catch(() => {});
+    } catch (_) {}
+  }
+
   function ratioLabel(ratio) {
     return { landscape: '가로', square: '정사각형', portrait: '세로' }[ratio] || '기타';
   }
@@ -611,6 +646,7 @@
   async function loadGalleryList() {
     if (!GALLERY_API_URL) {
       if (galleryTabs) galleryTabs.hidden = true;
+      if (gallerySortEl) gallerySortEl.hidden = true;
       galleryBody.innerHTML =
         '<p class="gallery-msg">아직 갤러리 서버가 연결되지 않았어요.<br>' +
         'Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>' +
@@ -618,6 +654,7 @@
       return;
     }
     if (galleryTabs) galleryTabs.hidden = true;
+    if (gallerySortEl) gallerySortEl.hidden = true;
     galleryBody.innerHTML = '<p class="gallery-msg">도안을 불러오는 중...</p>';
     try {
       const res = await fetch(GALLERY_API_URL + '?action=list');
@@ -661,15 +698,36 @@
     galleryTabs.hidden = false;
   }
 
+  function getViews(item) {
+    return Number(item && item.views) || 0;
+  }
+
+  function renderGallerySort() {
+    if (!gallerySortEl) return;
+    gallerySortEl.hidden = false;
+    gallerySortEl.querySelectorAll('.gallery-sort-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.sort === gallerySort);
+    });
+  }
+
   function renderGalleryList() {
     renderGalleryTabs();
-    const list = galleryRatioFilter === 'all'
-      ? galleryItems
+    let list = galleryRatioFilter === 'all'
+      ? galleryItems.slice()
       : galleryItems.filter(item => getPatternRatio(item) === galleryRatioFilter);
+    if (gallerySort === 'popular') {
+      // 안정 정렬: 조회수 높은 순, 같으면 기존(최신) 순서 유지
+      list = list
+        .map((item, i) => ({ item, i }))
+        .sort((a, b) => (getViews(b.item) - getViews(a.item)) || (a.i - b.i))
+        .map(x => x.item);
+    }
     if (!galleryItems.length) {
+      if (gallerySortEl) gallerySortEl.hidden = true;
       galleryBody.innerHTML = '<p class="gallery-msg">아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!</p>';
       return;
     }
+    renderGallerySort();
     if (!list.length) {
       galleryBody.innerHTML = `<p class="gallery-msg">${ratioLabel(galleryRatioFilter)} 비율 도안이 아직 없어요.</p>`;
       return;
@@ -683,7 +741,12 @@
       card.type = 'button';
       card.className = 'gallery-item';
       card.addEventListener('click', () => {
-        try { loadPatternData(item); closeGallery(); toast('도안을 불러왔어요! 번호에 맞게 색칠해 보세요.'); }
+        try {
+          loadPatternData(item);
+          recordGalleryView(item);
+          closeGallery();
+          toast('도안을 불러왔어요! 번호에 맞게 색칠해 보세요.');
+        }
         catch (_) { toast('이 도안을 불러올 수 없어요.'); }
       });
       const img = document.createElement('img');
@@ -696,12 +759,16 @@
       const meta = document.createElement('div');
       meta.className = 'gallery-meta';
       meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}`;
+      const views = document.createElement('div');
+      views.className = 'gallery-views';
+      views.innerHTML = `<span class="material-icons">visibility</span><span class="gallery-views-num">${getViews(item)}</span>`;
       const action = document.createElement('span');
       action.className = 'btn btn-primary btn-small gallery-action';
       action.innerHTML = '<span class="material-icons">brush</span> 색칠하기';
       card.appendChild(img);
       card.appendChild(title);
       card.appendChild(meta);
+      card.appendChild(views);
       card.appendChild(action);
       grid.appendChild(card);
     });
@@ -910,7 +977,7 @@
         '<p class="admin-meta"></p>';
       fields.querySelector('.admin-title-input').value = item.title || '';
       fields.querySelector('.admin-author-input').value = item.author || '';
-      fields.querySelector('.admin-meta').textContent = `${ratioLabel(getPatternRatio(item))} · ${item.cols || '?'}×${item.rows || '?'} · ${item.createdAt || '날짜 없음'}`;
+      fields.querySelector('.admin-meta').textContent = `${ratioLabel(getPatternRatio(item))} · ${item.cols || '?'}×${item.rows || '?'} · 조회 ${getViews(item)} · ${item.createdAt || '날짜 없음'}`;
 
       const actions = document.createElement('div');
       actions.className = 'admin-actions';
@@ -1140,6 +1207,11 @@
   pixelGrid.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     closeAllPopovers();
+    if (state.eyedropper) {
+      const pickIdx = cellIndexFromEvent(e);
+      if (pickIdx >= 0) pickColorAt(pickIdx);
+      return;
+    }
     if (state.patternMode === 'chart') return; // 도안 보기 모드는 읽기 전용
     isPointerDown = true;
     try { pixelGrid.setPointerCapture(e.pointerId); } catch (_) {}
@@ -1334,8 +1406,36 @@
   });
   mTriggerCustom.addEventListener('click', () => {
     closeAllPopovers();
+    setEyedropper(false);
     inputCustomColor.click();
   });
+
+  // ===== 스포이트(색 추출) =====
+  function setEyedropper(on) {
+    state.eyedropper = !!on;
+    if (mTriggerEyedropper) mTriggerEyedropper.classList.toggle('active', state.eyedropper);
+    if (canvasWrapper) canvasWrapper.classList.toggle('eyedropper-active', state.eyedropper);
+  }
+  if (mTriggerEyedropper) {
+    mTriggerEyedropper.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeAllPopovers();
+      const willOn = !state.eyedropper;
+      setEyedropper(willOn);
+      toast(willOn ? '스포이트: 색을 추출할 칸을 눌러요!' : '스포이트를 껐어요.');
+    });
+  }
+  // 추출 시도: 성공하면 색을 고르고 모드 종료. 빈 칸이면 알려 준다.
+  function pickColorAt(idx) {
+    const color = state.pixels[idx];
+    if (!color) {
+      toast('빈 칸이에요. 색칠된 칸을 눌러 주세요.');
+      return;
+    }
+    selectColor(color);
+    setEyedropper(false);
+    toast(`${color.toUpperCase()} 색을 골랐어요!`);
+  }
 
   // ===== 더보기 메뉴 =====
   const MORE_ACTIONS = {

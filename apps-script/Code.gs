@@ -37,6 +37,10 @@ function doPost(e) {
     if (data.action && String(data.action).indexOf('admin-') === 0) {
       return jsonOutput_(handleAdminAction_(data));
     }
+    if (data.action === 'view') {
+      var views = incrementView_(data.id);
+      return jsonOutput_({ ok: true, views: views });
+    }
     var saved = savePattern_(data);
     return jsonOutput_({ ok: true, id: saved.id });
   } catch (err) {
@@ -50,7 +54,7 @@ function getSheet_() {
   var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
-    sh.appendRow(['id', 'title', 'author', 'createdAt', 'payload']);
+    sh.appendRow(['id', 'title', 'author', 'createdAt', 'payload', 'views']);
   }
   migrateSheet_(sh);
   return sh;
@@ -59,9 +63,15 @@ function getSheet_() {
 function migrateSheet_(sh) {
   var lastCol = Math.max(sh.getLastColumn(), 4);
   var header = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+  // 옛 형식([id, title, createdAt, payload]) → author 컬럼 추가
   if (header[0] === 'id' && header[1] === 'title' && header[2] === 'createdAt' && header[3] === 'payload') {
     sh.insertColumnAfter(2);
     sh.getRange(1, 3).setValue('author');
+  }
+  // views(조회수) 컬럼이 없으면 6번째 컬럼으로 추가 (기존 행은 빈 값 = 0으로 취급)
+  var header2 = sh.getRange(1, 1, 1, Math.max(sh.getLastColumn(), 6)).getValues()[0];
+  if (header2[5] !== 'views') {
+    sh.getRange(1, 6).setValue('views');
   }
 }
 
@@ -70,7 +80,7 @@ function listPatterns_(limit) {
   var sh = getSheet_();
   var last = sh.getLastRow();
   if (last < 2) return [];
-  var rows = sh.getRange(2, 1, last - 1, 5).getValues();
+  var rows = sh.getRange(2, 1, last - 1, 6).getValues();
   var out = [];
   for (var i = rows.length - 1; i >= 0 && out.length < max; i--) {
     try {
@@ -79,10 +89,32 @@ function listPatterns_(limit) {
       payload.title = rows[i][1];
       payload.author = rows[i][2] || payload.author || '';
       payload.createdAt = rows[i][3];
+      payload.views = Number(rows[i][5]) || 0;
       out.push(payload);
     } catch (err) { /* 잘못된 행은 건너뜀 */ }
   }
   return out;
+}
+
+// 조회수(클릭수) +1. 동시 호출 시 값이 덮어써지지 않도록 잠금을 사용.
+function incrementView_(id) {
+  if (!id) throw new Error('missing pattern id');
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(5000);
+  } catch (e) {
+    // 잠금을 못 잡으면 그냥 진행 (조회수는 정확도보다 가용성 우선)
+  }
+  try {
+    var found = findPatternRow_(id);
+    var cell = found.sheet.getRange(found.row, 6);
+    var cur = Number(cell.getValue()) || 0;
+    var next = cur + 1;
+    cell.setValue(next);
+    return next;
+  } finally {
+    try { lock.releaseLock(); } catch (e) {}
+  }
 }
 
 
@@ -167,7 +199,7 @@ function savePattern_(data) {
     legend: data.legend,
     cells: data.cells
   };
-  sh.appendRow([id, title, author, createdAt, JSON.stringify(payload)]);
+  sh.appendRow([id, title, author, createdAt, JSON.stringify(payload), 0]);
   return { id: id };
 }
 

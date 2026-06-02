@@ -659,6 +659,14 @@
     try {
       const res = await fetch(GALLERY_API_URL + '?action=list');
       const json = await res.json();
+      // 서버가 에러 객체를 돌려주면 "자료 없음"으로 감추지 말고 에러로 알린다.
+      if (json && !Array.isArray(json) && json.error) {
+        console.error('gallery list error:', json.error);
+        if (galleryTabs) galleryTabs.hidden = true;
+        if (gallerySortEl) gallerySortEl.hidden = true;
+        galleryBody.innerHTML = '<p class="gallery-msg">갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</p>';
+        return;
+      }
       galleryItems = Array.isArray(json) ? json : (json.items || []);
       renderGalleryList();
     } catch (err) {

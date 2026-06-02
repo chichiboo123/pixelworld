@@ -120,8 +120,9 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 
 | 요청 | 설명 | 반환 예시 |
 |------|------|----------|
-| `GET ?action=list` | 최신 도안 목록 | `[{ cols, rows, legend, cells, title, author, ratio, ... }]` |
+| `GET ?action=list` | 최신 도안 목록 | `[{ cols, rows, legend, cells, title, author, ratio, views, ... }]` |
 | `POST` (text/plain JSON) | 도안 저장 | `{ ok: true, id: "uuid" }` |
+| `POST` `{ action: "view", id }` | 도안 조회수(클릭수) +1 | `{ ok: true, views: 12 }` |
 | `POST` `{ action: "admin-list", password }` | 관리자 도안 목록 | `{ ok: true, items: [...] }` |
 | `POST` `{ action: "admin-update", password, id, title, author }` | 도안 작품명/작가 수정 | `{ ok: true, item: {...} }` |
 | `POST` `{ action: "admin-delete", password, id }` | 도안 삭제 | `{ ok: true }` |
@@ -132,10 +133,13 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 
 ## 저장되는 스프레드시트 형식
 
-| A열: id | B열: title | C열: author | D열: createdAt | E열: payload (JSON) |
-|---------|-----------|----------------|----------------|---------------------|
-| uuid | 도안 이름 | 작가(만든이) | ISO 날짜 | `{ type, title, author, ratio, cols, rows, legend, cells, ... }` |
+| A열: id | B열: title | C열: author | D열: createdAt | E열: payload (JSON) | F열: views |
+|---------|-----------|----------------|----------------|---------------------|------------|
+| uuid | 도안 이름 | 작가(만든이) | ISO 날짜 | `{ type, title, author, ratio, cols, rows, legend, cells, ... }` | 조회수(정수) |
 
-기존 4열(`id/title/createdAt/payload`) 형식으로 만들어진 시트는 새 코드 실행 시 `author` 열이 자동으로 추가됩니다.
+기존 4열(`id/title/createdAt/payload`) 형식으로 만들어진 시트는 새 코드 실행 시 `author` 열이 자동으로 추가됩니다.  
+`views`(조회수) 열도 없으면 자동으로 추가되며, 기존 도안은 0부터 시작합니다. 갤러리에서 도안을 눌러 색칠을 시작할 때마다 조회수가 1씩 올라가고, 앱의 갤러리 화면에서 **인기순** 정렬에 사용됩니다.
+
+> ⚠️ **인기순 정렬을 쓰려면** 이 폴더의 새 `Code.gs`를 붙여넣은 뒤 **반드시 새 버전으로 재배포**(배포 관리 → 편집 → 새 버전)해야 `views` 컬럼과 조회수 기능이 켜집니다.
 
 > 관리자 수정·삭제 API는 `ADMIN_PASSWORD` 스크립트 속성과 요청 본문의 `password`가 일치할 때만 동작합니다. 수정은 작품명과 작가(만든이) 메타데이터를 바꾸고, 삭제는 해당 행을 스프레드시트에서 제거합니다.

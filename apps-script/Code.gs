@@ -68,8 +68,13 @@ function migrateSheet_(sh) {
     sh.insertColumnAfter(2);
     sh.getRange(1, 3).setValue('author');
   }
-  // views(조회수) 컬럼이 없으면 6번째 컬럼으로 추가 (기존 행은 빈 값 = 0으로 취급)
-  var header2 = sh.getRange(1, 1, 1, Math.max(sh.getLastColumn(), 6)).getValues()[0];
+  // 그리드에 6번째 열이 없으면 먼저 추가한다.
+  // (열이 정확히 5개뿐인 시트에서 6열을 읽으면 "out of bounds" 예외가 나기 때문)
+  if (sh.getMaxColumns() < 6) {
+    sh.insertColumnsAfter(sh.getMaxColumns(), 6 - sh.getMaxColumns());
+  }
+  // views(조회수) 헤더가 없으면 6번째 컬럼에 추가 (기존 행은 빈 값 = 0으로 취급)
+  var header2 = sh.getRange(1, 1, 1, 6).getValues()[0];
   if (header2[5] !== 'views') {
     sh.getRange(1, 6).setValue('views');
   }
@@ -80,7 +85,9 @@ function listPatterns_(limit) {
   var sh = getSheet_();
   var last = sh.getLastRow();
   if (last < 2) return [];
-  var rows = sh.getRange(2, 1, last - 1, 6).getValues();
+  // 열 개수가 시트마다 다를 수 있으므로 실제 존재하는 만큼만 읽는다 (최소 payload=5열).
+  var numCols = Math.max(sh.getLastColumn(), 5);
+  var rows = sh.getRange(2, 1, last - 1, numCols).getValues();
   var out = [];
   for (var i = rows.length - 1; i >= 0 && out.length < max; i--) {
     try {
@@ -89,7 +96,7 @@ function listPatterns_(limit) {
       payload.title = rows[i][1];
       payload.author = rows[i][2] || payload.author || '';
       payload.createdAt = rows[i][3];
-      payload.views = Number(rows[i][5]) || 0;
+      payload.views = numCols >= 6 ? (Number(rows[i][5]) || 0) : 0;
       out.push(payload);
     } catch (err) { /* 잘못된 행은 건너뜀 */ }
   }

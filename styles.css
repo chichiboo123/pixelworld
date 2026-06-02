@@ -181,7 +181,7 @@ body { padding-bottom: var(--footer-h); }
 .size-small  { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 26px 26px; }
 .size-medium { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 16px 16px; }
 .size-large  { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 9px 9px; }
-.size-xlarge { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 6px 6px; }
+.size-xlarge { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 4px 4px; }
 
 .choice-label {
   font-weight: 700;

@@ -10,9 +10,9 @@
   ];
 
   const SIZE_PRESETS = {
-    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [40, 23] },
-    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [40, 40] },
-    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [23, 40] }
+    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [64, 36] },
+    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [64, 64] },
+    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [36, 64] }
   };
 
   const STORAGE_KEY = 'pixelworld:v1';
@@ -1411,21 +1411,45 @@
   });
 
   // ===== 스포이트(색 추출) =====
+  const hasNativeEyedropper = typeof EyeDropper !== 'undefined';
+
   function setEyedropper(on) {
     state.eyedropper = !!on;
     if (mTriggerEyedropper) mTriggerEyedropper.classList.toggle('active', state.eyedropper);
-    if (canvasWrapper) canvasWrapper.classList.toggle('eyedropper-active', state.eyedropper);
+    // 네이티브 EyeDropper 사용 시 커서 변경은 브라우저가 처리하므로 클래스 불필요
+    if (!hasNativeEyedropper && canvasWrapper) {
+      canvasWrapper.classList.toggle('eyedropper-active', state.eyedropper);
+    }
   }
+
   if (mTriggerEyedropper) {
-    mTriggerEyedropper.addEventListener('click', (e) => {
+    mTriggerEyedropper.addEventListener('click', async (e) => {
       e.stopPropagation();
       closeAllPopovers();
+
+      if (hasNativeEyedropper) {
+        // 네이티브 EyeDropper: 버튼 상태를 active로 표시한 뒤 곧바로 실행
+        setEyedropper(true);
+        try {
+          const result = await new EyeDropper().open();
+          selectColor(result.sRGBHex);
+          toast(`${result.sRGBHex.toUpperCase()} 색을 골랐어요!`);
+        } catch (_) {
+          // 사용자가 Esc로 취소하거나 실패 시 조용히 종료
+        } finally {
+          setEyedropper(false);
+        }
+        return;
+      }
+
+      // 폴백: 캔버스 내 셀 클릭 방식
       const willOn = !state.eyedropper;
       setEyedropper(willOn);
       toast(willOn ? '스포이트: 색을 추출할 칸을 눌러요!' : '스포이트를 껐어요.');
     });
   }
-  // 추출 시도: 성공하면 색을 고르고 모드 종료. 빈 칸이면 알려 준다.
+
+  // 캔버스 내 폴백 추출 (네이티브 미지원 브라우저용)
   function pickColorAt(idx) {
     const color = state.pixels[idx];
     if (!color) {

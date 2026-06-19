@@ -126,8 +126,11 @@ body { padding-bottom: var(--footer-h); }
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
-/* 크기 선택(2단계)은 소·중·대·특대 4장 */
-#screen-size .choice-grid { grid-template-columns: repeat(4, 1fr); }
+/* 크기 선택(2단계)은 소·중·대·특대·초대형 5장 */
+#screen-size .choice-grid { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 1100px) {
+  #screen-size .choice-grid { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 900px) {
   #screen-size .choice-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -181,7 +184,8 @@ body { padding-bottom: var(--footer-h); }
 .size-small  { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 26px 26px; }
 .size-medium { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 16px 16px; }
 .size-large  { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 9px 9px; }
-.size-xlarge { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 4px 4px; }
+.size-xlarge  { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 4px 4px; }
+.size-xxlarge { background-image: linear-gradient(#dbe8ff 1px, transparent 1px), linear-gradient(90deg, #dbe8ff 1px, transparent 1px); background-size: 2px 2px; }
 
 .choice-label {
   font-weight: 700;

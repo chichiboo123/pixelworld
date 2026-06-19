@@ -973,7 +973,7 @@ UPLOADER_HTML = r"""<!DOCTYPE html>
 const API_URL = "__API_URL__";
 const PATTERNS = __PATTERNS_JSON__;
 const RATIO_KO = { landscape: "가로", square: "정사각형", portrait: "세로" };
-const SIZE_KO = { small: "소", medium: "중", large: "대", xlarge: "특대" };
+const SIZE_KO = { small: "소", medium: "중", large: "대", xlarge: "특대", xxlarge: "초대형(도전)" };
 
 const grid = document.getElementById("grid");
 const cards = [];

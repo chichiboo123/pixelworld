@@ -10,9 +10,9 @@
   ];
 
   const SIZE_PRESETS = {
-    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [64, 36] },
-    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [64, 64] },
-    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [36, 64] }
+    landscape: { small: [16, 9],  medium: [24, 14], large: [32, 18], xlarge: [64, 36],  xxlarge: [128, 72]  },
+    square:    { small: [16, 16], medium: [24, 24], large: [32, 32], xlarge: [64, 64],  xxlarge: [128, 128] },
+    portrait:  { small: [9, 16],  medium: [14, 24], large: [18, 32], xlarge: [36, 64],  xxlarge: [72, 128]  }
   };
 
   const STORAGE_KEY = 'pixelworld:v1';
@@ -173,6 +173,8 @@
     document.getElementById('desc-large').textContent  = `${presets.large[0]} × ${presets.large[1]}`;
     const descXlarge = document.getElementById('desc-xlarge');
     if (descXlarge) descXlarge.textContent = `${presets.xlarge[0]} × ${presets.xlarge[1]}`;
+    const descXxlarge = document.getElementById('desc-xxlarge');
+    if (descXxlarge) descXxlarge.textContent = `${presets.xxlarge[0]} × ${presets.xxlarge[1]}`;
   }
 
   // ===== 2단계 =====

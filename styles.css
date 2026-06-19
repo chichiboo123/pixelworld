@@ -126,13 +126,21 @@ body { padding-bottom: var(--footer-h); }
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
-/* 크기 선택(2단계)은 소·중·대·특대·초대형 5장 */
-#screen-size .choice-grid { grid-template-columns: repeat(5, 1fr); }
-@media (max-width: 1100px) {
-  #screen-size .choice-grid { grid-template-columns: repeat(3, 1fr); }
+/* 크기 선택(2단계): 윗줄 소·중·대(3열), 아랫줄 특대·초대형(2열 가운데) */
+#screen-size .choice-grid {
+  grid-template-columns: repeat(6, 1fr);
 }
-@media (max-width: 900px) {
+#screen-size .choice-grid .choice-card:nth-child(-n+3) { grid-column: span 2; }
+#screen-size .choice-grid .choice-card:nth-child(n+4)  { grid-column: span 3; }
+@media (max-width: 860px) {
   #screen-size .choice-grid { grid-template-columns: repeat(2, 1fr); }
+  #screen-size .choice-grid .choice-card:nth-child(-n+3) { grid-column: span 1; }
+  #screen-size .choice-grid .choice-card:nth-child(n+4)  { grid-column: span 1; }
+}
+@media (max-width: 460px) {
+  #screen-size .choice-grid { grid-template-columns: 1fr; }
+  #screen-size .choice-grid .choice-card:nth-child(-n+3) { grid-column: span 1; }
+  #screen-size .choice-grid .choice-card:nth-child(n+4)  { grid-column: span 1; }
 }
 @media (max-width: 720px) {
   .choice-grid { grid-template-columns: 1fr; gap: 14px; }

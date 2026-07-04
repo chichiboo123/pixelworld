@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=17" />
+  <link rel="stylesheet" href="styles.css?v=18" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -156,7 +156,7 @@
             <span class="material-icons">redo</span>
           </button>
         </div>
-        <button class="icon-btn icon-btn-secondary language-toggle" id="btn-language" type="button" title="Switch language" aria-label="Switch language">
+        <button class="icon-btn icon-btn-secondary language-toggle" id="btn-language" type="button" data-language-toggle title="Switch language" aria-label="Switch language">
           <span class="material-icons">language</span>
           <span class="language-label">KO</span>
         </button>
@@ -276,7 +276,11 @@
     </div>
   </div>
 
-  <!-- 사용법 -->
+  <!-- 사용법 / 언어 전환 -->
+  <button class="language-fab" id="btn-language-floating" type="button" data-language-toggle title="Switch language" aria-label="Switch language">
+    <span class="material-icons">language</span>
+    <span class="language-label">KO</span>
+  </button>
   <button class="help-fab" id="btn-help-floating" type="button" title="사용법" aria-label="사용법 보기">
     <span class="material-icons">help_outline</span>
   </button>
@@ -402,6 +406,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=19"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>

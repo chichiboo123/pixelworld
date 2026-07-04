@@ -106,15 +106,14 @@
     document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
     document.querySelectorAll('[data-i18n-aria-label]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
-    const langBtn = document.getElementById('btn-language');
-    if (langBtn) {
+    document.querySelectorAll('[data-language-toggle]').forEach(langBtn => {
       const next = currentLang === 'ko' ? 'en' : 'ko';
       langBtn.dataset.langNext = next;
       langBtn.title = t('langToggleLabel');
       langBtn.setAttribute('aria-label', t('langToggleLabel'));
       const label = langBtn.querySelector('.language-label');
       if (label) label.textContent = currentLang.toUpperCase();
-    }
+    });
   }
 
   // 도안 갤러리 서버 (Google Apps Script 웹앱 URL).
@@ -988,8 +987,9 @@
 
   function openHelp() { helpModal.classList.add('open'); }
   function closeHelp() { helpModal.classList.remove('open'); }
-  const btnLanguage = document.getElementById('btn-language');
-  if (btnLanguage) btnLanguage.addEventListener('click', () => setLanguage(btnLanguage.dataset.langNext || (currentLang === 'ko' ? 'en' : 'ko')));
+  document.querySelectorAll('[data-language-toggle]').forEach(btnLanguage => {
+    btnLanguage.addEventListener('click', () => setLanguage(btnLanguage.dataset.langNext || (currentLang === 'ko' ? 'en' : 'ko')));
+  });
   document.getElementById('btn-help-floating').addEventListener('click', openHelp);
   document.getElementById('btn-help-top').addEventListener('click', openHelp);
   document.getElementById('help-close').addEventListener('click', closeHelp);

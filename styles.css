@@ -1542,3 +1542,34 @@ body { padding-bottom: var(--footer-h); }
   .language-toggle { min-width: 44px; padding-inline: 6px; }
   .language-label { font-size: 9px; }
 }
+
+.language-fab {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top, 0px) + 10px);
+  right: max(62px, env(safe-area-inset-right, 0px) + 58px);
+  z-index: 120;
+  min-width: 50px;
+  height: 42px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--primary-dark);
+  box-shadow: var(--shadow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+}
+.language-fab:hover { background: var(--primary-soft); }
+.language-fab .material-icons { font-size: 20px; }
+#screen-editor.active ~ .language-fab { display: none; }
+@media (max-width: 520px) {
+  .language-fab {
+    right: max(58px, env(safe-area-inset-right, 0px) + 54px);
+    min-width: 46px;
+    height: 38px;
+    padding: 0 8px;
+  }
+}

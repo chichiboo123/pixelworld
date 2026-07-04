@@ -1525,3 +1525,20 @@ body { padding-bottom: var(--footer-h); }
 }
 .admin-login[hidden],
 .admin-dashboard[hidden] { display: none !important; }
+
+.language-toggle {
+  min-width: 54px;
+  gap: 3px;
+  padding-inline: 8px;
+}
+.language-toggle .material-icons { font-size: 20px; }
+.language-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  line-height: 1;
+}
+@media (max-width: 520px) {
+  .language-toggle { min-width: 44px; padding-inline: 6px; }
+  .language-label { font-size: 9px; }
+}

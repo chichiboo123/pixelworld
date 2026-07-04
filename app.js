@@ -18,6 +18,104 @@
   const STORAGE_KEY = 'pixelworld:v1';
   const MAX_HISTORY = 50;
 
+
+  const LANG_STORAGE_KEY = 'pixelworld:lang';
+  const DEFAULT_LANG = 'ko';
+  const I18N = {
+    ko: {
+      langCode: 'ko', langName: '한국어', langToggleLabel: 'Switch to English',
+      eraseHint: '같은 칸을 다시 누르면 지워져요!', homeTitle: '홈으로 가기', homeMsg: '홈 화면으로 돌아가요. 현재 그림은 자동으로 저장돼요.',
+      backTitle: '이전 단계로', backMsg: '캔버스 크기 선택 화면으로 돌아가요. 다시 크기를 고르면 지금 그림이 사라질 수 있어요.',
+      emptyCanvas: '이미 빈 캔버스예요!', clearTitle: '전체 지우기', clearMsg: '지금 그린 그림이 모두 사라져요. 정말 지울까요?', cleared: '캔버스를 비웠어요!',
+      myDrawing: '내그림', saved: '저장했어요!', loadTitle: '불러오기', loadMsg: '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?', imageSaved: '이미지로 저장했어요!', copiedImage: '이미지가 클립보드에 복사됐어요!', copyUnsupported: '이 브라우저에서는 복사를 지원하지 않아요.', shareCopied: '공유 링크를 복사했어요!', sharePrompt: '이 링크를 복사해서 공유하세요:', drawFirst: '먼저 그림을 그려 주세요!', patternMade: '색상 {count}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.', formatError: '형식 오류', endPatternTitle: '도안 끝내기', endPatternMsg: '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.', patternColorLabel: '번호에 맞게 색칠해요!', patternChartLabel: '색칠 도안 (숫자 = 색깔)', savePattern: '도안 저장', uploadGallery: '갤러리에 올리기', endPattern: '도안 끝내기', colorPickedNum: '{num}번 색을 골랐어요!', patternFile: '도안', patternSaved: '도안 파일을 저장했어요!', landscape: '가로', square: '정사각형', portrait: '세로', other: '기타', galleryNoServer: '아직 갤러리 서버가 연결되지 않았어요.<br>Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)', loadingPatterns: '도안을 불러오는 중...', galleryLoadFailed: '갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.', all: '전체', noPatterns: '아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!', noRatioPatterns: '{ratio} 비율 도안이 아직 없어요.', patternLoaded: '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.', patternLoadFailed: '이 도안을 불러올 수 없어요.', patternPreview: '{title} 미리보기', colorIt: '색칠하기', galleryNoServerToast: '갤러리 서버가 설정되지 않았어요.', agreeRequired: '공유 안내에 동의해야 제출할 수 있어요.', titleAuthorRequired: '작품명과 작가를 모두 적어 주세요.', galleryConfirmTitle: '갤러리 공유 확인', galleryConfirmMsg: '제출하면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료가 아닌지 다시 확인했나요?', uploading: '갤러리에 올리는 중...', uploaded: '갤러리에 올렸어요!', uploadFailed: '갤러리에 올리지 못했어요.', adminPasswordCheck: '관리자 비밀번호를 확인해 주세요.', adminTotal: '총 {count}개의 도안', adminEmpty: '관리할 도안이 아직 없어요.', title: '작품명', author: '작가(만든이)', views: '조회', noDate: '날짜 없음', edit: '수정', delete: '삭제', titleAuthorCheck: '작품명과 작가를 확인해 주세요.', updated: '도안을 수정했어요.', updateFailed: '도안을 수정하지 못했어요.', thisPattern: '이 도안', deleteTitle: '도안 삭제', deleteMsg: '「{title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.', deleted: '도안을 삭제했어요.', deleteFailed: '도안을 삭제하지 못했어요.', hideGuides: '가이드라인 숨기기', showGuides: '가이드라인 보기', referenceImage: '참고 이미지', referenceHint: '참고할 이미지를 올리면<br />여기에 보여요!', colorPicked: '{color} 색을 골랐어요!', eyedropperOn: '스포이트: 색을 추출할 칸을 눌러요!', eyedropperOff: '스포이트를 껐어요.', emptyCell: '빈 칸이에요. 색칠된 칸을 눌러 주세요.', fileReadFailed: '파일을 읽을 수 없어요.', loaded: '불러왔어요!', patternFileReadFailed: '도안 파일을 읽을 수 없어요.', shareReadFailed: '공유 링크를 읽을 수 없어요.'
+    },
+    en: {
+      langCode: 'en', langName: 'English', langToggleLabel: '한국어로 전환',
+      eraseHint: 'Tap the same cell again to erase it!', homeTitle: 'Go home', homeMsg: 'Return to the home screen. Your current drawing is saved automatically.',
+      backTitle: 'Go back', backMsg: 'Return to canvas size selection. Choosing a new size may clear your current drawing.',
+      emptyCanvas: 'The canvas is already empty!', clearTitle: 'Clear canvas', clearMsg: 'Everything you drew will disappear. Are you sure?', cleared: 'Canvas cleared!',
+      myDrawing: 'my-drawing', saved: 'Saved!', loadTitle: 'Load', loadMsg: 'Your current drawing will be replaced. Continue?', imageSaved: 'Saved as an image!', copiedImage: 'Image copied to the clipboard!', copyUnsupported: 'Copy is not supported in this browser.', shareCopied: 'Share link copied!', sharePrompt: 'Copy this link to share:', drawFirst: 'Draw something first!', patternMade: 'Made a pattern with {count} colors! Use the top button to return to editing.', formatError: 'Invalid format', endPatternTitle: 'Finish pattern', endPatternMsg: 'Turn off the number guide and draw freely. Your colored pixels will stay.', patternColorLabel: 'Color by number!', patternChartLabel: 'Coloring pattern (number = color)', savePattern: 'Save pattern', uploadGallery: 'Upload to gallery', endPattern: 'Finish pattern', colorPickedNum: 'Selected color #{num}!', patternFile: 'pattern', patternSaved: 'Pattern file saved!', landscape: 'Landscape', square: 'Square', portrait: 'Portrait', other: 'Other', galleryNoServer: 'The gallery server is not connected yet.<br>Deploy the Google Apps Script web app, then add its URL to <code>GALLERY_API_URL</code> in <code>app.js</code>.<br>After that, everyone can share patterns!<br>(See <code>apps-script/README.md</code> for setup.)', loadingPatterns: 'Loading patterns...', galleryLoadFailed: 'Could not load the gallery.<br>Please try again later.', all: 'All', noPatterns: 'No patterns have been uploaded yet.<br>Upload the first one!', noRatioPatterns: 'No {ratio} patterns yet.', patternLoaded: 'Pattern loaded! Try coloring by number.', patternLoadFailed: 'Could not load this pattern.', patternPreview: '{title} preview', colorIt: 'Color it', galleryNoServerToast: 'Gallery server is not configured.', agreeRequired: 'You need to agree before submitting.', titleAuthorRequired: 'Please enter both title and artist.', galleryConfirmTitle: 'Confirm gallery sharing', galleryConfirmMsg: 'After submitting, this will be public to everyone using this app and cannot be deleted by you. Please confirm it is not harmful or offensive.', uploading: 'Uploading to gallery...', uploaded: 'Uploaded to gallery!', uploadFailed: 'Could not upload to gallery.', adminPasswordCheck: 'Please check the admin password.', adminTotal: '{count} patterns total', adminEmpty: 'There are no patterns to manage yet.', title: 'Title', author: 'Artist', views: 'Views', noDate: 'No date', edit: 'Update', delete: 'Delete', titleAuthorCheck: 'Please check the title and artist.', updated: 'Pattern updated.', updateFailed: 'Could not update the pattern.', thisPattern: 'this pattern', deleteTitle: 'Delete pattern', deleteMsg: 'Delete “{title}” from the gallery? This cannot be undone.', deleted: 'Pattern deleted.', deleteFailed: 'Could not delete the pattern.', hideGuides: 'Hide guides', showGuides: 'Show guides', referenceImage: 'Reference image', referenceHint: 'Upload a reference image<br />and it will appear here!', colorPicked: 'Selected {color}!', eyedropperOn: 'Eyedropper: tap a colored cell to pick it!', eyedropperOff: 'Eyedropper off.', emptyCell: 'Empty cell. Tap a colored cell.', fileReadFailed: 'Could not read the file.', loaded: 'Loaded!', patternFileReadFailed: 'Could not read the pattern file.', shareReadFailed: 'Could not read the share link.'
+    }
+  };
+  let currentLang = getInitialLang();
+  function getInitialLang() {
+    try { const saved = localStorage.getItem(LANG_STORAGE_KEY); if (I18N[saved]) return saved; } catch (_) {}
+    return (navigator.language || '').toLowerCase().startsWith('en') ? 'en' : DEFAULT_LANG;
+  }
+  function t(key, vars = {}) {
+    const table = I18N[currentLang] || I18N[DEFAULT_LANG];
+    return (table[key] || I18N[DEFAULT_LANG][key] || key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+  }
+  function setLanguage(lang) {
+    if (!I18N[lang]) return;
+    currentLang = lang;
+    document.documentElement.lang = t('langCode');
+    try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch (_) {}
+    applyStaticTranslations();
+    updateGuidesUI();
+    if (state.patternMode) buildLegendBar();
+    if (galleryModal && galleryModal.classList.contains('open')) renderGalleryList();
+  }
+
+  const STATIC_EN = {
+    '나만의 픽셀아트를 만들어 보아요!': 'Create your own pixel art!',
+    '1단계 · 캔버스 모양을 골라요': 'Step 1 · Choose a canvas shape',
+    '가로 모드': 'Landscape mode', '정사각형 모드': 'Square mode', '세로 모드': 'Portrait mode',
+    '도안 갤러리': 'Pattern Gallery', '친구들이 공유한 도안을 골라 색칠해요': 'Choose and color patterns shared by friends',
+    '픽셀 칸 수를 정해요': 'Choose the number of pixel cells', '2단계 · 그림 크기를 골라요': 'Step 2 · Choose a drawing size',
+    '소 (S)': 'Small (S)', '중 (M)': 'Medium (M)', '대 (L)': 'Large (L)', '특대 (XL)': 'Extra Large (XL)', '초대형(XXL)': 'Huge (XXL)',
+    '이전 단계': 'Previous step', '붓 크기': 'Brush size', '이전 단계로 이동': 'Go to previous step', '홈으로 이동': 'Go home', '첫 화면으로 이동': 'Go to first screen', '홈으로': 'Home', '사용자 지정 색': 'Custom color', '스포이트 (색 추출)': 'Eyedropper (pick color)', '되돌리기': 'Undo', '다시 실행': 'Redo', '더보기': 'More', '닫기': 'Close', '사용법 보기': 'Open help', '갤러리에 올리기': 'Upload to gallery', '작가(만든이)': 'Artist', '관리자 모드 열기': 'Open admin mode', '1칸': '1 cell', '4칸': '4 cells', '9칸': '9 cells',
+    '같은 칸을 다시 누르면 지워져요': 'Tap the same cell again to erase it', '색상': 'Color', '그림 참고하기': 'Reference image',
+    '가이드라인 숨기기': 'Hide guides', '가이드라인 보기': 'Show guides', '저장하기': 'Save', '불러오기': 'Load', '이미지 저장': 'Save image', '이미지 복사': 'Copy image', '링크 공유': 'Share link', '도안 만들기': 'Make pattern', '도안 불러오기': 'Load pattern', '전체 지우기': 'Clear all',
+    '편집 화면으로 돌아가기': 'Back to editing', '이미지를 선택하세요': 'Choose an image', '참고할 이미지를 올리면여기에 보여요!': 'Upload a reference image and it will appear here!', '이미지 지우기': 'Remove image', '색칠 도안': 'Coloring pattern',
+    '확인': 'Confirm', '정말 진행할까요?': 'Do you want to continue?', '취소': 'Cancel', '사용법': 'How to use',
+    '모양·크기': 'Shape & size', '캔버스 모양과 픽셀 칸 수를 골라요. 도안 갤러리에서 바로 시작할 수도 있어요': 'Choose a canvas shape and pixel count. You can also start from the pattern gallery.',
+    '붓·색상': 'Brush & color', '붓 크기와 색을 고른 뒤 칸을 터치해요. 같은 색을 다시 누르면 지워져요': 'Choose a brush size and color, then tap cells. Tap the same color again to erase.',
+    '도안 색칠': 'Color patterns', '갤러리 도안을 누르면 번호대로 색칠하는 화면이 바로 열려요': 'Tap a gallery pattern to open color-by-number mode.',
+    '참고·편집': 'Reference & edit', '더보기(⋮)에서 그림 참고하기·가이드라인, 되돌리기·다시 실행을 써요': 'Use reference image, guides, undo, and redo from More (⋮).',
+    '저장·공유': 'Save & share', '더보기(⋮)에서 이미지 저장·복사, 링크 공유, 갤러리에 올리기를 해요': 'Use More (⋮) to save/copy images, share links, and upload to the gallery.',
+    '정렬': 'Sort', '최신순': 'Newest', '인기순': 'Popular', '작품명': 'Title', '작가(만든이)': 'Artist', '동의하고 제출': 'Agree and submit', '관리자 모드': 'Admin mode', '입장': 'Enter', '새로고침': 'Refresh', 'Created by. 교육뮤지컬 꿈꾸는 치수쌤': 'Created by. Education Musical Chichiboo'
+  };
+  const STATIC_KO = Object.fromEntries(Object.entries(STATIC_EN).map(([ko, en]) => [en, ko]));
+  function translateTextNodes(root, table) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const raw = node.nodeValue;
+      const compact = raw.replace(/\s+/g, ' ').trim();
+      if (!compact) return;
+      const direct = table[compact] || table[raw.trim()];
+      if (direct) node.nodeValue = raw.replace(raw.trim(), direct);
+    });
+  }
+  function applyAttributeTranslations(table) {
+    document.querySelectorAll('[title], [aria-label], [placeholder]').forEach(el => {
+      ['title', 'aria-label', 'placeholder'].forEach(attr => {
+        const value = el.getAttribute(attr);
+        if (value && table[value]) el.setAttribute(attr, table[value]);
+      });
+    });
+  }
+  function applyStaticTranslations() {
+    const staticTable = currentLang === 'en' ? STATIC_EN : STATIC_KO;
+    translateTextNodes(document.body, staticTable);
+    applyAttributeTranslations(staticTable);
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    document.querySelectorAll('[data-language-toggle]').forEach(langBtn => {
+      const next = currentLang === 'ko' ? 'en' : 'ko';
+      langBtn.dataset.langNext = next;
+      langBtn.title = t('langToggleLabel');
+      langBtn.setAttribute('aria-label', t('langToggleLabel'));
+      const label = langBtn.querySelector('.language-label');
+      if (label) label.textContent = currentLang.toUpperCase();
+    });
+  }
+
   // 도안 갤러리 서버 (Google Apps Script 웹앱 URL).
   // 비워두면 갤러리는 설정 안내만 표시됩니다. apps-script/Code.gs 참고.
   const GALLERY_API_URL = 'https://script.google.com/macros/s/AKfycbyJslq6cMLVZpxeXqQ6ropJ7PRPJ-b45-8HIA9i1saDsVzk8sxfJeui7pi3hwx8EELj/exec';
@@ -212,7 +310,7 @@
     try {
       if (localStorage.getItem('pixelworld:eraseHintShown')) return;
       setTimeout(() => {
-        toast('같은 칸을 다시 누르면 지워져요!');
+        toast(t('eraseHint'));
         localStorage.setItem('pixelworld:eraseHintShown', '1');
       }, 1200);
     } catch (_) {}
@@ -229,13 +327,13 @@
 
   // ===== 액션 핸들러 (네임드 함수) =====
   async function handleHome() {
-    const ok = await showConfirm('홈으로 가기', '홈 화면으로 돌아가요. 현재 그림은 자동으로 저장돼요.');
+    const ok = await showConfirm(t('homeTitle'), t('homeMsg'));
     if (!ok) return;
     saveLocal();
     showScreen('ratio');
   }
   async function handleBackStep() {
-    const ok = await showConfirm('이전 단계로', '캔버스 크기 선택 화면으로 돌아가요. 다시 크기를 고르면 지금 그림이 사라질 수 있어요.');
+    const ok = await showConfirm(t('backTitle'), t('backMsg'));
     if (!ok) return;
     saveLocal();
     updateSizeLabels();
@@ -243,14 +341,14 @@
   }
   async function handleClear() {
     const hasContent = state.pixels.some(p => p !== null);
-    if (!hasContent) { toast('이미 빈 캔버스예요!'); return; }
-    const ok = await showConfirm('전체 지우기', '지금 그린 그림이 모두 사라져요. 정말 지울까요?');
+    if (!hasContent) { toast(t('emptyCanvas')); return; }
+    const ok = await showConfirm(t('clearTitle'), t('clearMsg'));
     if (!ok) return;
     pushUndo(state.pixels.slice());
     state.pixels = new Array(state.cols * state.rows).fill(null);
     refreshGrid();
     saveLocal();
-    toast('캔버스를 비웠어요!');
+    toast(t('cleared'));
   }
   function handleGuidesToggle() {
     state.guidesVisible = !state.guidesVisible;
@@ -317,13 +415,13 @@
       patternLegend: state.patternLegend,
       savedAt: new Date().toISOString()
     };
-    downloadJsonFile(data, `내그림-${todayStr()}.json`);
-    toast('저장했어요!');
+    downloadJsonFile(data, `${t('myDrawing')}-${todayStr()}.json`);
+    toast(t('saved'));
   }
   async function handleLoadJson() {
     const hasContent = Array.isArray(state.pixels) && state.pixels.some(p => p !== null);
     if (hasContent) {
-      const ok = await showConfirm('불러오기', '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?');
+      const ok = await showConfirm(t('loadTitle'), t('loadMsg'));
       if (!ok) return;
     }
     inputLoadJson.value = '';
@@ -335,12 +433,12 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `내그림-${todayStr()}.jpg`;
+      a.download = `${t('myDrawing')}-${todayStr()}.jpg`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      toast('이미지로 저장했어요!');
+      toast(t('imageSaved'));
     }, 'image/jpeg', 0.92);
   }
   function handleCopyJpg() {
@@ -349,9 +447,9 @@
       try {
         if (!navigator.clipboard || !window.ClipboardItem) throw new Error('not supported');
         await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-        toast('이미지가 클립보드에 복사됐어요!');
+        toast(t('copiedImage'));
       } catch (err) {
-        toast('이 브라우저에서는 복사를 지원하지 않아요.');
+        toast(t('copyUnsupported'));
       }
     }, 'image/png');
   }
@@ -368,9 +466,9 @@
     const url = `${location.origin}${location.pathname}#art=${encoded}`;
     try {
       await navigator.clipboard.writeText(url);
-      toast('공유 링크를 복사했어요!');
+      toast(t('shareCopied'));
     } catch (err) {
-      prompt('이 링크를 복사해서 공유하세요:', url);
+      prompt(t('sharePrompt'), url);
     }
   }
 
@@ -397,14 +495,14 @@
 
   function handleMakePattern() {
     const filled = state.pixels.some(p => p);
-    if (!filled) { toast('먼저 그림을 그려 주세요!'); return; }
+    if (!filled) { toast(t('drawFirst')); return; }
     const { legend, cells } = buildPatternFromPixels(state.pixels);
     state.patternMode = 'chart';
     state.patternCells = cells;
     state.patternLegend = legend;
     applyPatternUI();
     saveLocal();
-    toast(`색상 ${legend.length}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.`);
+    toast(t('patternMade', { count: legend.length }));
   }
 
   function handleLoadPattern() {
@@ -414,7 +512,7 @@
 
   function loadPatternData(data) {
     if (!data || !Array.isArray(data.cells) || !Array.isArray(data.legend) || !data.cols || !data.rows) {
-      throw new Error('형식 오류');
+      throw new Error(t('formatError'));
     }
     const total = data.cols * data.rows;
     state.ratio = data.ratio || 'square';
@@ -442,7 +540,7 @@
   // 일반 그림(픽셀) 데이터 불러오기
   function loadDrawingData(data) {
     if (!data || !Array.isArray(data.pixels) || !data.cols || !data.rows) {
-      throw new Error('형식 오류');
+      throw new Error(t('formatError'));
     }
     const total = data.cols * data.rows;
     state.ratio = data.ratio || 'square';
@@ -481,7 +579,7 @@
 
   async function exitPatternMode() {
     if (state.patternMode === 'color') {
-      const ok = await showConfirm('도안 끝내기', '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.');
+      const ok = await showConfirm(t('endPatternTitle'), t('endPatternMsg'));
       if (!ok) return;
     }
     state.patternMode = null;
@@ -528,19 +626,19 @@
   function buildLegendBar() {
     if (!patternLegendEl || !state.patternLegend) return;
     const isColor = state.patternMode === 'color';
-    patternLegendLabel.textContent = isColor ? '번호에 맞게 색칠해요!' : '색칠 도안 (숫자 = 색깔)';
+    patternLegendLabel.textContent = isColor ? t('patternColorLabel') : t('patternChartLabel');
 
     patternLegendActions.innerHTML = '';
     if (patternFab) patternFab.innerHTML = '';
     if (state.patternMode === 'chart') {
       // 도안 보기(읽기 전용) — 기능 버튼을 캔버스 위 플로팅 버튼으로 제공
-      addLegendAction(patternFab, 'download', '도안 저장', downloadPattern, true);
-      if (GALLERY_API_URL) addLegendAction(patternFab, 'cloud_upload', '갤러리에 올리기', submitToGallery);
+      addLegendAction(patternFab, 'download', t('savePattern'), downloadPattern, true);
+      if (GALLERY_API_URL) addLegendAction(patternFab, 'cloud_upload', t('uploadGallery'), submitToGallery);
       if (patternFab) patternFab.hidden = false;
       // '그림으로 돌아가기'는 좌측 상단 플로팅 버튼(btn-return-to-drawing)으로 제공
     } else {
       if (patternFab) patternFab.hidden = true;
-      addLegendAction(patternLegendActions, 'check_circle', '도안 끝내기', exitPatternMode, true);
+      addLegendAction(patternLegendActions, 'check_circle', t('endPattern'), exitPatternMode, true);
     }
 
     patternLegendItems.innerHTML = '';
@@ -555,7 +653,7 @@
       if (isColor) {
         chip.addEventListener('click', () => {
           selectColor(color);
-          toast(`${num}번 색을 골랐어요!`);
+          toast(t('colorPickedNum', { num }));
         });
       } else {
         chip.classList.add('legend-chip-static');
@@ -590,8 +688,8 @@
       cells: state.patternCells,
       savedAt: new Date().toISOString()
     };
-    downloadJsonFile(data, `도안-${todayStr()}.json`);
-    toast('도안 파일을 저장했어요!');
+    downloadJsonFile(data, `${t('patternFile')}-${todayStr()}.json`);
+    toast(t('patternSaved'));
   }
 
   // ===== 도안 갤러리 =====
@@ -634,7 +732,7 @@
   }
 
   function ratioLabel(ratio) {
-    return { landscape: '가로', square: '정사각형', portrait: '세로' }[ratio] || '기타';
+    return { landscape: t('landscape'), square: t('square'), portrait: t('portrait') }[ratio] || t('other');
   }
 
   function getPatternRatio(item) {
@@ -649,15 +747,12 @@
     if (!GALLERY_API_URL) {
       if (galleryTabs) galleryTabs.hidden = true;
       if (gallerySortEl) gallerySortEl.hidden = true;
-      galleryBody.innerHTML =
-        '<p class="gallery-msg">아직 갤러리 서버가 연결되지 않았어요.<br>' +
-        'Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>' +
-        '친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)</p>';
+      galleryBody.innerHTML = `<p class="gallery-msg">${t('galleryNoServer')}</p>`;
       return;
     }
     if (galleryTabs) galleryTabs.hidden = true;
     if (gallerySortEl) gallerySortEl.hidden = true;
-    galleryBody.innerHTML = '<p class="gallery-msg">도안을 불러오는 중...</p>';
+    galleryBody.innerHTML = `<p class="gallery-msg">${t('loadingPatterns')}</p>`;
     try {
       const res = await fetch(GALLERY_API_URL + '?action=list');
       const json = await res.json();
@@ -666,13 +761,13 @@
         console.error('gallery list error:', json.error);
         if (galleryTabs) galleryTabs.hidden = true;
         if (gallerySortEl) gallerySortEl.hidden = true;
-        galleryBody.innerHTML = '<p class="gallery-msg">갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</p>';
+        galleryBody.innerHTML = `<p class="gallery-msg">${t('galleryLoadFailed')}</p>`;
         return;
       }
       galleryItems = Array.isArray(json) ? json : (json.items || []);
       renderGalleryList();
     } catch (err) {
-      galleryBody.innerHTML = '<p class="gallery-msg">갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</p>';
+      galleryBody.innerHTML = `<p class="gallery-msg">${t('galleryLoadFailed')}</p>`;
     }
   }
 
@@ -682,10 +777,10 @@
     galleryItems.forEach(item => { counts[getPatternRatio(item)] = (counts[getPatternRatio(item)] || 0) + 1; });
     galleryTabs.innerHTML = '';
     [
-      ['all', '전체'],
-      ['landscape', '가로'],
-      ['square', '정사각형'],
-      ['portrait', '세로']
+      ['all', t('all')],
+      ['landscape', t('landscape')],
+      ['square', t('square')],
+      ['portrait', t('portrait')]
     ].forEach(([key, label]) => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -734,12 +829,12 @@
     }
     if (!galleryItems.length) {
       if (gallerySortEl) gallerySortEl.hidden = true;
-      galleryBody.innerHTML = '<p class="gallery-msg">아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!</p>';
+      galleryBody.innerHTML = `<p class="gallery-msg">${t('noPatterns')}</p>`;
       return;
     }
     renderGallerySort();
     if (!list.length) {
-      galleryBody.innerHTML = `<p class="gallery-msg">${ratioLabel(galleryRatioFilter)} 비율 도안이 아직 없어요.</p>`;
+      galleryBody.innerHTML = `<p class="gallery-msg">${t('noRatioPatterns', { ratio: ratioLabel(galleryRatioFilter) })}</p>`;
       return;
     }
     galleryBody.innerHTML = '';
@@ -755,17 +850,17 @@
           loadPatternData(item);
           recordGalleryView(item);
           closeGallery();
-          toast('도안을 불러왔어요! 번호에 맞게 색칠해 보세요.');
+          toast(t('patternLoaded'));
         }
-        catch (_) { toast('이 도안을 불러올 수 없어요.'); }
+        catch (_) { toast(t('patternLoadFailed')); }
       });
       const img = document.createElement('img');
       img.className = 'gallery-thumb';
-      img.alt = `${item.title || '도안'} 미리보기`;
+      img.alt = t('patternPreview', { title: item.title || t('patternFile') });
       try { img.src = renderPatternThumb(item, 160); } catch (_) {}
       const title = document.createElement('div');
       title.className = 'gallery-title';
-      title.textContent = item.title || '도안';
+      title.textContent = item.title || t('patternFile');
       const meta = document.createElement('div');
       meta.className = 'gallery-meta';
       meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}`;
@@ -774,7 +869,7 @@
       views.innerHTML = `<span class="material-icons">visibility</span><span class="gallery-views-num">${getViews(item)}</span>`;
       const action = document.createElement('span');
       action.className = 'btn btn-primary btn-small gallery-action';
-      action.innerHTML = '<span class="material-icons">brush</span> 색칠하기';
+      action.innerHTML = `<span class="material-icons">brush</span> ${t('colorIt')}`;
       card.appendChild(img);
       card.appendChild(title);
       card.appendChild(meta);
@@ -812,7 +907,7 @@
   }
 
   function submitToGallery() {
-    if (!GALLERY_API_URL) { toast('갤러리 서버가 설정되지 않았어요.'); return; }
+    if (!GALLERY_API_URL) { toast(t('galleryNoServerToast')); return; }
     if (!state.patternCells || !state.patternLegend) return;
     galleryUploadForm.reset();
     galleryUploadTitle.value = '';
@@ -829,21 +924,21 @@
   async function handleGalleryUploadSubmit(e) {
     e.preventDefault();
     if (!galleryUploadAgree.checked) {
-      toast('공유 안내에 동의해야 제출할 수 있어요.');
+      toast(t('agreeRequired'));
       return;
     }
     const title = galleryUploadTitle.value.trim();
     const author = galleryUploadAuthor.value.trim();
     if (!title || !author) {
-      toast('작품명과 작가를 모두 적어 주세요.');
+      toast(t('titleAuthorRequired'));
       return;
     }
     const ok = await showConfirm(
-      '갤러리 공유 확인',
-      '제출하면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료가 아닌지 다시 확인했나요?'
+      t('galleryConfirmTitle'),
+      t('galleryConfirmMsg')
     );
     if (!ok) return;
-    toast('갤러리에 올리는 중...');
+    toast(t('uploading'));
     const payload = {
       title,
       author,
@@ -865,9 +960,9 @@
       try { json = await res.json(); } catch (_) {}
       if (!res.ok || (json && json.ok === false)) throw new Error(json && json.error ? json.error : 'upload failed');
       closeGalleryUpload();
-      toast('갤러리에 올렸어요!');
+      toast(t('uploaded'));
     } catch (err) {
-      toast('갤러리에 올리지 못했어요.');
+      toast(t('uploadFailed'));
     }
   }
 
@@ -892,6 +987,9 @@
 
   function openHelp() { helpModal.classList.add('open'); }
   function closeHelp() { helpModal.classList.remove('open'); }
+  document.querySelectorAll('[data-language-toggle]').forEach(btnLanguage => {
+    btnLanguage.addEventListener('click', () => setLanguage(btnLanguage.dataset.langNext || (currentLang === 'ko' ? 'en' : 'ko')));
+  });
   document.getElementById('btn-help-floating').addEventListener('click', openHelp);
   document.getElementById('btn-help-top').addEventListener('click', openHelp);
   document.getElementById('help-close').addEventListener('click', closeHelp);
@@ -899,7 +997,7 @@
 
   // ===== 관리자 모드 =====
   function openAdmin() {
-    if (!GALLERY_API_URL) { toast('갤러리 서버가 설정되지 않았어요.'); return; }
+    if (!GALLERY_API_URL) { toast(t('galleryNoServerToast')); return; }
     adminModal.classList.add('open');
     if (adminPassword) {
       showAdminDashboard();
@@ -943,7 +1041,7 @@
   }
 
   async function loadAdminList() {
-    adminSummary.textContent = '도안을 불러오는 중...';
+    adminSummary.textContent = t('loadingPatterns');
     adminList.innerHTML = '';
     try {
       const json = await adminApi('admin-list');
@@ -952,18 +1050,18 @@
       adminPassword = '';
       adminLoginForm.hidden = false;
       adminDashboard.hidden = true;
-      toast('관리자 비밀번호를 확인해 주세요.');
+      toast(t('adminPasswordCheck'));
       setTimeout(() => adminPasswordInput.focus(), 0);
     }
   }
 
   function renderAdminList(items) {
-    adminSummary.textContent = `총 ${items.length}개의 도안`;
+    adminSummary.textContent = t('adminTotal', { count: items.length });
     adminList.innerHTML = '';
     if (!items.length) {
       const empty = document.createElement('p');
       empty.className = 'gallery-msg';
-      empty.textContent = '관리할 도안이 아직 없어요.';
+      empty.textContent = t('adminEmpty');
       adminList.appendChild(empty);
       return;
     }
@@ -974,31 +1072,31 @@
 
       const img = document.createElement('img');
       img.className = 'admin-thumb';
-      img.alt = `${item.title || '도안'} 미리보기`;
+      img.alt = t('patternPreview', { title: item.title || t('patternFile') });
       try { img.src = renderPatternThumb(item, 96); } catch (_) {}
 
       const fields = document.createElement('div');
       fields.className = 'admin-fields';
       fields.innerHTML =
-        '<label class="field-label">작품명</label>' +
+        `<label class="field-label">${t('title')}</label>` +
         '<input class="text-field admin-title-input" maxlength="60" required />' +
-        '<label class="field-label">작가(만든이)</label>' +
+        `<label class="field-label">${t('author')}</label>` +
         '<input class="text-field admin-author-input" maxlength="40" required />' +
         '<p class="admin-meta"></p>';
       fields.querySelector('.admin-title-input').value = item.title || '';
       fields.querySelector('.admin-author-input').value = item.author || '';
-      fields.querySelector('.admin-meta').textContent = `${ratioLabel(getPatternRatio(item))} · ${item.cols || '?'}×${item.rows || '?'} · 조회 ${getViews(item)} · ${item.createdAt || '날짜 없음'}`;
+      fields.querySelector('.admin-meta').textContent = `${ratioLabel(getPatternRatio(item))} · ${item.cols || '?'}×${item.rows || '?'} · ${t('views')} ${getViews(item)} · ${item.createdAt || t('noDate')}`;
 
       const actions = document.createElement('div');
       actions.className = 'admin-actions';
       const saveBtn = document.createElement('button');
       saveBtn.type = 'submit';
       saveBtn.className = 'btn btn-primary btn-small';
-      saveBtn.innerHTML = '<span class="material-icons">save</span> 수정';
+      saveBtn.innerHTML = `<span class="material-icons">save</span> ${t('edit')}`;
       const deleteBtn = document.createElement('button');
       deleteBtn.type = 'button';
       deleteBtn.className = 'btn btn-ghost btn-small admin-delete';
-      deleteBtn.innerHTML = '<span class="material-icons">delete</span> 삭제';
+      deleteBtn.innerHTML = `<span class="material-icons">delete</span> ${t('delete')}`;
       actions.appendChild(saveBtn);
       actions.appendChild(deleteBtn);
 
@@ -1016,14 +1114,14 @@
     const id = row.dataset.id;
     const title = row.querySelector('.admin-title-input').value.trim();
     const author = row.querySelector('.admin-author-input').value.trim();
-    if (!id || !title || !author) { toast('작품명과 작가를 확인해 주세요.'); return; }
+    if (!id || !title || !author) { toast(t('titleAuthorCheck')); return; }
     try {
       await adminApi('admin-update', { id, title, author });
-      toast('도안을 수정했어요.');
+      toast(t('updated'));
       loadAdminList();
       if (galleryModal.classList.contains('open')) loadGalleryList();
     } catch (err) {
-      toast('도안을 수정하지 못했어요.');
+      toast(t('updateFailed'));
     }
   }
 
@@ -1033,16 +1131,16 @@
     const row = btn.closest('.admin-item');
     const id = row && row.dataset.id;
     if (!id) return;
-    const title = row.querySelector('.admin-title-input').value.trim() || '이 도안';
-    const ok = await showConfirm('도안 삭제', `「${title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.`);
+    const title = row.querySelector('.admin-title-input').value.trim() || t('thisPattern');
+    const ok = await showConfirm(t('deleteTitle'), t('deleteMsg', { title }));
     if (!ok) return;
     try {
       await adminApi('admin-delete', { id });
-      toast('도안을 삭제했어요.');
+      toast(t('deleted'));
       loadAdminList();
       if (galleryModal.classList.contains('open')) loadGalleryList();
     } catch (err) {
-      toast('도안을 삭제하지 못했어요.');
+      toast(t('deleteFailed'));
     }
   }
 
@@ -1307,7 +1405,7 @@
   function updateGuidesUI() {
     canvasWrapper.classList.toggle('guides-hidden', !state.guidesVisible);
     if (moreGuidesLabel) {
-      moreGuidesLabel.textContent = state.guidesVisible ? '가이드라인 숨기기' : '가이드라인 보기';
+      moreGuidesLabel.textContent = state.guidesVisible ? t('hideGuides') : t('showGuides');
     }
   }
 
@@ -1380,14 +1478,14 @@
       referencePreview.innerHTML = '';
       const img = document.createElement('img');
       img.src = ev.target.result;
-      img.alt = '참고 이미지';
+      img.alt = t('referenceImage');
       referencePreview.appendChild(img);
       btnRemoveReference.style.display = 'inline-flex';
     };
     reader.readAsDataURL(file);
   });
   btnRemoveReference.addEventListener('click', () => {
-    referencePreview.innerHTML = '<p class="reference-hint">참고할 이미지를 올리면<br />여기에 보여요!</p>';
+    referencePreview.innerHTML = `<p class="reference-hint">${t('referenceHint')}</p>`;
     inputReference.value = '';
     btnRemoveReference.style.display = 'none';
   });
@@ -1443,7 +1541,7 @@
         try {
           const result = await new EyeDropper().open();
           selectColor(result.sRGBHex);
-          toast(`${result.sRGBHex.toUpperCase()} 색을 골랐어요!`);
+          toast(t('colorPicked', { color: result.sRGBHex.toUpperCase() }));
         } catch (_) {
           // 사용자가 Esc로 취소하거나 실패 시 조용히 종료
         } finally {
@@ -1455,7 +1553,7 @@
       // 폴백: 캔버스 내 셀 클릭 방식
       const willOn = !state.eyedropper;
       setEyedropper(willOn);
-      toast(willOn ? '스포이트: 색을 추출할 칸을 눌러요!' : '스포이트를 껐어요.');
+      toast(willOn ? t('eyedropperOn') : t('eyedropperOff'));
     });
   }
 
@@ -1463,12 +1561,12 @@
   function pickColorAt(idx) {
     const color = state.pixels[idx];
     if (!color) {
-      toast('빈 칸이에요. 색칠된 칸을 눌러 주세요.');
+      toast(t('emptyCell'));
       return;
     }
     selectColor(color);
     setEyedropper(false);
-    toast(`${color.toUpperCase()} 색을 골랐어요!`);
+    toast(t('colorPicked', { color: color.toUpperCase() }));
   }
 
   // ===== 더보기 메뉴 =====
@@ -1517,7 +1615,7 @@
     if (!file) return;
     const reader = new FileReader();
     reader.onerror = () => {
-      toast('파일을 읽을 수 없어요.');
+      toast(t('fileReadFailed'));
       inputLoadJson.value = '';
     };
     reader.onload = (ev) => {
@@ -1525,10 +1623,10 @@
         const data = JSON.parse(ev.target.result);
         loadProjectFile(data);
         toast(state.patternMode === 'color'
-          ? '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.'
-          : '불러왔어요!');
+          ? t('patternLoaded')
+          : t('loaded'));
       } catch (err) {
-        toast('파일을 읽을 수 없어요.');
+        toast(t('fileReadFailed'));
       }
       inputLoadJson.value = '';
     };
@@ -1541,7 +1639,7 @@
     if (!file) return;
     const reader = new FileReader();
     reader.onerror = () => {
-      toast('도안 파일을 읽을 수 없어요.');
+      toast(t('patternFileReadFailed'));
       inputLoadPattern.value = '';
     };
     reader.onload = (ev) => {
@@ -1549,10 +1647,10 @@
         const data = JSON.parse(ev.target.result);
         loadProjectFile(data);
         toast(state.patternMode === 'color'
-          ? '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.'
-          : '불러왔어요!');
+          ? t('patternLoaded')
+          : t('loaded'));
       } catch (err) {
-        toast('도안 파일을 읽을 수 없어요.');
+        toast(t('patternFileReadFailed'));
       }
       inputLoadPattern.value = '';
     };
@@ -1664,7 +1762,7 @@
         history.replaceState(null, '', location.pathname);
         return;
       } catch (err) {
-        toast('공유 링크를 읽을 수 없어요.');
+        toast(t('shareReadFailed'));
       }
     }
 
@@ -1697,5 +1795,6 @@
     showScreen('ratio');
   }
 
+  setLanguage(currentLang);
   bootstrap();
 })();

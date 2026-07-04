@@ -74,7 +74,9 @@
     '도안 색칠': 'Color patterns', '갤러리 도안을 누르면 번호대로 색칠하는 화면이 바로 열려요': 'Tap a gallery pattern to open color-by-number mode.',
     '참고·편집': 'Reference & edit', '더보기(⋮)에서 그림 참고하기·가이드라인, 되돌리기·다시 실행을 써요': 'Use reference image, guides, undo, and redo from More (⋮).',
     '저장·공유': 'Save & share', '더보기(⋮)에서 이미지 저장·복사, 링크 공유, 갤러리에 올리기를 해요': 'Use More (⋮) to save/copy images, share links, and upload to the gallery.',
-    '정렬': 'Sort', '최신순': 'Newest', '인기순': 'Popular', '작품명': 'Title', '작가(만든이)': 'Artist', '동의하고 제출': 'Agree and submit', '관리자 모드': 'Admin mode', '입장': 'Enter', '새로고침': 'Refresh', 'Created by. 교육뮤지컬 꿈꾸는 치수쌤': 'Created by. Education Musical Chichiboo'
+    '정렬': 'Sort', '최신순': 'Newest', '인기순': 'Popular', '작품명': 'Title', '작가(만든이)': 'Artist', '예: 무지개 고양이': 'Ex: Rainbow Cat', '예: 3학년 김픽셀': 'Ex: Pixel Kim, Grade 3',
+    '올리면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료를 올리지 않겠습니다.': 'After uploading, it cannot be deleted by you and will be shared with everyone who uses this app. I will not upload anything harmful or offensive to others.',
+    'Apps Script 속성의 ADMIN_PASSWORD': 'ADMIN_PASSWORD from Apps Script properties', '동의하고 제출': 'Agree and submit', '관리자 모드': 'Admin mode', '입장': 'Enter', '새로고침': 'Refresh', 'Created by. 교육뮤지컬 꿈꾸는 치수쌤': 'Created by. Education Musical Chichiboo'
   };
   const STATIC_KO = Object.fromEntries(Object.entries(STATIC_EN).map(([ko, en]) => [en, ko]));
   function translateTextNodes(root, table) {

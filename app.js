@@ -122,6 +122,268 @@
   // 비워두면 갤러리는 설정 안내만 표시됩니다. apps-script/Code.gs 참고.
   const GALLERY_API_URL = 'https://script.google.com/macros/s/AKfycbyJslq6cMLVZpxeXqQ6ropJ7PRPJ-b45-8HIA9i1saDsVzk8sxfJeui7pi3hwx8EELj/exec';
 
+  const COUNTRY_OPTIONS = [
+    { code: 'KR', name: 'South Korea' },
+    { code: 'AF', name: 'Afghanistan' },
+    { code: 'AX', name: 'Åland Islands' },
+    { code: 'AL', name: 'Albania' },
+    { code: 'DZ', name: 'Algeria' },
+    { code: 'AS', name: 'American Samoa' },
+    { code: 'AD', name: 'Andorra' },
+    { code: 'AO', name: 'Angola' },
+    { code: 'AI', name: 'Anguilla' },
+    { code: 'AQ', name: 'Antarctica' },
+    { code: 'AG', name: 'Antigua and Barbuda' },
+    { code: 'AR', name: 'Argentina' },
+    { code: 'AM', name: 'Armenia' },
+    { code: 'AW', name: 'Aruba' },
+    { code: 'AU', name: 'Australia' },
+    { code: 'AT', name: 'Austria' },
+    { code: 'AZ', name: 'Azerbaijan' },
+    { code: 'BS', name: 'Bahamas' },
+    { code: 'BH', name: 'Bahrain' },
+    { code: 'BD', name: 'Bangladesh' },
+    { code: 'BB', name: 'Barbados' },
+    { code: 'BY', name: 'Belarus' },
+    { code: 'BE', name: 'Belgium' },
+    { code: 'BZ', name: 'Belize' },
+    { code: 'BJ', name: 'Benin' },
+    { code: 'BM', name: 'Bermuda' },
+    { code: 'BT', name: 'Bhutan' },
+    { code: 'BO', name: 'Bolivia' },
+    { code: 'BQ', name: 'Bonaire, Sint Eustatius and Saba' },
+    { code: 'BA', name: 'Bosnia and Herzegovina' },
+    { code: 'BW', name: 'Botswana' },
+    { code: 'BV', name: 'Bouvet Island' },
+    { code: 'BR', name: 'Brazil' },
+    { code: 'IO', name: 'British Indian Ocean Territory' },
+    { code: 'BN', name: 'Brunei Darussalam' },
+    { code: 'BG', name: 'Bulgaria' },
+    { code: 'BF', name: 'Burkina Faso' },
+    { code: 'BI', name: 'Burundi' },
+    { code: 'CV', name: 'Cabo Verde' },
+    { code: 'KH', name: 'Cambodia' },
+    { code: 'CM', name: 'Cameroon' },
+    { code: 'CA', name: 'Canada' },
+    { code: 'KY', name: 'Cayman Islands' },
+    { code: 'CF', name: 'Central African Republic' },
+    { code: 'TD', name: 'Chad' },
+    { code: 'CL', name: 'Chile' },
+    { code: 'CN', name: 'China' },
+    { code: 'CX', name: 'Christmas Island' },
+    { code: 'CC', name: 'Cocos (Keeling) Islands' },
+    { code: 'CO', name: 'Colombia' },
+    { code: 'KM', name: 'Comoros' },
+    { code: 'CG', name: 'Congo' },
+    { code: 'CD', name: 'Congo, The Democratic Republic of the' },
+    { code: 'CK', name: 'Cook Islands' },
+    { code: 'CR', name: 'Costa Rica' },
+    { code: 'CI', name: "Côte d'Ivoire" },
+    { code: 'HR', name: 'Croatia' },
+    { code: 'CU', name: 'Cuba' },
+    { code: 'CW', name: 'Curaçao' },
+    { code: 'CY', name: 'Cyprus' },
+    { code: 'CZ', name: 'Czechia' },
+    { code: 'DK', name: 'Denmark' },
+    { code: 'DJ', name: 'Djibouti' },
+    { code: 'DM', name: 'Dominica' },
+    { code: 'DO', name: 'Dominican Republic' },
+    { code: 'EC', name: 'Ecuador' },
+    { code: 'EG', name: 'Egypt' },
+    { code: 'SV', name: 'El Salvador' },
+    { code: 'GQ', name: 'Equatorial Guinea' },
+    { code: 'ER', name: 'Eritrea' },
+    { code: 'EE', name: 'Estonia' },
+    { code: 'SZ', name: 'Eswatini' },
+    { code: 'ET', name: 'Ethiopia' },
+    { code: 'FK', name: 'Falkland Islands (Malvinas)' },
+    { code: 'FO', name: 'Faroe Islands' },
+    { code: 'FJ', name: 'Fiji' },
+    { code: 'FI', name: 'Finland' },
+    { code: 'FR', name: 'France' },
+    { code: 'GF', name: 'French Guiana' },
+    { code: 'PF', name: 'French Polynesia' },
+    { code: 'TF', name: 'French Southern Territories' },
+    { code: 'GA', name: 'Gabon' },
+    { code: 'GM', name: 'Gambia' },
+    { code: 'GE', name: 'Georgia' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'GH', name: 'Ghana' },
+    { code: 'GI', name: 'Gibraltar' },
+    { code: 'GR', name: 'Greece' },
+    { code: 'GL', name: 'Greenland' },
+    { code: 'GD', name: 'Grenada' },
+    { code: 'GP', name: 'Guadeloupe' },
+    { code: 'GU', name: 'Guam' },
+    { code: 'GT', name: 'Guatemala' },
+    { code: 'GG', name: 'Guernsey' },
+    { code: 'GN', name: 'Guinea' },
+    { code: 'GW', name: 'Guinea-Bissau' },
+    { code: 'GY', name: 'Guyana' },
+    { code: 'HT', name: 'Haiti' },
+    { code: 'HM', name: 'Heard Island and McDonald Islands' },
+    { code: 'VA', name: 'Holy See (Vatican City State)' },
+    { code: 'HN', name: 'Honduras' },
+    { code: 'HK', name: 'Hong Kong' },
+    { code: 'HU', name: 'Hungary' },
+    { code: 'IS', name: 'Iceland' },
+    { code: 'IN', name: 'India' },
+    { code: 'ID', name: 'Indonesia' },
+    { code: 'IR', name: 'Iran' },
+    { code: 'IQ', name: 'Iraq' },
+    { code: 'IE', name: 'Ireland' },
+    { code: 'IM', name: 'Isle of Man' },
+    { code: 'IL', name: 'Israel' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'JM', name: 'Jamaica' },
+    { code: 'JP', name: 'Japan' },
+    { code: 'JE', name: 'Jersey' },
+    { code: 'JO', name: 'Jordan' },
+    { code: 'KZ', name: 'Kazakhstan' },
+    { code: 'KE', name: 'Kenya' },
+    { code: 'KI', name: 'Kiribati' },
+    { code: 'KW', name: 'Kuwait' },
+    { code: 'KG', name: 'Kyrgyzstan' },
+    { code: 'LA', name: 'Laos' },
+    { code: 'LV', name: 'Latvia' },
+    { code: 'LB', name: 'Lebanon' },
+    { code: 'LS', name: 'Lesotho' },
+    { code: 'LR', name: 'Liberia' },
+    { code: 'LY', name: 'Libya' },
+    { code: 'LI', name: 'Liechtenstein' },
+    { code: 'LT', name: 'Lithuania' },
+    { code: 'LU', name: 'Luxembourg' },
+    { code: 'MO', name: 'Macao' },
+    { code: 'MG', name: 'Madagascar' },
+    { code: 'MW', name: 'Malawi' },
+    { code: 'MY', name: 'Malaysia' },
+    { code: 'MV', name: 'Maldives' },
+    { code: 'ML', name: 'Mali' },
+    { code: 'MT', name: 'Malta' },
+    { code: 'MH', name: 'Marshall Islands' },
+    { code: 'MQ', name: 'Martinique' },
+    { code: 'MR', name: 'Mauritania' },
+    { code: 'MU', name: 'Mauritius' },
+    { code: 'YT', name: 'Mayotte' },
+    { code: 'MX', name: 'Mexico' },
+    { code: 'FM', name: 'Micronesia, Federated States of' },
+    { code: 'MD', name: 'Moldova' },
+    { code: 'MC', name: 'Monaco' },
+    { code: 'MN', name: 'Mongolia' },
+    { code: 'ME', name: 'Montenegro' },
+    { code: 'MS', name: 'Montserrat' },
+    { code: 'MA', name: 'Morocco' },
+    { code: 'MZ', name: 'Mozambique' },
+    { code: 'MM', name: 'Myanmar' },
+    { code: 'NA', name: 'Namibia' },
+    { code: 'NR', name: 'Nauru' },
+    { code: 'NP', name: 'Nepal' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'NC', name: 'New Caledonia' },
+    { code: 'NZ', name: 'New Zealand' },
+    { code: 'NI', name: 'Nicaragua' },
+    { code: 'NE', name: 'Niger' },
+    { code: 'NG', name: 'Nigeria' },
+    { code: 'NU', name: 'Niue' },
+    { code: 'NF', name: 'Norfolk Island' },
+    { code: 'KP', name: 'North Korea' },
+    { code: 'MK', name: 'North Macedonia' },
+    { code: 'MP', name: 'Northern Mariana Islands' },
+    { code: 'NO', name: 'Norway' },
+    { code: 'OM', name: 'Oman' },
+    { code: 'PK', name: 'Pakistan' },
+    { code: 'PW', name: 'Palau' },
+    { code: 'PS', name: 'Palestine, State of' },
+    { code: 'PA', name: 'Panama' },
+    { code: 'PG', name: 'Papua New Guinea' },
+    { code: 'PY', name: 'Paraguay' },
+    { code: 'PE', name: 'Peru' },
+    { code: 'PH', name: 'Philippines' },
+    { code: 'PN', name: 'Pitcairn' },
+    { code: 'PL', name: 'Poland' },
+    { code: 'PT', name: 'Portugal' },
+    { code: 'PR', name: 'Puerto Rico' },
+    { code: 'QA', name: 'Qatar' },
+    { code: 'RE', name: 'Réunion' },
+    { code: 'RO', name: 'Romania' },
+    { code: 'RU', name: 'Russian Federation' },
+    { code: 'RW', name: 'Rwanda' },
+    { code: 'BL', name: 'Saint Barthélemy' },
+    { code: 'SH', name: 'Saint Helena, Ascension and Tristan da Cunha' },
+    { code: 'KN', name: 'Saint Kitts and Nevis' },
+    { code: 'LC', name: 'Saint Lucia' },
+    { code: 'MF', name: 'Saint Martin (French part)' },
+    { code: 'PM', name: 'Saint Pierre and Miquelon' },
+    { code: 'VC', name: 'Saint Vincent and the Grenadines' },
+    { code: 'WS', name: 'Samoa' },
+    { code: 'SM', name: 'San Marino' },
+    { code: 'ST', name: 'Sao Tome and Principe' },
+    { code: 'SA', name: 'Saudi Arabia' },
+    { code: 'SN', name: 'Senegal' },
+    { code: 'RS', name: 'Serbia' },
+    { code: 'SC', name: 'Seychelles' },
+    { code: 'SL', name: 'Sierra Leone' },
+    { code: 'SG', name: 'Singapore' },
+    { code: 'SX', name: 'Sint Maarten (Dutch part)' },
+    { code: 'SK', name: 'Slovakia' },
+    { code: 'SI', name: 'Slovenia' },
+    { code: 'SB', name: 'Solomon Islands' },
+    { code: 'SO', name: 'Somalia' },
+    { code: 'ZA', name: 'South Africa' },
+    { code: 'GS', name: 'South Georgia and the South Sandwich Islands' },
+    { code: 'SS', name: 'South Sudan' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'LK', name: 'Sri Lanka' },
+    { code: 'SD', name: 'Sudan' },
+    { code: 'SR', name: 'Suriname' },
+    { code: 'SJ', name: 'Svalbard and Jan Mayen' },
+    { code: 'SE', name: 'Sweden' },
+    { code: 'CH', name: 'Switzerland' },
+    { code: 'SY', name: 'Syria' },
+    { code: 'TW', name: 'Taiwan' },
+    { code: 'TJ', name: 'Tajikistan' },
+    { code: 'TZ', name: 'Tanzania' },
+    { code: 'TH', name: 'Thailand' },
+    { code: 'TL', name: 'Timor-Leste' },
+    { code: 'TG', name: 'Togo' },
+    { code: 'TK', name: 'Tokelau' },
+    { code: 'TO', name: 'Tonga' },
+    { code: 'TT', name: 'Trinidad and Tobago' },
+    { code: 'TN', name: 'Tunisia' },
+    { code: 'TR', name: 'Türkiye' },
+    { code: 'TM', name: 'Turkmenistan' },
+    { code: 'TC', name: 'Turks and Caicos Islands' },
+    { code: 'TV', name: 'Tuvalu' },
+    { code: 'UG', name: 'Uganda' },
+    { code: 'UA', name: 'Ukraine' },
+    { code: 'AE', name: 'United Arab Emirates' },
+    { code: 'GB', name: 'United Kingdom' },
+    { code: 'US', name: 'United States' },
+    { code: 'UM', name: 'United States Minor Outlying Islands' },
+    { code: 'UY', name: 'Uruguay' },
+    { code: 'UZ', name: 'Uzbekistan' },
+    { code: 'VU', name: 'Vanuatu' },
+    { code: 'VE', name: 'Venezuela' },
+    { code: 'VN', name: 'Vietnam' },
+    { code: 'VG', name: 'Virgin Islands, British' },
+    { code: 'VI', name: 'Virgin Islands, U.S.' },
+    { code: 'WF', name: 'Wallis and Futuna' },
+    { code: 'EH', name: 'Western Sahara' },
+    { code: 'YE', name: 'Yemen' },
+    { code: 'ZM', name: 'Zambia' },
+    { code: 'ZW', name: 'Zimbabwe' },
+  ];
+
+  function countryFlag(code) {
+    if (!/^[A-Z]{2}$/.test(code || '')) return '';
+    return String.fromCodePoint(...code.split('').map(ch => 0x1F1E6 + ch.charCodeAt(0) - 65));
+  }
+
+  function countryLabel(country) {
+    if (!country || !country.code || !country.name) return '';
+    return `${countryFlag(country.code)} ${country.name}`;
+  }
+
   // ===== 상태 =====
   let state = {
     ratio: 'square',
@@ -184,6 +446,7 @@
   const galleryUploadForm = document.getElementById('gallery-upload-form');
   const galleryUploadTitle = document.getElementById('gallery-upload-title');
   const galleryUploadAuthor = document.getElementById('gallery-upload-author');
+  const galleryUploadCountry = document.getElementById('gallery-upload-country');
   const galleryUploadAgree = document.getElementById('gallery-upload-agree');
   const helpModal = document.getElementById('help-modal');
   const adminModal = document.getElementById('admin-modal');
@@ -265,6 +528,7 @@
   });
   document.getElementById('btn-back-to-ratio').addEventListener('click', () => showScreen('ratio'));
   document.getElementById('btn-gallery-home').addEventListener('click', handleGallery);
+  populateCountryOptions();
 
   function updateSizeLabels() {
     const presets = SIZE_PRESETS[state.ratio];
@@ -329,12 +593,14 @@
 
   // ===== 액션 핸들러 (네임드 함수) =====
   async function handleHome() {
+    const selectedCountry = getSelectedCountry();
     const ok = await showConfirm(t('homeTitle'), t('homeMsg'));
     if (!ok) return;
     saveLocal();
     showScreen('ratio');
   }
   async function handleBackStep() {
+    const selectedCountry = getSelectedCountry();
     const ok = await showConfirm(t('backTitle'), t('backMsg'));
     if (!ok) return;
     saveLocal();
@@ -344,6 +610,7 @@
   async function handleClear() {
     const hasContent = state.pixels.some(p => p !== null);
     if (!hasContent) { toast(t('emptyCanvas')); return; }
+    const selectedCountry = getSelectedCountry();
     const ok = await showConfirm(t('clearTitle'), t('clearMsg'));
     if (!ok) return;
     pushUndo(state.pixels.slice());
@@ -423,7 +690,8 @@
   async function handleLoadJson() {
     const hasContent = Array.isArray(state.pixels) && state.pixels.some(p => p !== null);
     if (hasContent) {
-      const ok = await showConfirm(t('loadTitle'), t('loadMsg'));
+      const selectedCountry = getSelectedCountry();
+    const ok = await showConfirm(t('loadTitle'), t('loadMsg'));
       if (!ok) return;
     }
     inputLoadJson.value = '';
@@ -581,7 +849,8 @@
 
   async function exitPatternMode() {
     if (state.patternMode === 'color') {
-      const ok = await showConfirm(t('endPatternTitle'), t('endPatternMsg'));
+      const selectedCountry = getSelectedCountry();
+    const ok = await showConfirm(t('endPatternTitle'), t('endPatternMsg'));
       if (!ok) return;
     }
     state.patternMode = null;
@@ -865,7 +1134,8 @@
       title.textContent = item.title || t('patternFile');
       const meta = document.createElement('div');
       meta.className = 'gallery-meta';
-      meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}`;
+      const itemCountry = item.countryCode && item.countryName ? countryLabel({ code: item.countryCode, name: item.countryName }) : '';
+      meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}${itemCountry ? ' · ' + itemCountry : ''}`;
       const views = document.createElement('div');
       views.className = 'gallery-views';
       views.innerHTML = `<span class="material-icons">visibility</span><span class="gallery-views-num">${getViews(item)}</span>`;
@@ -908,12 +1178,31 @@
     return c.toDataURL('image/png');
   }
 
+  function populateCountryOptions() {
+    if (!galleryUploadCountry) return;
+    const placeholder = galleryUploadCountry.querySelector('option[value=""]');
+    galleryUploadCountry.innerHTML = '';
+    if (placeholder) galleryUploadCountry.appendChild(placeholder);
+    COUNTRY_OPTIONS.forEach(country => {
+      const option = document.createElement('option');
+      option.value = country.code;
+      option.textContent = countryLabel(country);
+      galleryUploadCountry.appendChild(option);
+    });
+  }
+
+  function getSelectedCountry() {
+    if (!galleryUploadCountry || !galleryUploadCountry.value) return null;
+    return COUNTRY_OPTIONS.find(country => country.code === galleryUploadCountry.value) || null;
+  }
+
   function submitToGallery() {
     if (!GALLERY_API_URL) { toast(t('galleryNoServerToast')); return; }
     if (!state.patternCells || !state.patternLegend) return;
     galleryUploadForm.reset();
     galleryUploadTitle.value = '';
     galleryUploadAuthor.value = '';
+    if (galleryUploadCountry) galleryUploadCountry.value = '';
     galleryUploadAgree.checked = false;
     galleryUploadModal.classList.add('open');
     setTimeout(() => galleryUploadTitle.focus(), 0);
@@ -935,6 +1224,7 @@
       toast(t('titleAuthorRequired'));
       return;
     }
+    const selectedCountry = getSelectedCountry();
     const ok = await showConfirm(
       t('galleryConfirmTitle'),
       t('galleryConfirmMsg')
@@ -951,6 +1241,10 @@
       legend: state.patternLegend,
       cells: state.patternCells
     };
+    if (selectedCountry) {
+      payload.countryCode = selectedCountry.code;
+      payload.countryName = selectedCountry.name;
+    }
     try {
       // text/plain 으로 보내 CORS preflight 를 피한다 (Apps Script 호환)
       const res = await fetch(GALLERY_API_URL, {
@@ -1134,6 +1428,7 @@
     const id = row && row.dataset.id;
     if (!id) return;
     const title = row.querySelector('.admin-title-input').value.trim() || t('thisPattern');
+    const selectedCountry = getSelectedCountry();
     const ok = await showConfirm(t('deleteTitle'), t('deleteMsg', { title }));
     if (!ok) return;
     try {

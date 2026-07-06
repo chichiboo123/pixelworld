@@ -1249,6 +1249,29 @@ body { padding-bottom: var(--footer-h); }
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft);
 }
+.gallery-country {
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.field-hint {
+  margin: -4px 0 2px;
+  color: var(--text-soft);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
 .gallery-meta {
   width: 100%;
   color: var(--text-soft);

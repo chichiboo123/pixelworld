@@ -206,6 +206,10 @@ function savePattern_(data) {
     legend: data.legend,
     cells: data.cells
   };
+  if (data.countryCode && data.countryName) {
+    payload.countryCode = String(data.countryCode).slice(0, 2);
+    payload.countryName = String(data.countryName).slice(0, 80);
+  }
   sh.appendRow([id, title, author, createdAt, JSON.stringify(payload), 0]);
   return { id: id };
 }

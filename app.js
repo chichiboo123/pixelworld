@@ -447,6 +447,7 @@
   const galleryUploadTitle = document.getElementById('gallery-upload-title');
   const galleryUploadAuthor = document.getElementById('gallery-upload-author');
   const galleryUploadCountry = document.getElementById('gallery-upload-country');
+  const galleryUploadCountryList = document.getElementById('gallery-upload-country-list');
   const galleryUploadAgree = document.getElementById('gallery-upload-agree');
   const helpModal = document.getElementById('help-modal');
   const adminModal = document.getElementById('admin-modal');
@@ -1132,6 +1133,11 @@
       const title = document.createElement('div');
       title.className = 'gallery-title';
       title.textContent = item.title || t('patternFile');
+      const itemCountry = item.countryCode && item.countryName ? countryLabel({ code: item.countryCode, name: item.countryName }) : '';
+      const country = document.createElement('div');
+      country.className = 'gallery-country';
+      country.hidden = !itemCountry;
+      country.textContent = itemCountry;
       const meta = document.createElement('div');
       meta.className = 'gallery-meta';
       const itemCountry = item.countryCode && item.countryName ? countryLabel({ code: item.countryCode, name: item.countryName }) : '';
@@ -1144,6 +1150,7 @@
       action.innerHTML = `<span class="material-icons">brush</span> ${t('colorIt')}`;
       card.appendChild(img);
       card.appendChild(title);
+      if (itemCountry) card.appendChild(country);
       card.appendChild(meta);
       card.appendChild(views);
       card.appendChild(action);
@@ -1179,21 +1186,25 @@
   }
 
   function populateCountryOptions() {
-    if (!galleryUploadCountry) return;
-    const placeholder = galleryUploadCountry.querySelector('option[value=""]');
-    galleryUploadCountry.innerHTML = '';
-    if (placeholder) galleryUploadCountry.appendChild(placeholder);
+    if (!galleryUploadCountryList) return;
+    galleryUploadCountryList.innerHTML = '';
     COUNTRY_OPTIONS.forEach(country => {
       const option = document.createElement('option');
-      option.value = country.code;
-      option.textContent = countryLabel(country);
-      galleryUploadCountry.appendChild(option);
+      option.value = countryLabel(country);
+      option.label = country.name;
+      galleryUploadCountryList.appendChild(option);
     });
   }
 
   function getSelectedCountry() {
     if (!galleryUploadCountry || !galleryUploadCountry.value) return null;
-    return COUNTRY_OPTIONS.find(country => country.code === galleryUploadCountry.value) || null;
+    const value = galleryUploadCountry.value.trim();
+    const normalizedValue = value.toLowerCase();
+    return COUNTRY_OPTIONS.find(country => {
+      return countryLabel(country).toLowerCase() === normalizedValue
+        || country.name.toLowerCase() === normalizedValue
+        || country.code.toLowerCase() === normalizedValue;
+    }) || null;
   }
 
   function submitToGallery() {

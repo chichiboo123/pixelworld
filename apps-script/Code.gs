@@ -171,6 +171,15 @@ function updatePattern_(data) {
   var payload = JSON.parse(found.sheet.getRange(found.row, 5).getValue());
   payload.title = title;
   payload.author = author;
+  if (Object.prototype.hasOwnProperty.call(data, 'countryCode') || Object.prototype.hasOwnProperty.call(data, 'countryName')) {
+    if (data.countryCode && data.countryName) {
+      payload.countryCode = String(data.countryCode).slice(0, 2);
+      payload.countryName = String(data.countryName).slice(0, 80);
+    } else {
+      delete payload.countryCode;
+      delete payload.countryName;
+    }
+  }
   found.sheet.getRange(found.row, 2).setValue(title);
   found.sheet.getRange(found.row, 3).setValue(author);
   found.sheet.getRange(found.row, 5).setValue(JSON.stringify(payload));

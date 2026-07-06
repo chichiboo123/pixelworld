@@ -344,6 +344,11 @@
         <label class="field-label" for="gallery-upload-author">작가(만든이)</label>
         <input class="text-field" id="gallery-upload-author" name="author" type="text" maxlength="40" required placeholder="예: 3학년 김픽셀" />
 
+        <label class="field-label" for="gallery-upload-country">국가 (선택)</label>
+        <input class="text-field" id="gallery-upload-country" name="country" type="search" list="gallery-upload-country-list" autocomplete="off" placeholder="예: 🇰🇷 South Korea" />
+        <datalist id="gallery-upload-country-list"></datalist>
+        <p class="field-hint">국가명을 영어로 검색하거나 목록에서 선택할 수 있어요.</p>
+
         <label class="upload-agree">
           <input type="checkbox" id="gallery-upload-agree" required />
           <span>올리면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료를 올리지 않겠습니다.</span>

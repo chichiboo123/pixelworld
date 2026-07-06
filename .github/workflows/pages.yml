@@ -28,7 +28,7 @@ jobs:
           node --check /tmp/Code.gs.js
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@main
+        uses: actions/configure-pages@v6
 
       - name: Upload static site artifact
         uses: actions/upload-pages-artifact@v5

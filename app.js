@@ -1140,7 +1140,8 @@
       country.textContent = itemCountry;
       const meta = document.createElement('div');
       meta.className = 'gallery-meta';
-      meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}`;
+      const itemCountry = item.countryCode && item.countryName ? countryLabel({ code: item.countryCode, name: item.countryName }) : '';
+      meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}${itemCountry ? ' · ' + itemCountry : ''}`;
       const views = document.createElement('div');
       views.className = 'gallery-views';
       views.innerHTML = `<span class="material-icons">visibility</span><span class="gallery-views-num">${getViews(item)}</span>`;

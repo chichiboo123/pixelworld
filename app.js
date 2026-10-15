@@ -27,14 +27,14 @@
       eraseHint: '같은 칸을 다시 누르면 지워져요!', homeTitle: '홈으로 가기', homeMsg: '홈 화면으로 돌아가요. 현재 그림은 자동으로 저장돼요.',
       backTitle: '이전 단계로', backMsg: '캔버스 크기 선택 화면으로 돌아가요. 다시 크기를 고르면 지금 그림이 사라질 수 있어요.',
       emptyCanvas: '이미 빈 캔버스예요!', clearTitle: '전체 지우기', clearMsg: '지금 그린 그림이 모두 사라져요. 정말 지울까요?', cleared: '캔버스를 비웠어요!',
-      myDrawing: '내그림', saved: '저장했어요!', loadTitle: '불러오기', loadMsg: '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?', imageSaved: '이미지로 저장했어요!', copiedImage: '이미지가 클립보드에 복사됐어요!', copyUnsupported: '이 브라우저에서는 복사를 지원하지 않아요.', shareCopied: '공유 링크를 복사했어요!', sharePrompt: '이 링크를 복사해서 공유하세요:', drawFirst: '먼저 그림을 그려 주세요!', patternMade: '색상 {count}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.', formatError: '형식 오류', endPatternTitle: '도안 끝내기', endPatternMsg: '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.', patternColorLabel: '번호에 맞게 색칠해요!', patternChartLabel: '색칠 도안 (숫자 = 색깔)', savePattern: '도안 저장', uploadGallery: '갤러리에 올리기', endPattern: '도안 끝내기', colorPickedNum: '{num}번 색을 골랐어요!', patternFile: '도안', patternSaved: '도안 파일을 저장했어요!', landscape: '가로', square: '정사각형', portrait: '세로', other: '기타', galleryNoServer: '아직 갤러리 서버가 연결되지 않았어요.<br>Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)', loadingPatterns: '도안을 불러오는 중...', galleryLoadFailed: '갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.', all: '전체', noPatterns: '아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!', noRatioPatterns: '{ratio} 비율 도안이 아직 없어요.', patternLoaded: '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.', patternLoadFailed: '이 도안을 불러올 수 없어요.', patternPreview: '{title} 미리보기', colorIt: '색칠하기', galleryNoServerToast: '갤러리 서버가 설정되지 않았어요.', agreeRequired: '공유 안내에 동의해야 제출할 수 있어요.', titleAuthorRequired: '작품명과 작가를 모두 적어 주세요.', galleryConfirmTitle: '갤러리 공유 확인', galleryConfirmMsg: '제출하면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료가 아닌지 다시 확인했나요?', uploading: '갤러리에 올리는 중...', uploaded: '갤러리에 올렸어요!', uploadFailed: '갤러리에 올리지 못했어요.', adminPasswordCheck: '관리자 비밀번호를 확인해 주세요.', adminTotal: '총 {count}개의 도안', adminEmpty: '관리할 도안이 아직 없어요.', title: '작품명', author: '작가(만든이)', views: '조회', noDate: '날짜 없음', edit: '수정', delete: '삭제', titleAuthorCheck: '작품명과 작가를 확인해 주세요.', updated: '도안을 수정했어요.', updateFailed: '도안을 수정하지 못했어요.', thisPattern: '이 도안', deleteTitle: '도안 삭제', deleteMsg: '「{title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.', deleted: '도안을 삭제했어요.', deleteFailed: '도안을 삭제하지 못했어요.', country: '국가', countryCheck: '국가는 목록에서 선택하거나 비워 주세요.', hideGuides: '가이드라인 숨기기', showGuides: '가이드라인 보기', referenceImage: '참고 이미지', referenceHint: '참고할 이미지를 올리면<br />여기에 보여요!', colorPicked: '{color} 색을 골랐어요!', eyedropperOn: '스포이트: 색을 추출할 칸을 눌러요!', eyedropperOff: '스포이트를 껐어요.', emptyCell: '빈 칸이에요. 색칠된 칸을 눌러 주세요.', fileReadFailed: '파일을 읽을 수 없어요.', loaded: '불러왔어요!', patternFileReadFailed: '도안 파일을 읽을 수 없어요.', shareReadFailed: '공유 링크를 읽을 수 없어요.'
+      myDrawing: '내그림', saved: '저장했어요!', loadTitle: '불러오기', loadMsg: '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?', imageSaved: '이미지로 저장했어요!', copiedImage: '이미지가 클립보드에 복사됐어요!', copyUnsupported: '이 브라우저에서는 복사를 지원하지 않아요.', shareCopied: '공유 링크를 복사했어요!', sharePrompt: '이 링크를 복사해서 공유하세요:', drawFirst: '먼저 그림을 그려 주세요!', patternMade: '색상 {count}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.', formatError: '형식 오류', endPatternTitle: '도안 끝내기', endPatternMsg: '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.', patternColorLabel: '번호에 맞게 색칠해요!', patternChartLabel: '색칠 도안 (숫자 = 색깔)', savePattern: '도안 저장', uploadGallery: '갤러리에 올리기', endPattern: '도안 끝내기', colorPickedNum: '{num}번 색을 골랐어요!', patternFile: '도안', patternSaved: '도안 파일을 저장했어요!', landscape: '가로', square: '정사각형', portrait: '세로', other: '기타', galleryNoServer: '아직 갤러리 서버가 연결되지 않았어요.<br>Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)', loadingPatterns: '도안을 불러오는 중...', galleryLoadFailed: '갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.', all: '전체', noPatterns: '아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!', noRatioPatterns: '{ratio} 비율 도안이 아직 없어요.', patternLoaded: '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.', patternLoadFailed: '이 도안을 불러올 수 없어요.', patternPreview: '{title} 미리보기', colorIt: '색칠하기', galleryNoServerToast: '갤러리 서버가 설정되지 않았어요.', agreeRequired: '공유 안내에 동의해야 제출할 수 있어요.', titleAuthorRequired: '작품명과 작가를 모두 적어 주세요.', galleryConfirmTitle: '갤러리 공유 확인', galleryConfirmMsg: '제출하면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료가 아닌지 다시 확인했나요?', uploading: '갤러리에 올리는 중...', uploaded: '갤러리에 올렸어요!', uploadFailed: '갤러리에 올리지 못했어요.', adminPasswordCheck: '관리자 비밀번호를 확인해 주세요.', adminTotal: '총 {count}개의 도안', adminEmpty: '관리할 도안이 아직 없어요.', title: '작품명', author: '작가(만든이)', views: '조회', noDate: '날짜 없음', edit: '수정', delete: '삭제', titleAuthorCheck: '작품명과 작가를 확인해 주세요.', updated: '도안을 수정했어요.', updateFailed: '도안을 수정하지 못했어요.', thisPattern: '이 도안', deleteTitle: '도안 삭제', deleteMsg: '「{title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.', deleted: '도안을 삭제했어요.', deleteFailed: '도안을 삭제하지 못했어요.', country: '국가', countryCheck: '국가는 목록에서 선택하거나 비워 주세요.', hideGuides: '가이드라인 숨기기', showGuides: '가이드라인 보기', referenceImage: '참고 이미지', referenceHint: '참고할 이미지를 올리면<br />여기에 보여요!', colorPicked: '{color} 색을 골랐어요!', eyedropperOn: '스포이트: 색을 추출할 칸을 눌러요!', eyedropperOff: '스포이트를 껐어요.', emptyCell: '빈 칸이에요. 색칠된 칸을 눌러 주세요.', fileReadFailed: '파일을 읽을 수 없어요.', loaded: '불러왔어요!', patternFileReadFailed: '도안 파일을 읽을 수 없어요.', shareReadFailed: '공유 링크를 읽을 수 없어요.', gallerySearch: '작품명·작가·국가 검색', galleryTotal: '총 {count}개', noSearchResults: '「{query}」에 맞는 도안이 없어요.', viewSmall: '작게 보기', viewLarge: '크게 보기', backToTop: '맨 위로'
     },
     en: {
       langCode: 'en', langName: 'English', langToggleLabel: '한국어로 전환',
       eraseHint: 'Tap the same cell again to erase it!', homeTitle: 'Go home', homeMsg: 'Return to the home screen. Your current drawing is saved automatically.',
       backTitle: 'Go back', backMsg: 'Return to canvas size selection. Choosing a new size may clear your current drawing.',
       emptyCanvas: 'The canvas is already empty!', clearTitle: 'Clear canvas', clearMsg: 'Everything you drew will disappear. Are you sure?', cleared: 'Canvas cleared!',
-      myDrawing: 'my-drawing', saved: 'Saved!', loadTitle: 'Load', loadMsg: 'Your current drawing will be replaced. Continue?', imageSaved: 'Saved as an image!', copiedImage: 'Image copied to the clipboard!', copyUnsupported: 'Copy is not supported in this browser.', shareCopied: 'Share link copied!', sharePrompt: 'Copy this link to share:', drawFirst: 'Draw something first!', patternMade: 'Made a pattern with {count} colors! Use the top button to return to editing.', formatError: 'Invalid format', endPatternTitle: 'Finish pattern', endPatternMsg: 'Turn off the number guide and draw freely. Your colored pixels will stay.', patternColorLabel: 'Color by number!', patternChartLabel: 'Coloring pattern (number = color)', savePattern: 'Save pattern', uploadGallery: 'Upload to gallery', endPattern: 'Finish pattern', colorPickedNum: 'Selected color #{num}!', patternFile: 'pattern', patternSaved: 'Pattern file saved!', landscape: 'Landscape', square: 'Square', portrait: 'Portrait', other: 'Other', galleryNoServer: 'The gallery server is not connected yet.<br>Deploy the Google Apps Script web app, then add its URL to <code>GALLERY_API_URL</code> in <code>app.js</code>.<br>After that, everyone can share patterns!<br>(See <code>apps-script/README.md</code> for setup.)', loadingPatterns: 'Loading patterns...', galleryLoadFailed: 'Could not load the gallery.<br>Please try again later.', all: 'All', noPatterns: 'No patterns have been uploaded yet.<br>Upload the first one!', noRatioPatterns: 'No {ratio} patterns yet.', patternLoaded: 'Pattern loaded! Try coloring by number.', patternLoadFailed: 'Could not load this pattern.', patternPreview: '{title} preview', colorIt: 'Color it', galleryNoServerToast: 'Gallery server is not configured.', agreeRequired: 'You need to agree before submitting.', titleAuthorRequired: 'Please enter both title and artist.', galleryConfirmTitle: 'Confirm gallery sharing', galleryConfirmMsg: 'After submitting, this will be public to everyone using this app and cannot be deleted by you. Please confirm it is not harmful or offensive.', uploading: 'Uploading to gallery...', uploaded: 'Uploaded to gallery!', uploadFailed: 'Could not upload to gallery.', adminPasswordCheck: 'Please check the admin password.', adminTotal: '{count} patterns total', adminEmpty: 'There are no patterns to manage yet.', title: 'Title', author: 'Artist', views: 'Views', noDate: 'No date', edit: 'Update', delete: 'Delete', titleAuthorCheck: 'Please check the title and artist.', updated: 'Pattern updated.', updateFailed: 'Could not update the pattern.', thisPattern: 'this pattern', deleteTitle: 'Delete pattern', deleteMsg: 'Delete “{title}” from the gallery? This cannot be undone.', deleted: 'Pattern deleted.', deleteFailed: 'Could not delete the pattern.', country: 'Country', countryCheck: 'Choose a country from the list or leave it empty.', hideGuides: 'Hide guides', showGuides: 'Show guides', referenceImage: 'Reference image', referenceHint: 'Upload a reference image<br />and it will appear here!', colorPicked: 'Selected {color}!', eyedropperOn: 'Eyedropper: tap a colored cell to pick it!', eyedropperOff: 'Eyedropper off.', emptyCell: 'Empty cell. Tap a colored cell.', fileReadFailed: 'Could not read the file.', loaded: 'Loaded!', patternFileReadFailed: 'Could not read the pattern file.', shareReadFailed: 'Could not read the share link.'
+      myDrawing: 'my-drawing', saved: 'Saved!', loadTitle: 'Load', loadMsg: 'Your current drawing will be replaced. Continue?', imageSaved: 'Saved as an image!', copiedImage: 'Image copied to the clipboard!', copyUnsupported: 'Copy is not supported in this browser.', shareCopied: 'Share link copied!', sharePrompt: 'Copy this link to share:', drawFirst: 'Draw something first!', patternMade: 'Made a pattern with {count} colors! Use the top button to return to editing.', formatError: 'Invalid format', endPatternTitle: 'Finish pattern', endPatternMsg: 'Turn off the number guide and draw freely. Your colored pixels will stay.', patternColorLabel: 'Color by number!', patternChartLabel: 'Coloring pattern (number = color)', savePattern: 'Save pattern', uploadGallery: 'Upload to gallery', endPattern: 'Finish pattern', colorPickedNum: 'Selected color #{num}!', patternFile: 'pattern', patternSaved: 'Pattern file saved!', landscape: 'Landscape', square: 'Square', portrait: 'Portrait', other: 'Other', galleryNoServer: 'The gallery server is not connected yet.<br>Deploy the Google Apps Script web app, then add its URL to <code>GALLERY_API_URL</code> in <code>app.js</code>.<br>After that, everyone can share patterns!<br>(See <code>apps-script/README.md</code> for setup.)', loadingPatterns: 'Loading patterns...', galleryLoadFailed: 'Could not load the gallery.<br>Please try again later.', all: 'All', noPatterns: 'No patterns have been uploaded yet.<br>Upload the first one!', noRatioPatterns: 'No {ratio} patterns yet.', patternLoaded: 'Pattern loaded! Try coloring by number.', patternLoadFailed: 'Could not load this pattern.', patternPreview: '{title} preview', colorIt: 'Color it', galleryNoServerToast: 'Gallery server is not configured.', agreeRequired: 'You need to agree before submitting.', titleAuthorRequired: 'Please enter both title and artist.', galleryConfirmTitle: 'Confirm gallery sharing', galleryConfirmMsg: 'After submitting, this will be public to everyone using this app and cannot be deleted by you. Please confirm it is not harmful or offensive.', uploading: 'Uploading to gallery...', uploaded: 'Uploaded to gallery!', uploadFailed: 'Could not upload to gallery.', adminPasswordCheck: 'Please check the admin password.', adminTotal: '{count} patterns total', adminEmpty: 'There are no patterns to manage yet.', title: 'Title', author: 'Artist', views: 'Views', noDate: 'No date', edit: 'Update', delete: 'Delete', titleAuthorCheck: 'Please check the title and artist.', updated: 'Pattern updated.', updateFailed: 'Could not update the pattern.', thisPattern: 'this pattern', deleteTitle: 'Delete pattern', deleteMsg: 'Delete “{title}” from the gallery? This cannot be undone.', deleted: 'Pattern deleted.', deleteFailed: 'Could not delete the pattern.', country: 'Country', countryCheck: 'Choose a country from the list or leave it empty.', hideGuides: 'Hide guides', showGuides: 'Show guides', referenceImage: 'Reference image', referenceHint: 'Upload a reference image<br />and it will appear here!', colorPicked: 'Selected {color}!', eyedropperOn: 'Eyedropper: tap a colored cell to pick it!', eyedropperOff: 'Eyedropper off.', emptyCell: 'Empty cell. Tap a colored cell.', fileReadFailed: 'Could not read the file.', loaded: 'Loaded!', patternFileReadFailed: 'Could not read the pattern file.', shareReadFailed: 'Could not read the share link.', gallerySearch: 'Search title, artist, country', galleryTotal: '{count} total', noSearchResults: 'No patterns match “{query}”.', viewSmall: 'Small thumbnails', viewLarge: 'Large thumbnails', backToTop: 'Back to top'
     }
   };
   let currentLang = getInitialLang();
@@ -412,6 +412,11 @@
   let galleryRatioFilter = 'all';
   let gallerySort = 'recent';   // 'recent'(최신순) | 'popular'(인기순)
   let viewedGalleryIds = new Set(); // 한 세션에서 중복 조회수 증가 방지
+  let gallerySearchQuery = '';
+  let galleryDensity = 'comfy';  // 'comfy'(크게) | 'compact'(작게)
+  try { if (localStorage.getItem('pixelworld:galleryDensity') === 'compact') galleryDensity = 'compact'; } catch (_) {}
+  const galleryThumbCache = new WeakMap(); // 도안 객체 → 썸네일 dataURL (정렬·필터를 바꿔도 다시 그리지 않음)
+  let galleryThumbObserver = null;
   let adminPassword = '';
 
   // ===== DOM =====
@@ -442,6 +447,11 @@
   const galleryTabs = document.getElementById('gallery-tabs');
   const gallerySortEl = document.getElementById('gallery-sort');
   const galleryBody = document.getElementById('gallery-body');
+  const galleryToolbar = document.getElementById('gallery-toolbar');
+  const galleryTotal = document.getElementById('gallery-total');
+  const gallerySearch = document.getElementById('gallery-search');
+  const galleryDensityEl = document.getElementById('gallery-density');
+  const galleryTopBtn = document.getElementById('gallery-top');
   const galleryUploadModal = document.getElementById('gallery-upload-modal');
   const galleryUploadForm = document.getElementById('gallery-upload-form');
   const galleryUploadTitle = document.getElementById('gallery-upload-title');
@@ -968,6 +978,9 @@
   function handleGallery() {
     galleryModal.classList.add('open');
     galleryRatioFilter = 'all';
+    gallerySearchQuery = '';
+    if (gallerySearch) gallerySearch.value = '';
+    galleryBody.scrollTop = 0;
     loadGalleryList();
   }
   function closeGallery() {
@@ -975,6 +988,12 @@
   }
   document.getElementById('gallery-close').addEventListener('click', closeGallery);
   galleryModal.addEventListener('click', (e) => { if (e.target === galleryModal) closeGallery(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !galleryModal.classList.contains('open')) return;
+    // 갤러리 위에 다른 모달(업로드·확인 등)이 떠 있으면 그 모달이 먼저 닫히도록 둔다.
+    if (document.querySelectorAll('.modal.open').length > 1) return;
+    closeGallery();
+  });
 
   if (gallerySortEl) {
     gallerySortEl.addEventListener('click', (e) => {
@@ -982,6 +1001,50 @@
       if (!btn) return;
       gallerySort = btn.dataset.sort === 'popular' ? 'popular' : 'recent';
       renderGalleryList();
+    });
+  }
+
+  // 검색: 작품명·작가·국가로 걸러 보기 (입력이 잠시 멈추면 다시 그림)
+  let gallerySearchTimer = null;
+  if (gallerySearch) {
+    gallerySearch.addEventListener('input', () => {
+      clearTimeout(gallerySearchTimer);
+      gallerySearchTimer = setTimeout(() => {
+        gallerySearchQuery = gallerySearch.value.trim();
+        galleryBody.scrollTop = 0;
+        renderGalleryList();
+      }, 150);
+    });
+  }
+
+  // 보기 크기: 크게(기본) / 작게 — 한 화면에 더 많은 도안을 훑어볼 수 있게
+  function applyGalleryDensity() {
+    galleryBody.classList.toggle('is-compact', galleryDensity === 'compact');
+    if (!galleryDensityEl) return;
+    galleryDensityEl.querySelectorAll('.gallery-density-btn').forEach(btn => {
+      const on = btn.dataset.density === galleryDensity;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  if (galleryDensityEl) {
+    galleryDensityEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.gallery-density-btn');
+      if (!btn) return;
+      galleryDensity = btn.dataset.density === 'compact' ? 'compact' : 'comfy';
+      try { localStorage.setItem('pixelworld:galleryDensity', galleryDensity); } catch (_) {}
+      applyGalleryDensity();
+    });
+  }
+  applyGalleryDensity();
+
+  // 많이 내려갔을 때 맨 위로 돌아가는 버튼
+  if (galleryTopBtn) {
+    galleryBody.addEventListener('scroll', () => {
+      galleryTopBtn.hidden = galleryBody.scrollTop < 600;
+    }, { passive: true });
+    galleryTopBtn.addEventListener('click', () => {
+      galleryBody.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
@@ -1015,38 +1078,61 @@
     return 'square';
   }
 
+  function setGalleryToolbar(visible) {
+    if (galleryToolbar) galleryToolbar.hidden = !visible;
+    if (galleryTotal) galleryTotal.hidden = !visible;
+    if (galleryTopBtn && !visible) galleryTopBtn.hidden = true;
+  }
+
+  function showGalleryMessage(html) {
+    if (galleryThumbObserver) { galleryThumbObserver.disconnect(); galleryThumbObserver = null; }
+    galleryBody.innerHTML = `<p class="gallery-msg">${html}</p>`;
+  }
+
   async function loadGalleryList() {
     if (!GALLERY_API_URL) {
-      if (galleryTabs) galleryTabs.hidden = true;
-      if (gallerySortEl) gallerySortEl.hidden = true;
-      galleryBody.innerHTML = `<p class="gallery-msg">${t('galleryNoServer')}</p>`;
+      setGalleryToolbar(false);
+      showGalleryMessage(t('galleryNoServer'));
       return;
     }
-    if (galleryTabs) galleryTabs.hidden = true;
-    if (gallerySortEl) gallerySortEl.hidden = true;
-    galleryBody.innerHTML = `<p class="gallery-msg">${t('loadingPatterns')}</p>`;
+    setGalleryToolbar(false);
+    showGalleryMessage(t('loadingPatterns'));
     try {
       const res = await fetch(GALLERY_API_URL + '?action=list');
       const json = await res.json();
       // 서버가 에러 객체를 돌려주면 "자료 없음"으로 감추지 말고 에러로 알린다.
       if (json && !Array.isArray(json) && json.error) {
         console.error('gallery list error:', json.error);
-        if (galleryTabs) galleryTabs.hidden = true;
-        if (gallerySortEl) gallerySortEl.hidden = true;
-        galleryBody.innerHTML = `<p class="gallery-msg">${t('galleryLoadFailed')}</p>`;
+        setGalleryToolbar(false);
+        showGalleryMessage(t('galleryLoadFailed'));
         return;
       }
       galleryItems = Array.isArray(json) ? json : (json.items || []);
       renderGalleryList();
     } catch (err) {
-      galleryBody.innerHTML = `<p class="gallery-msg">${t('galleryLoadFailed')}</p>`;
+      setGalleryToolbar(false);
+      showGalleryMessage(t('galleryLoadFailed'));
     }
   }
 
-  function renderGalleryTabs() {
+  function galleryItemCountry(item) {
+    return item && item.countryCode && item.countryName
+      ? { code: item.countryCode, name: item.countryName }
+      : null;
+  }
+
+  function matchesGallerySearch(item, query) {
+    if (!query) return true;
+    const country = galleryItemCountry(item);
+    const haystack = [item.title, item.author, country && country.name, country && country.code]
+      .filter(Boolean).join(' ').toLowerCase();
+    return haystack.includes(query);
+  }
+
+  function renderGalleryTabs(searched) {
     if (!galleryTabs) return;
-    const counts = { all: galleryItems.length, landscape: 0, square: 0, portrait: 0 };
-    galleryItems.forEach(item => { counts[getPatternRatio(item)] = (counts[getPatternRatio(item)] || 0) + 1; });
+    const counts = { all: searched.length, landscape: 0, square: 0, portrait: 0 };
+    searched.forEach(item => { counts[getPatternRatio(item)] = (counts[getPatternRatio(item)] || 0) + 1; });
     galleryTabs.innerHTML = '';
     [
       ['all', t('all')],
@@ -1068,11 +1154,11 @@
       btn.appendChild(countSpan);
       btn.addEventListener('click', () => {
         galleryRatioFilter = key;
+        galleryBody.scrollTop = 0;
         renderGalleryList();
       });
       galleryTabs.appendChild(btn);
     });
-    galleryTabs.hidden = false;
   }
 
   function getViews(item) {
@@ -1081,17 +1167,44 @@
 
   function renderGallerySort() {
     if (!gallerySortEl) return;
-    gallerySortEl.hidden = false;
     gallerySortEl.querySelectorAll('.gallery-sort-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.sort === gallerySort);
     });
   }
 
+  // 썸네일은 화면에 보일 때만 그린다 (도안이 아주 많아도 갤러리가 바로 열리도록).
+  function galleryThumbSrc(item) {
+    let src = galleryThumbCache.get(item);
+    if (src === undefined) {
+      try { src = renderPatternThumb(item, 200); } catch (_) { src = ''; }
+      galleryThumbCache.set(item, src);
+    }
+    return src;
+  }
+  function fillGalleryThumb(img) {
+    const item = img._galleryItem;
+    if (!item) return;
+    img._galleryItem = null;
+    const src = galleryThumbSrc(item);
+    if (src) img.src = src;
+  }
+
   function renderGalleryList() {
-    renderGalleryTabs();
+    if (galleryThumbObserver) { galleryThumbObserver.disconnect(); galleryThumbObserver = null; }
+    if (!galleryItems.length) {
+      setGalleryToolbar(false);
+      showGalleryMessage(t('noPatterns'));
+      return;
+    }
+    setGalleryToolbar(true);
+    if (galleryTotal) galleryTotal.textContent = t('galleryTotal', { count: galleryItems.length.toLocaleString() });
+    const query = gallerySearchQuery.toLowerCase();
+    const searched = galleryItems.filter(item => matchesGallerySearch(item, query));
+    renderGalleryTabs(searched);
+    renderGallerySort();
     let list = galleryRatioFilter === 'all'
-      ? galleryItems.slice()
-      : galleryItems.filter(item => getPatternRatio(item) === galleryRatioFilter);
+      ? searched
+      : searched.filter(item => getPatternRatio(item) === galleryRatioFilter);
     if (gallerySort === 'popular') {
       // 안정 정렬: 조회수 높은 순, 같으면 기존(최신) 순서 유지
       list = list
@@ -1099,24 +1212,36 @@
         .sort((a, b) => (getViews(b.item) - getViews(a.item)) || (a.i - b.i))
         .map(x => x.item);
     }
-    if (!galleryItems.length) {
-      if (gallerySortEl) gallerySortEl.hidden = true;
-      galleryBody.innerHTML = `<p class="gallery-msg">${t('noPatterns')}</p>`;
-      return;
-    }
-    renderGallerySort();
     if (!list.length) {
-      galleryBody.innerHTML = `<p class="gallery-msg">${t('noRatioPatterns', { ratio: ratioLabel(galleryRatioFilter) })}</p>`;
+      if (query) {
+        // 검색어는 사용자가 입력한 값이므로 HTML이 아닌 텍스트로 넣는다.
+        showGalleryMessage('');
+        galleryBody.firstChild.textContent = t('noSearchResults', { query: gallerySearchQuery });
+      } else {
+        showGalleryMessage(t('noRatioPatterns', { ratio: ratioLabel(galleryRatioFilter) }));
+      }
       return;
     }
     galleryBody.innerHTML = '';
+    if ('IntersectionObserver' in window) {
+      galleryThumbObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          obs.unobserve(entry.target);
+          fillGalleryThumb(entry.target);
+        });
+      }, { root: galleryBody, rootMargin: '400px 0px' });
+    }
     const grid = document.createElement('div');
     grid.className = 'gallery-grid';
     list.forEach(item => {
       const ratio = getPatternRatio(item);
+      const titleText = item.title || t('patternFile');
+      const country = galleryItemCountry(item);
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'gallery-item';
+      card.title = [titleText, item.author, country && countryLabel(country)].filter(Boolean).join(' · ');
       card.addEventListener('click', () => {
         try {
           loadPatternData(item);
@@ -1126,33 +1251,62 @@
         }
         catch (_) { toast(t('patternLoadFailed')); }
       });
+
+      const frame = document.createElement('div');
+      frame.className = 'gallery-thumb-wrap';
       const img = document.createElement('img');
       img.className = 'gallery-thumb';
-      img.alt = t('patternPreview', { title: item.title || t('patternFile') });
-      try { img.src = renderPatternThumb(item, 160); } catch (_) {}
+      img.alt = t('patternPreview', { title: titleText });
+      img.decoding = 'async';
+      const cached = galleryThumbCache.get(item);
+      if (cached) img.src = cached;
+      else {
+        img._galleryItem = item;
+        if (galleryThumbObserver) galleryThumbObserver.observe(img);
+        else fillGalleryThumb(img);
+      }
+      frame.appendChild(img);
+
+      const views = document.createElement('span');
+      views.className = 'gallery-views';
+      views.innerHTML = `<span class="material-icons">visibility</span><span class="gallery-views-num">${getViews(item).toLocaleString()}</span>`;
+      views.title = t('views');
+      frame.appendChild(views);
+
+      if (country) {
+        const flag = document.createElement('span');
+        flag.className = 'gallery-country';
+        flag.textContent = countryFlag(country.code);
+        flag.title = countryLabel(country);
+        frame.appendChild(flag);
+      }
+
+      const hover = document.createElement('span');
+      hover.className = 'gallery-action';
+      hover.innerHTML = `<span class="material-icons">brush</span> ${t('colorIt')}`;
+      frame.appendChild(hover);
+
+      const info = document.createElement('div');
+      info.className = 'gallery-info';
       const title = document.createElement('div');
       title.className = 'gallery-title';
-      title.textContent = item.title || t('patternFile');
-      const itemCountry = item.countryCode && item.countryName ? countryLabel({ code: item.countryCode, name: item.countryName }) : '';
-      const country = document.createElement('div');
-      country.className = 'gallery-country';
-      country.hidden = !itemCountry;
-      country.textContent = itemCountry;
+      title.textContent = titleText;
       const meta = document.createElement('div');
       meta.className = 'gallery-meta';
-      meta.textContent = `${ratioLabel(ratio)} · ${item.cols || '?'}×${item.rows || '?'}${item.author ? ' · ' + item.author : ''}${itemCountry ? ' · ' + itemCountry : ''}`;
-      const views = document.createElement('div');
-      views.className = 'gallery-views';
-      views.innerHTML = `<span class="material-icons">visibility</span><span class="gallery-views-num">${getViews(item)}</span>`;
-      const action = document.createElement('span');
-      action.className = 'btn btn-primary btn-small gallery-action';
-      action.innerHTML = `<span class="material-icons">brush</span> ${t('colorIt')}`;
-      card.appendChild(img);
-      card.appendChild(title);
-      if (itemCountry) card.appendChild(country);
-      card.appendChild(meta);
-      card.appendChild(views);
-      card.appendChild(action);
+      const author = document.createElement('span');
+      author.className = 'gallery-author';
+      author.textContent = item.author || '';
+      const size = document.createElement('span');
+      size.className = 'gallery-size';
+      size.textContent = `${item.cols || '?'}×${item.rows || '?'}`;
+      size.title = ratioLabel(ratio);
+      meta.appendChild(author);
+      meta.appendChild(size);
+      info.appendChild(title);
+      info.appendChild(meta);
+
+      card.appendChild(frame);
+      card.appendChild(info);
       grid.appendChild(card);
     });
     galleryBody.appendChild(grid);

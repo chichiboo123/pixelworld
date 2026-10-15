@@ -120,7 +120,7 @@ const GALLERY_API_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX
 
 | 요청 | 설명 | 반환 예시 |
 |------|------|----------|
-| `GET ?action=list` | 최신 도안 목록 | `[{ cols, rows, legend, cells, title, author, ratio, views, ... }]` |
+| `GET ?action=list` | 저장된 모든 도안 목록 (최신순, 개수 제한 없음) | `[{ cols, rows, legend, cells, title, author, ratio, views, ... }]` |
 | `POST` (text/plain JSON) | 도안 저장 | `{ ok: true, id: "uuid" }` |
 | `POST` `{ action: "view", id }` | 도안 조회수(클릭수) +1 | `{ ok: true, views: 12 }` |
 | `POST` `{ action: "admin-list", password }` | 관리자 도안 목록 | `{ ok: true, items: [...] }` |

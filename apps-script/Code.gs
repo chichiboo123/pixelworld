@@ -14,8 +14,6 @@ var SPREADSHEET_ID = '여기에_스프레드시트_ID_붙여넣기';
 
 // 도안을 저장할 시트 이름 (자동 생성됨)
 var SHEET_NAME = 'patterns';
-// 한 번에 내려줄 최대 도안 수 (최신순)
-var MAX_LIST = 100;
 // 관리자 비밀번호를 저장할 스크립트 속성 이름
 var ADMIN_PASSWORD_PROPERTY = 'ADMIN_PASSWORD';
 
@@ -80,8 +78,8 @@ function migrateSheet_(sh) {
   }
 }
 
-function listPatterns_(limit) {
-  var max = limit || MAX_LIST;
+// 저장된 모든 도안을 최신순으로 반환한다. (개수 제한 없음)
+function listPatterns_() {
   var sh = getSheet_();
   var last = sh.getLastRow();
   if (last < 2) return [];
@@ -89,7 +87,7 @@ function listPatterns_(limit) {
   var numCols = Math.max(sh.getLastColumn(), 5);
   var rows = sh.getRange(2, 1, last - 1, numCols).getValues();
   var out = [];
-  for (var i = rows.length - 1; i >= 0 && out.length < max; i--) {
+  for (var i = rows.length - 1; i >= 0; i--) {
     try {
       var payload = JSON.parse(rows[i][4]);
       payload.id = rows[i][0];
@@ -128,7 +126,7 @@ function incrementView_(id) {
 function handleAdminAction_(data) {
   assertAdmin_(data.password);
   if (data.action === 'admin-list') {
-    return { ok: true, items: listPatterns_(500) };
+    return { ok: true, items: listPatterns_() };
   }
   if (data.action === 'admin-update') {
     return { ok: true, item: updatePattern_(data) };

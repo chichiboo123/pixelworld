@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=18" />
+  <link rel="stylesheet" href="styles.css?v=19" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -311,18 +311,37 @@
       <div class="gallery-head">
         <h3 class="modal-title gallery-title-head">
           <span class="material-icons">collections</span> 도안 갤러리
+          <span class="gallery-total" id="gallery-total" hidden></span>
         </h3>
         <button class="icon-btn icon-btn-sm" id="gallery-close" title="닫기">
           <span class="material-icons">close</span>
         </button>
       </div>
-      <div class="gallery-tabs" id="gallery-tabs" hidden></div>
-      <div class="gallery-sort" id="gallery-sort" hidden>
-        <span class="gallery-sort-label"><span class="material-icons">sort</span> 정렬</span>
-        <button type="button" class="gallery-sort-btn active" data-sort="recent">최신순</button>
-        <button type="button" class="gallery-sort-btn" data-sort="popular">인기순</button>
+      <div class="gallery-toolbar" id="gallery-toolbar" hidden>
+        <div class="gallery-tabs" id="gallery-tabs"></div>
+        <label class="gallery-search">
+          <span class="material-icons">search</span>
+          <input type="search" id="gallery-search" autocomplete="off" data-i18n-placeholder="gallerySearch" placeholder="작품명·작가·국가 검색" />
+        </label>
+        <div class="gallery-tools-right">
+          <div class="gallery-sort" id="gallery-sort">
+            <button type="button" class="gallery-sort-btn active" data-sort="recent">최신순</button>
+            <button type="button" class="gallery-sort-btn" data-sort="popular">인기순</button>
+          </div>
+          <div class="gallery-density" id="gallery-density">
+            <button type="button" class="gallery-density-btn" data-density="compact" data-i18n-title="viewSmall" data-i18n-aria-label="viewSmall" title="작게 보기" aria-label="작게 보기">
+              <span class="material-icons">apps</span>
+            </button>
+            <button type="button" class="gallery-density-btn active" data-density="comfy" data-i18n-title="viewLarge" data-i18n-aria-label="viewLarge" title="크게 보기" aria-label="크게 보기">
+              <span class="material-icons">grid_view</span>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="gallery-body" id="gallery-body"></div>
+      <button type="button" class="gallery-top-btn" id="gallery-top" data-i18n-title="backToTop" data-i18n-aria-label="backToTop" title="맨 위로" aria-label="맨 위로" hidden>
+        <span class="material-icons">arrow_upward</span>
+      </button>
     </div>
   </div>
 
@@ -411,6 +430,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=23"></script>
+  <script src="app.js?v=24"></script>
 </body>
 </html>

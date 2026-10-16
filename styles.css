@@ -893,11 +893,13 @@ body { padding-bottom: var(--footer-h); }
   backdrop-filter: blur(8px);
   border-top: 1px solid var(--line);
   display: flex;
+  flex-direction: column;
+  gap: 6px;
   align-items: center;
   justify-content: center;
   z-index: 100;
-  padding: 3px 12px;
-  padding-bottom: calc(3px + env(safe-area-inset-bottom, 0px));
+  padding: 8px 12px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   line-height: 1;
 }
 .app-footer a {
@@ -913,6 +915,20 @@ body { padding-bottom: var(--footer-h); }
   max-width: 100%;
 }
 .app-footer a:hover { color: var(--primary-dark); text-decoration: underline; }
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  max-width: 100%;
+  color: var(--text-soft);
+  font-size: 12px;
+}
+.app-footer a:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 3px;
+}
 
 @media (max-width: 420px) {
   .app-footer a { font-size: 11px; }
@@ -1135,6 +1151,9 @@ body { padding-bottom: var(--footer-h); }
 }
 .upload-card {
   max-width: 520px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   text-align: left;
 }
 .help-list {
@@ -1765,3 +1784,8 @@ body { padding-bottom: var(--footer-h); }
   .gallery-item:hover .gallery-action { opacity: 0; }
   .gallery-item:active .gallery-thumb-wrap { transform: scale(.97); box-shadow: inset 0 0 0 2px var(--primary); }
 }
+
+/* Notices are available before the existing publication acknowledgment. */
+.upload-legal { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+.upload-legal a { color: var(--primary-dark); text-underline-offset: 3px; }
+.upload-legal a:focus-visible { outline: 2px solid var(--primary-dark); outline-offset: 3px; }

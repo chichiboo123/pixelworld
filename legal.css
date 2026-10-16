@@ -1,0 +1,42 @@
+:root {
+  --bg: #f6f8ff;
+  --text: #1f2a44;
+  --text-soft: #5a6685;
+  --line: #e3e8f5;
+  --primary-dark: #245bb3;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 1rem; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 1rem/1.85 'Pretendard GOV', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+a { color: var(--primary-dark); text-underline-offset: .2em; }
+a:focus-visible { outline: 3px solid var(--primary-dark); outline-offset: 4px; }
+.skip, header, main, footer { max-width: 58rem; margin: auto; padding: 1.25rem; }
+.skip { display: block; padding-bottom: 0; }
+header { padding-top: .75rem; }
+.brand { color: var(--primary-dark); font-weight: 800; letter-spacing: .1em; }
+h1 { font-size: clamp(1.65rem, 5vw, 2.3rem); line-height: 1.4; }
+h1 span { display: block; font-size: .65em; margin-top: .5rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+article {
+  background: white;
+  padding: clamp(1rem, 4vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  margin: 1.5rem 0;
+  box-shadow: 0 6px 20px #4c8dff15;
+}
+.notice { padding: 1rem; background: #dbe8ff; border-radius: 14px; }
+.document-date { color: var(--text-soft); font-size: .9rem; }
+p, li { overflow-wrap: anywhere; }
+ol, ul { padding-inline-start: 1.5rem; }
+article section { border-top: 1px solid var(--line); padding-top: .5rem; margin-top: 1.8rem; }
+.legal-footer { padding-bottom: 3rem; font-size: .9rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { body { background: white; } article { box-shadow: none; } }

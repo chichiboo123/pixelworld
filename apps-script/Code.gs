@@ -163,6 +163,7 @@ function findPatternRow_(id) {
 }
 
 function updatePattern_(data) {
+  validatePublicMetadata_(data);
   var found = findPatternRow_(data.id);
   var title = String(data.title || '제목 없음').slice(0, 60);
   var author = String(data.author || '익명').slice(0, 40);
@@ -178,8 +179,8 @@ function updatePattern_(data) {
       delete payload.countryName;
     }
   }
-  found.sheet.getRange(found.row, 2).setValue(title);
-  found.sheet.getRange(found.row, 3).setValue(author);
+  found.sheet.getRange(found.row, 2).setValue(sheetText_(title));
+  found.sheet.getRange(found.row, 3).setValue(sheetText_(author));
   found.sheet.getRange(found.row, 5).setValue(JSON.stringify(payload));
   payload.id = data.id;
   payload.createdAt = found.sheet.getRange(found.row, 4).getValue();
@@ -191,10 +192,49 @@ function deletePattern_(id) {
   found.sheet.deleteRow(found.row);
 }
 
-function savePattern_(data) {
-  if (!data || !data.cells || !data.legend || !data.cols || !data.rows) {
-    throw new Error('invalid pattern payload');
+function validatePublicMetadata_(data) {
+  if (!data || typeof data.title !== 'string' || !data.title.trim() || data.title.length > 60
+    || typeof data.author !== 'string' || !data.author.trim() || data.author.length > 40) {
+    throw new Error('invalid title or artist');
   }
+  if ((data.countryCode || data.countryName)
+    && (typeof data.countryCode !== 'string' || !/^[A-Z]{2}$/.test(data.countryCode)
+      || typeof data.countryName !== 'string' || !data.countryName.trim() || data.countryName.length > 80)) {
+    throw new Error('invalid country');
+  }
+}
+
+function validatePattern_(data) {
+  validatePublicMetadata_(data);
+  if (!Number.isInteger(data.cols) || !Number.isInteger(data.rows)
+    || data.cols < 1 || data.rows < 1 || data.cols > 128 || data.rows > 128
+    || (data.ratio && ['landscape', 'square', 'portrait'].indexOf(data.ratio) === -1)
+    || (data.sizeKey && ['small', 'medium', 'large', 'xlarge', 'xxlarge'].indexOf(data.sizeKey) === -1)) {
+    throw new Error('invalid canvas');
+  }
+  var total = data.cols * data.rows;
+  if (!Array.isArray(data.legend) || data.legend.length > total
+    || !Array.isArray(data.cells) || data.cells.length !== total) throw new Error('invalid pattern');
+  var numbers = Object.create(null);
+  data.legend.forEach(function(entry) {
+    if (!entry || !Number.isInteger(entry.num) || entry.num < 1 || entry.num > total
+      || numbers[entry.num] || typeof entry.color !== 'string' || !/^#[0-9a-f]{6}$/i.test(entry.color)) {
+      throw new Error('invalid legend');
+    }
+    numbers[entry.num] = true;
+  });
+  if (data.cells.some(function(n) { return !Number.isInteger(n) || (n !== 0 && !numbers[n]); })) {
+    throw new Error('invalid cells');
+  }
+}
+
+// User text must stay text when written to a spreadsheet cell.
+function sheetText_(value) {
+  return /^[\s]*[=+\-@]/.test(value) ? "'" + value : value;
+}
+
+function savePattern_(data) {
+  validatePattern_(data);
   var sh = getSheet_();
   var id = Utilities.getUuid();
   var createdAt = new Date().toISOString();
@@ -217,7 +257,7 @@ function savePattern_(data) {
     payload.countryCode = String(data.countryCode).slice(0, 2);
     payload.countryName = String(data.countryName).slice(0, 80);
   }
-  sh.appendRow([id, title, author, createdAt, JSON.stringify(payload), 0]);
+  sh.appendRow([id, sheetText_(title), sheetText_(author), createdAt, JSON.stringify(payload), 0]);
   return { id: id };
 }
 

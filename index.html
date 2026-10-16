@@ -357,11 +357,12 @@
         </button>
       </div>
       <form class="upload-form" id="gallery-upload-form">
+        <p class="field-hint">실명 대신 별명을 써 주세요. 학교·학년·반·번호·연락처는 작품과 글에 넣지 마세요. 올리면 누구나 보고 색칠할 수 있어요.</p>
         <label class="field-label" for="gallery-upload-title">작품명</label>
         <input class="text-field" id="gallery-upload-title" name="title" type="text" maxlength="60" required placeholder="예: 무지개 고양이" />
 
         <label class="field-label" for="gallery-upload-author">작가(만든이)</label>
-        <input class="text-field" id="gallery-upload-author" name="author" type="text" maxlength="40" required placeholder="예: 3학년 김픽셀" />
+        <input class="text-field" id="gallery-upload-author" name="author" type="text" maxlength="40" required placeholder="예: 파란별" />
 
         <label class="field-label" for="gallery-upload-country">국가 (선택)</label>
         <input class="text-field" id="gallery-upload-country" name="country" type="search" list="gallery-upload-country-list" autocomplete="off" placeholder="예: 🇰🇷 South Korea" />
@@ -370,12 +371,12 @@
 
         <label class="upload-agree">
           <input type="checkbox" id="gallery-upload-agree" required />
-          <span>올리면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료를 올리지 않겠습니다.</span>
+          <span>작품·작품명·별명·선택한 국가가 누구에게나 공개되고, 직접 수정·삭제하는 기능은 없음을 확인했어요. 개인정보나 다른 사람의 권리를 침해하는 자료를 올리지 않겠습니다.</span>
         </label>
 
         <div class="modal-actions">
           <button class="btn btn-ghost" type="button" id="gallery-upload-cancel">취소</button>
-          <button class="btn btn-primary" type="submit">동의하고 제출</button>
+          <button class="btn btn-primary" type="submit">확인하고 공개</button>
         </div>
       </form>
     </div>
@@ -430,6 +431,6 @@
     </a>
   </footer>
 
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>

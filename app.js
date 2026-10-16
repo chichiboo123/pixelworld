@@ -58,6 +58,10 @@
   }
 
   const STATIC_EN = {
+    '서비스 안내': 'Service information',
+    '이용약관': 'Terms of Service', '개인정보 처리방침': 'Privacy Policy', '검토용 초안': 'Review drafts',
+    '이용약관 (검토용 초안, 새 탭)': 'Terms of Service (review draft, opens in a new tab)',
+    '개인정보 처리방침 (검토용 초안, 새 탭)': 'Privacy Policy (review draft, opens in a new tab)',
     '나만의 픽셀아트를 만들어 보아요!': 'Create your own pixel art!',
     '1단계 · 캔버스 모양을 골라요': 'Step 1 · Choose a canvas shape',
     '가로 모드': 'Landscape mode', '정사각형 모드': 'Square mode', '세로 모드': 'Portrait mode',
@@ -109,6 +113,9 @@
     document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
     document.querySelectorAll('[data-i18n-aria-label]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    document.querySelectorAll('[data-legal-page]').forEach(link => {
+      link.href = `${link.dataset.legalPage}.html#${currentLang}`;
+    });
     document.querySelectorAll('[data-language-toggle]').forEach(langBtn => {
       const next = currentLang === 'ko' ? 'en' : 'ko';
       langBtn.dataset.langNext = next;

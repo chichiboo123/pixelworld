@@ -172,6 +172,39 @@ test('valid shared links restore pixels and malformed runs are rejected', async 
   }
 });
 
+test('footer legal links stay visible and open the correct draft language', async () => {
+  for (const width of [320, 390, 1280]) {
+    const p = await page();
+    try {
+      await p.setViewportSize({ width, height: 844 });
+      assert.equal(await p.locator('.app-footer a[data-legal-page]').count(), 2);
+      await newDrawing(p);
+      for (const lang of ['ko', 'en']) {
+        if (lang === 'en') await switchLanguage(p);
+        for (const name of ['terms', 'privacy']) {
+          const link = p.locator(`.app-footer [data-legal-page="${name}"]`);
+          assert.equal(await link.isVisible(), true);
+          assert.equal(await link.getAttribute('href'), `${name}.html#${lang}`);
+          const bounds = await link.boundingBox();
+          assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width);
+          const [documentPage] = await Promise.all([p.waitForEvent('popup'), link.click()]);
+          await documentPage.waitForLoadState();
+          assert.equal(await documentPage.locator('h1').count(), 1);
+          assert.ok((await documentPage.locator('.notice').innerText()).includes('초안'));
+          assert.equal(await documentPage.locator(`#${lang}`).count(), 1);
+          assert.equal(await documentPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+          await documentPage.close();
+        }
+      }
+      await p.waitForFunction(() => {
+        const footer = document.querySelector('.app-footer');
+        return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--footer-h')) >= footer.getBoundingClientRect().height;
+      });
+      assert.ok(await p.evaluate(() => document.querySelector('#canvas-wrapper').getBoundingClientRect().bottom <= document.querySelector('.app-footer').getBoundingClientRect().top));
+    } finally { await p.close(); }
+  }
+});
+
 (async () => {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   base = `http://127.0.0.1:${server.address().port}/`;

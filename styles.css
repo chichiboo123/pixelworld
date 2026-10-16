@@ -925,14 +925,6 @@ body { padding-bottom: var(--footer-h); }
   color: var(--text-soft);
   font-size: 12px;
 }
-.footer-draft {
-  color: #704800;
-  background: var(--yellow);
-  border-radius: 4px;
-  padding: 3px 5px;
-  font-size: 10px;
-  white-space: nowrap;
-}
 .app-footer a:focus-visible {
   outline: 2px solid var(--primary-dark);
   outline-offset: 3px;
@@ -1159,6 +1151,9 @@ body { padding-bottom: var(--footer-h); }
 }
 .upload-card {
   max-width: 520px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   text-align: left;
 }
 .help-list {
@@ -1789,3 +1784,8 @@ body { padding-bottom: var(--footer-h); }
   .gallery-item:hover .gallery-action { opacity: 0; }
   .gallery-item:active .gallery-thumb-wrap { transform: scale(.97); box-shadow: inset 0 0 0 2px var(--primary); }
 }
+
+/* Notices are available before the existing publication acknowledgment. */
+.upload-legal { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+.upload-legal a { color: var(--primary-dark); text-underline-offset: 3px; }
+.upload-legal a:focus-visible { outline: 2px solid var(--primary-dark); outline-offset: 3px; }

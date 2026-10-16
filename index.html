@@ -14,7 +14,7 @@
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-gov.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20" />
+  <link rel="stylesheet" href="styles.css?v=21" />
 </head>
 <body>
   <!-- 1단계: 비율 선택 -->
@@ -369,9 +369,15 @@
         <datalist id="gallery-upload-country-list"></datalist>
         <p class="field-hint">국가명을 영어로 검색하거나 목록에서 선택할 수 있어요.</p>
 
+        <p class="field-hint">만 14세 미만 아동의 개인정보가 포함된 자료는 올리지 마세요. 보호자 동의를 확인하는 기능은 제공하지 않습니다.</p>
+        <p class="field-hint">작품의 저작권은 만든이에게 남습니다. 직접 수정·삭제하는 기능은 없으며 문의 경로로 관리자에게 요청할 수 있어요.</p>
+        <nav class="upload-legal" aria-label="공개 전 확인">
+          <a href="terms.html#ko" data-legal-page="terms" target="_blank" rel="noopener noreferrer" aria-label="이용약관 (새 탭)">이용약관</a>
+          <a href="privacy.html#ko" data-legal-page="privacy" target="_blank" rel="noopener noreferrer" aria-label="개인정보 처리방침 (새 탭)">개인정보 처리방침</a>
+        </nav>
         <label class="upload-agree">
           <input type="checkbox" id="gallery-upload-agree" required />
-          <span>작품·작품명·별명·선택한 국가가 누구에게나 공개되고, 직접 수정·삭제하는 기능은 없음을 확인했어요. 개인정보나 다른 사람의 권리를 침해하는 자료를 올리지 않겠습니다.</span>
+          <span>공개 범위를 확인했어요. 갤러리 제공과 다른 사람의 개인·교육용 색칠·저장에 필요한 이용을 허락합니다. 개인정보나 다른 사람의 권리를 침해하는 자료를 올리지 않겠습니다.</span>
         </label>
 
         <div class="modal-actions">
@@ -427,16 +433,17 @@
 
   <footer class="app-footer">
     <nav class="footer-legal" aria-label="서비스 안내">
-      <a href="terms.html#ko" data-legal-page="terms" target="_blank" rel="noopener noreferrer" aria-label="이용약관 (검토용 초안, 새 탭)">이용약관</a>
+      <a href="terms.html#ko" data-legal-page="terms" target="_blank" rel="noopener noreferrer" aria-label="이용약관 (새 탭)">이용약관</a>
       <span aria-hidden="true">|</span>
-      <a href="privacy.html#ko" data-legal-page="privacy" target="_blank" rel="noopener noreferrer" aria-label="개인정보 처리방침 (검토용 초안, 새 탭)"><strong>개인정보 처리방침</strong></a>
-      <span class="footer-draft">검토용 초안</span>
+      <a href="privacy.html#ko" data-legal-page="privacy" target="_blank" rel="noopener noreferrer" aria-label="개인정보 처리방침 (새 탭)"><strong>개인정보 처리방침</strong></a>
+      <span aria-hidden="true">|</span>
+      <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer" aria-label="문의하기 (외부 페이지, 새 탭)">문의하기</a>
     </nav>
     <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer">
       Created by. 교육뮤지컬 꿈꾸는 치수쌤
     </a>
   </footer>
 
-  <script src="app.js?v=26"></script>
+  <script src="app.js?v=27"></script>
 </body>
 </html>

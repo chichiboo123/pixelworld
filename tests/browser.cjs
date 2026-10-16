@@ -172,7 +172,7 @@ test('valid shared links restore pixels and malformed runs are rejected', async 
   }
 });
 
-test('footer legal links stay visible and open the correct draft language', async () => {
+test('footer legal links stay visible and open the correct language', async () => {
   for (const width of [320, 390, 1280]) {
     const p = await page();
     try {
@@ -190,7 +190,8 @@ test('footer legal links stay visible and open the correct draft language', asyn
           const [documentPage] = await Promise.all([p.waitForEvent('popup'), link.click()]);
           await documentPage.waitForLoadState();
           assert.equal(await documentPage.locator('h1').count(), 1);
-          assert.ok((await documentPage.locator('.notice').innerText()).includes('초안'));
+          assert.equal(await documentPage.locator('a[href="https://litt.ly/chichiboo"]').count() > 0, true);
+          assert.doesNotMatch(await documentPage.locator('body').innerText(), /검토용 초안|REVIEW DRAFT|운영자 확인 필요|Operator confirmation required/i);
           assert.equal(await documentPage.locator(`#${lang}`).count(), 1);
           assert.equal(await documentPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
           await documentPage.close();
@@ -202,6 +203,32 @@ test('footer legal links stay visible and open the correct draft language', asyn
       });
       assert.ok(await p.evaluate(() => document.querySelector('#canvas-wrapper').getBoundingClientRect().bottom <= document.querySelector('.app-footer').getBoundingClientRect().top));
     } finally { await p.close(); }
+  }
+});
+
+test('expanded upload notices remain scrollable and usable on short mobile screens', async () => {
+  for (const [width, height] of [[320, 568], [390, 844]]) {
+    for (const language of ['ko', 'en']) {
+      const p = await page();
+      try {
+        await p.setViewportSize({ width, height });
+        await newDrawing(p);
+        await p.locator('.pixel-cell').first().click();
+        if (language === 'en') await switchLanguage(p);
+        await p.locator('#btn-more').click();
+        await p.locator('[data-action="make-pattern"]').click();
+        await p.locator('#pattern-fab button').last().click();
+        const box = await p.locator('.upload-card').boundingBox();
+        assert.ok(box.y >= 0 && box.y + box.height <= height, 'dialog must fit within the viewport');
+        assert.equal(await p.locator('.upload-legal a').count(), 2);
+        const submit = p.locator('#gallery-upload-form button[type="submit"]');
+        await submit.scrollIntoViewIfNeeded();
+        const submitBox = await submit.boundingBox();
+        assert.ok(submitBox.y >= 0 && submitBox.y + submitBox.height <= height);
+        await p.locator('#gallery-upload-cancel').click();
+        assert.equal(await p.locator('#gallery-upload-modal.open').count(), 0);
+      } finally { await p.close(); }
+    }
   }
 });
 

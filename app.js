@@ -59,9 +59,13 @@
 
   const STATIC_EN = {
     '서비스 안내': 'Service information',
-    '이용약관': 'Terms of Service', '개인정보 처리방침': 'Privacy Policy', '검토용 초안': 'Review drafts',
-    '이용약관 (검토용 초안, 새 탭)': 'Terms of Service (review draft, opens in a new tab)',
-    '개인정보 처리방침 (검토용 초안, 새 탭)': 'Privacy Policy (review draft, opens in a new tab)',
+    '이용약관': 'Terms of Service', '개인정보 처리방침': 'Privacy Policy', '문의하기': 'Contact',
+    '이용약관 (새 탭)': 'Terms of Service (opens in a new tab)',
+    '개인정보 처리방침 (새 탭)': 'Privacy Policy (opens in a new tab)',
+    '문의하기 (외부 페이지, 새 탭)': 'Contact (external page, opens in a new tab)',
+    '공개 전 확인': 'Before publishing',
+    '만 14세 미만 아동의 개인정보가 포함된 자료는 올리지 마세요. 보호자 동의를 확인하는 기능은 제공하지 않습니다.': 'Do not upload material containing personal information of children under 14. Guardian-consent verification is not provided.',
+    '작품의 저작권은 만든이에게 남습니다. 직접 수정·삭제하는 기능은 없으며 문의 경로로 관리자에게 요청할 수 있어요.': 'Copyright stays with the creator. You cannot edit or delete posts yourself; use the contact route to request administrator handling.',
     '나만의 픽셀아트를 만들어 보아요!': 'Create your own pixel art!',
     '1단계 · 캔버스 모양을 골라요': 'Step 1 · Choose a canvas shape',
     '가로 모드': 'Landscape mode', '정사각형 모드': 'Square mode', '세로 모드': 'Portrait mode',
@@ -79,7 +83,7 @@
     '참고·편집': 'Reference & edit', '더보기(⋮)에서 그림 참고하기·가이드라인, 되돌리기·다시 실행을 써요': 'Use reference image, guides, undo, and redo from More (⋮).',
     '저장·공유': 'Save & share', '더보기(⋮)에서 이미지 저장·복사, 링크 공유, 갤러리에 올리기를 해요': 'Use More (⋮) to save/copy images, share links, and upload to the gallery.',
     '정렬': 'Sort', '최신순': 'Newest', '인기순': 'Popular', '작품명': 'Title', '작가(만든이)': 'Artist', '예: 무지개 고양이': 'Ex: Rainbow Cat', '예: 파란별': 'Ex: Blue Star',
-    '작품·작품명·별명·선택한 국가가 누구에게나 공개되고, 직접 수정·삭제하는 기능은 없음을 확인했어요. 개인정보나 다른 사람의 권리를 침해하는 자료를 올리지 않겠습니다.': 'I understand that my pattern, title, nickname and optional country will be public and that I cannot edit or delete the post myself. I will not upload personal information or material that infringes others’ rights.',
+    '공개 범위를 확인했어요. 갤러리 제공과 다른 사람의 개인·교육용 색칠·저장에 필요한 이용을 허락합니다. 개인정보나 다른 사람의 권리를 침해하는 자료를 올리지 않겠습니다.': 'I understand the public scope and permit use needed for the gallery and others’ personal or educational coloring and saving. I will not upload personal information or material that infringes others’ rights.',
     '실명 대신 별명을 써 주세요. 학교·학년·반·번호·연락처는 작품과 글에 넣지 마세요. 올리면 누구나 보고 색칠할 수 있어요.': 'Use a nickname. Keep your real name, school, grade, class, student number and contact details out of the artwork and text. Anyone can view and color your public pattern.',
     'Apps Script 속성의 ADMIN_PASSWORD': 'ADMIN_PASSWORD from Apps Script properties', '확인하고 공개': 'Confirm and publish', '관리자 모드': 'Admin mode', '입장': 'Enter', '새로고침': 'Refresh', 'Created by. 교육뮤지컬 꿈꾸는 치수쌤': 'Created by. Education Musical Chichiboo'
   };

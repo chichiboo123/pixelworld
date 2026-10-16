@@ -27,14 +27,14 @@
       eraseHint: '같은 칸을 다시 누르면 지워져요!', homeTitle: '홈으로 가기', homeMsg: '홈 화면으로 돌아가요. 현재 그림은 자동으로 저장돼요.',
       backTitle: '이전 단계로', backMsg: '캔버스 크기 선택 화면으로 돌아가요. 다시 크기를 고르면 지금 그림이 사라질 수 있어요.',
       emptyCanvas: '이미 빈 캔버스예요!', clearTitle: '전체 지우기', clearMsg: '지금 그린 그림이 모두 사라져요. 정말 지울까요?', cleared: '캔버스를 비웠어요!',
-      myDrawing: '내그림', saved: '저장했어요!', loadTitle: '불러오기', loadMsg: '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?', imageSaved: '이미지로 저장했어요!', copiedImage: '이미지가 클립보드에 복사됐어요!', copyUnsupported: '이 브라우저에서는 복사를 지원하지 않아요.', shareCopied: '공유 링크를 복사했어요!', sharePrompt: '이 링크를 복사해서 공유하세요:', drawFirst: '먼저 그림을 그려 주세요!', patternMade: '색상 {count}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.', formatError: '형식 오류', endPatternTitle: '도안 끝내기', endPatternMsg: '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.', patternColorLabel: '번호에 맞게 색칠해요!', patternChartLabel: '색칠 도안 (숫자 = 색깔)', savePattern: '도안 저장', uploadGallery: '갤러리에 올리기', endPattern: '도안 끝내기', colorPickedNum: '{num}번 색을 골랐어요!', patternFile: '도안', patternSaved: '도안 파일을 저장했어요!', landscape: '가로', square: '정사각형', portrait: '세로', other: '기타', galleryNoServer: '아직 갤러리 서버가 연결되지 않았어요.<br>Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)', loadingPatterns: '도안을 불러오는 중...', galleryLoadFailed: '갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.', all: '전체', noPatterns: '아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!', noRatioPatterns: '{ratio} 비율 도안이 아직 없어요.', patternLoaded: '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.', patternLoadFailed: '이 도안을 불러올 수 없어요.', patternPreview: '{title} 미리보기', colorIt: '색칠하기', galleryNoServerToast: '갤러리 서버가 설정되지 않았어요.', agreeRequired: '공유 안내에 동의해야 제출할 수 있어요.', titleAuthorRequired: '작품명과 작가를 모두 적어 주세요.', galleryConfirmTitle: '갤러리 공유 확인', galleryConfirmMsg: '제출하면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료가 아닌지 다시 확인했나요?', uploading: '갤러리에 올리는 중...', uploaded: '갤러리에 올렸어요!', uploadFailed: '갤러리에 올리지 못했어요.', adminPasswordCheck: '관리자 비밀번호를 확인해 주세요.', adminTotal: '총 {count}개의 도안', adminEmpty: '관리할 도안이 아직 없어요.', title: '작품명', author: '작가(만든이)', views: '조회', noDate: '날짜 없음', edit: '수정', delete: '삭제', titleAuthorCheck: '작품명과 작가를 확인해 주세요.', updated: '도안을 수정했어요.', updateFailed: '도안을 수정하지 못했어요.', thisPattern: '이 도안', deleteTitle: '도안 삭제', deleteMsg: '「{title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.', deleted: '도안을 삭제했어요.', deleteFailed: '도안을 삭제하지 못했어요.', country: '국가', countryCheck: '국가는 목록에서 선택하거나 비워 주세요.', hideGuides: '가이드라인 숨기기', showGuides: '가이드라인 보기', referenceImage: '참고 이미지', referenceHint: '참고할 이미지를 올리면<br />여기에 보여요!', colorPicked: '{color} 색을 골랐어요!', eyedropperOn: '스포이트: 색을 추출할 칸을 눌러요!', eyedropperOff: '스포이트를 껐어요.', emptyCell: '빈 칸이에요. 색칠된 칸을 눌러 주세요.', fileReadFailed: '파일을 읽을 수 없어요.', loaded: '불러왔어요!', patternFileReadFailed: '도안 파일을 읽을 수 없어요.', shareReadFailed: '공유 링크를 읽을 수 없어요.', gallerySearch: '작품명·작가·국가 검색', galleryTotal: '총 {count}개', noSearchResults: '「{query}」에 맞는 도안이 없어요.', viewSmall: '작게 보기', viewLarge: '크게 보기', backToTop: '맨 위로'
+      myDrawing: '내그림', saved: '저장했어요!', loadTitle: '불러오기', loadMsg: '지금 그린 그림이 사라지고 새 그림을 불러와요. 계속할까요?', imageSaved: '이미지로 저장했어요!', copiedImage: '이미지가 클립보드에 복사됐어요!', copyUnsupported: '이 브라우저에서는 복사를 지원하지 않아요.', shareCopied: '공유 링크를 복사했어요!', sharePrompt: '이 링크를 복사해서 공유하세요:', drawFirst: '먼저 그림을 그려 주세요!', patternMade: '색상 {count}개로 도안을 만들었어요! 편집은 위쪽 버튼으로 돌아가세요.', formatError: '형식 오류', endPatternTitle: '도안 끝내기', endPatternMsg: '번호 안내를 끄고 자유롭게 그릴 수 있어요. 지금까지 색칠한 그림은 그대로 남아요.', patternColorLabel: '번호에 맞게 색칠해요!', patternChartLabel: '색칠 도안 (숫자 = 색깔)', savePattern: '도안 저장', uploadGallery: '갤러리에 올리기', endPattern: '도안 끝내기', colorPickedNum: '{num}번 색을 골랐어요!', patternFile: '도안', patternSaved: '도안 파일을 저장했어요!', landscape: '가로', square: '정사각형', portrait: '세로', other: '기타', galleryNoServer: '아직 갤러리 서버가 연결되지 않았어요.<br>Google Apps Script 웹앱을 배포한 뒤 <code>app.js</code>의 <code>GALLERY_API_URL</code>에 주소를 넣으면<br>친구들과 도안을 주고받을 수 있어요!<br>(설정 방법은 <code>apps-script/README.md</code> 참고)', loadingPatterns: '도안을 불러오는 중...', galleryLoadFailed: '갤러리를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.', all: '전체', noPatterns: '아직 올라온 도안이 없어요.<br>첫 번째 도안을 올려 보세요!', noRatioPatterns: '{ratio} 비율 도안이 아직 없어요.', patternLoaded: '도안을 불러왔어요! 번호에 맞게 색칠해 보세요.', patternLoadFailed: '이 도안을 불러올 수 없어요.', patternPreview: '{title} 미리보기', colorIt: '색칠하기', galleryNoServerToast: '갤러리 서버가 설정되지 않았어요.', agreeRequired: '공유 안내에 동의해야 제출할 수 있어요.', titleAuthorRequired: '작품명과 작가를 모두 적어 주세요.', galleryConfirmTitle: '갤러리 공유 확인', galleryConfirmMsg: '작품·작품명·별명·선택한 국가가 누구에게나 공개됩니다. 직접 수정·삭제하는 기능은 없고 관리자만 처리할 수 있어요. 개인정보와 다른 사람의 권리를 침해하는 내용이 없는지 확인했나요?', uploading: '갤러리에 올리는 중...', uploaded: '갤러리에 올렸어요!', uploadFailed: '갤러리에 올리지 못했어요.', adminPasswordCheck: '관리자 비밀번호를 확인해 주세요.', adminTotal: '총 {count}개의 도안', adminEmpty: '관리할 도안이 아직 없어요.', title: '작품명', author: '작가(만든이)', views: '조회', noDate: '날짜 없음', edit: '수정', delete: '삭제', titleAuthorCheck: '작품명과 작가를 확인해 주세요.', updated: '도안을 수정했어요.', updateFailed: '도안을 수정하지 못했어요.', thisPattern: '이 도안', deleteTitle: '도안 삭제', deleteMsg: '「{title}」 도안을 갤러리에서 삭제할까요? 이 작업은 되돌릴 수 없어요.', deleted: '도안을 삭제했어요.', deleteFailed: '도안을 삭제하지 못했어요.', country: '국가', countryCheck: '국가는 목록에서 선택하거나 비워 주세요.', hideGuides: '가이드라인 숨기기', showGuides: '가이드라인 보기', referenceImage: '참고 이미지', referenceHint: '참고할 이미지를 올리면<br />여기에 보여요!', colorPicked: '{color} 색을 골랐어요!', eyedropperOn: '스포이트: 색을 추출할 칸을 눌러요!', eyedropperOff: '스포이트를 껐어요.', emptyCell: '빈 칸이에요. 색칠된 칸을 눌러 주세요.', fileReadFailed: '파일을 읽을 수 없어요.', loaded: '불러왔어요!', patternFileReadFailed: '도안 파일을 읽을 수 없어요.', shareReadFailed: '공유 링크를 읽을 수 없어요.', gallerySearch: '작품명·작가·국가 검색', galleryTotal: '총 {count}개', noSearchResults: '「{query}」에 맞는 도안이 없어요.', viewSmall: '작게 보기', viewLarge: '크게 보기', backToTop: '맨 위로'
     },
     en: {
       langCode: 'en', langName: 'English', langToggleLabel: '한국어로 전환',
       eraseHint: 'Tap the same cell again to erase it!', homeTitle: 'Go home', homeMsg: 'Return to the home screen. Your current drawing is saved automatically.',
       backTitle: 'Go back', backMsg: 'Return to canvas size selection. Choosing a new size may clear your current drawing.',
       emptyCanvas: 'The canvas is already empty!', clearTitle: 'Clear canvas', clearMsg: 'Everything you drew will disappear. Are you sure?', cleared: 'Canvas cleared!',
-      myDrawing: 'my-drawing', saved: 'Saved!', loadTitle: 'Load', loadMsg: 'Your current drawing will be replaced. Continue?', imageSaved: 'Saved as an image!', copiedImage: 'Image copied to the clipboard!', copyUnsupported: 'Copy is not supported in this browser.', shareCopied: 'Share link copied!', sharePrompt: 'Copy this link to share:', drawFirst: 'Draw something first!', patternMade: 'Made a pattern with {count} colors! Use the top button to return to editing.', formatError: 'Invalid format', endPatternTitle: 'Finish pattern', endPatternMsg: 'Turn off the number guide and draw freely. Your colored pixels will stay.', patternColorLabel: 'Color by number!', patternChartLabel: 'Coloring pattern (number = color)', savePattern: 'Save pattern', uploadGallery: 'Upload to gallery', endPattern: 'Finish pattern', colorPickedNum: 'Selected color #{num}!', patternFile: 'pattern', patternSaved: 'Pattern file saved!', landscape: 'Landscape', square: 'Square', portrait: 'Portrait', other: 'Other', galleryNoServer: 'The gallery server is not connected yet.<br>Deploy the Google Apps Script web app, then add its URL to <code>GALLERY_API_URL</code> in <code>app.js</code>.<br>After that, everyone can share patterns!<br>(See <code>apps-script/README.md</code> for setup.)', loadingPatterns: 'Loading patterns...', galleryLoadFailed: 'Could not load the gallery.<br>Please try again later.', all: 'All', noPatterns: 'No patterns have been uploaded yet.<br>Upload the first one!', noRatioPatterns: 'No {ratio} patterns yet.', patternLoaded: 'Pattern loaded! Try coloring by number.', patternLoadFailed: 'Could not load this pattern.', patternPreview: '{title} preview', colorIt: 'Color it', galleryNoServerToast: 'Gallery server is not configured.', agreeRequired: 'You need to agree before submitting.', titleAuthorRequired: 'Please enter both title and artist.', galleryConfirmTitle: 'Confirm gallery sharing', galleryConfirmMsg: 'After submitting, this will be public to everyone using this app and cannot be deleted by you. Please confirm it is not harmful or offensive.', uploading: 'Uploading to gallery...', uploaded: 'Uploaded to gallery!', uploadFailed: 'Could not upload to gallery.', adminPasswordCheck: 'Please check the admin password.', adminTotal: '{count} patterns total', adminEmpty: 'There are no patterns to manage yet.', title: 'Title', author: 'Artist', views: 'Views', noDate: 'No date', edit: 'Update', delete: 'Delete', titleAuthorCheck: 'Please check the title and artist.', updated: 'Pattern updated.', updateFailed: 'Could not update the pattern.', thisPattern: 'this pattern', deleteTitle: 'Delete pattern', deleteMsg: 'Delete “{title}” from the gallery? This cannot be undone.', deleted: 'Pattern deleted.', deleteFailed: 'Could not delete the pattern.', country: 'Country', countryCheck: 'Choose a country from the list or leave it empty.', hideGuides: 'Hide guides', showGuides: 'Show guides', referenceImage: 'Reference image', referenceHint: 'Upload a reference image<br />and it will appear here!', colorPicked: 'Selected {color}!', eyedropperOn: 'Eyedropper: tap a colored cell to pick it!', eyedropperOff: 'Eyedropper off.', emptyCell: 'Empty cell. Tap a colored cell.', fileReadFailed: 'Could not read the file.', loaded: 'Loaded!', patternFileReadFailed: 'Could not read the pattern file.', shareReadFailed: 'Could not read the share link.', gallerySearch: 'Search title, artist, country', galleryTotal: '{count} total', noSearchResults: 'No patterns match “{query}”.', viewSmall: 'Small thumbnails', viewLarge: 'Large thumbnails', backToTop: 'Back to top'
+      myDrawing: 'my-drawing', saved: 'Saved!', loadTitle: 'Load', loadMsg: 'Your current drawing will be replaced. Continue?', imageSaved: 'Saved as an image!', copiedImage: 'Image copied to the clipboard!', copyUnsupported: 'Copy is not supported in this browser.', shareCopied: 'Share link copied!', sharePrompt: 'Copy this link to share:', drawFirst: 'Draw something first!', patternMade: 'Made a pattern with {count} colors! Use the top button to return to editing.', formatError: 'Invalid format', endPatternTitle: 'Finish pattern', endPatternMsg: 'Turn off the number guide and draw freely. Your colored pixels will stay.', patternColorLabel: 'Color by number!', patternChartLabel: 'Coloring pattern (number = color)', savePattern: 'Save pattern', uploadGallery: 'Upload to gallery', endPattern: 'Finish pattern', colorPickedNum: 'Selected color #{num}!', patternFile: 'pattern', patternSaved: 'Pattern file saved!', landscape: 'Landscape', square: 'Square', portrait: 'Portrait', other: 'Other', galleryNoServer: 'The gallery server is not connected yet.<br>Deploy the Google Apps Script web app, then add its URL to <code>GALLERY_API_URL</code> in <code>app.js</code>.<br>After that, everyone can share patterns!<br>(See <code>apps-script/README.md</code> for setup.)', loadingPatterns: 'Loading patterns...', galleryLoadFailed: 'Could not load the gallery.<br>Please try again later.', all: 'All', noPatterns: 'No patterns have been uploaded yet.<br>Upload the first one!', noRatioPatterns: 'No {ratio} patterns yet.', patternLoaded: 'Pattern loaded! Try coloring by number.', patternLoadFailed: 'Could not load this pattern.', patternPreview: '{title} preview', colorIt: 'Color it', galleryNoServerToast: 'Gallery server is not configured.', agreeRequired: 'You need to agree before submitting.', titleAuthorRequired: 'Please enter both title and artist.', galleryConfirmTitle: 'Confirm gallery sharing', galleryConfirmMsg: 'Your pattern, title, nickname and optional country will be public. Only an administrator can edit or delete the post. Have you checked that it contains no personal information or material that infringes others’ rights?', uploading: 'Uploading to gallery...', uploaded: 'Uploaded to gallery!', uploadFailed: 'Could not upload to gallery.', adminPasswordCheck: 'Please check the admin password.', adminTotal: '{count} patterns total', adminEmpty: 'There are no patterns to manage yet.', title: 'Title', author: 'Artist', views: 'Views', noDate: 'No date', edit: 'Update', delete: 'Delete', titleAuthorCheck: 'Please check the title and artist.', updated: 'Pattern updated.', updateFailed: 'Could not update the pattern.', thisPattern: 'this pattern', deleteTitle: 'Delete pattern', deleteMsg: 'Delete “{title}” from the gallery? This cannot be undone.', deleted: 'Pattern deleted.', deleteFailed: 'Could not delete the pattern.', country: 'Country', countryCheck: 'Choose a country from the list or leave it empty.', hideGuides: 'Hide guides', showGuides: 'Show guides', referenceImage: 'Reference image', referenceHint: 'Upload a reference image<br />and it will appear here!', colorPicked: 'Selected {color}!', eyedropperOn: 'Eyedropper: tap a colored cell to pick it!', eyedropperOff: 'Eyedropper off.', emptyCell: 'Empty cell. Tap a colored cell.', fileReadFailed: 'Could not read the file.', loaded: 'Loaded!', patternFileReadFailed: 'Could not read the pattern file.', shareReadFailed: 'Could not read the share link.', gallerySearch: 'Search title, artist, country', galleryTotal: '{count} total', noSearchResults: 'No patterns match “{query}”.', viewSmall: 'Small thumbnails', viewLarge: 'Large thumbnails', backToTop: 'Back to top'
     }
   };
   let currentLang = getInitialLang();
@@ -74,9 +74,10 @@
     '도안 색칠': 'Color patterns', '갤러리 도안을 누르면 번호대로 색칠하는 화면이 바로 열려요': 'Tap a gallery pattern to open color-by-number mode.',
     '참고·편집': 'Reference & edit', '더보기(⋮)에서 그림 참고하기·가이드라인, 되돌리기·다시 실행을 써요': 'Use reference image, guides, undo, and redo from More (⋮).',
     '저장·공유': 'Save & share', '더보기(⋮)에서 이미지 저장·복사, 링크 공유, 갤러리에 올리기를 해요': 'Use More (⋮) to save/copy images, share links, and upload to the gallery.',
-    '정렬': 'Sort', '최신순': 'Newest', '인기순': 'Popular', '작품명': 'Title', '작가(만든이)': 'Artist', '예: 무지개 고양이': 'Ex: Rainbow Cat', '예: 3학년 김픽셀': 'Ex: Pixel Kim, Grade 3',
-    '올리면 삭제할 수 없고, 이 앱에 접속하는 모든 사람에게 공유됩니다. 다른 사람에게 피해를 주거나 불쾌감을 주는 자료를 올리지 않겠습니다.': 'After uploading, it cannot be deleted by you and will be shared with everyone who uses this app. I will not upload anything harmful or offensive to others.',
-    'Apps Script 속성의 ADMIN_PASSWORD': 'ADMIN_PASSWORD from Apps Script properties', '동의하고 제출': 'Agree and submit', '관리자 모드': 'Admin mode', '입장': 'Enter', '새로고침': 'Refresh', 'Created by. 교육뮤지컬 꿈꾸는 치수쌤': 'Created by. Education Musical Chichiboo'
+    '정렬': 'Sort', '최신순': 'Newest', '인기순': 'Popular', '작품명': 'Title', '작가(만든이)': 'Artist', '예: 무지개 고양이': 'Ex: Rainbow Cat', '예: 파란별': 'Ex: Blue Star',
+    '작품·작품명·별명·선택한 국가가 누구에게나 공개되고, 직접 수정·삭제하는 기능은 없음을 확인했어요. 개인정보나 다른 사람의 권리를 침해하는 자료를 올리지 않겠습니다.': 'I understand that my pattern, title, nickname and optional country will be public and that I cannot edit or delete the post myself. I will not upload personal information or material that infringes others’ rights.',
+    '실명 대신 별명을 써 주세요. 학교·학년·반·번호·연락처는 작품과 글에 넣지 마세요. 올리면 누구나 보고 색칠할 수 있어요.': 'Use a nickname. Keep your real name, school, grade, class, student number and contact details out of the artwork and text. Anyone can view and color your public pattern.',
+    'Apps Script 속성의 ADMIN_PASSWORD': 'ADMIN_PASSWORD from Apps Script properties', '확인하고 공개': 'Confirm and publish', '관리자 모드': 'Admin mode', '입장': 'Enter', '새로고침': 'Refresh', 'Created by. 교육뮤지컬 꿈꾸는 치수쌤': 'Created by. Education Musical Chichiboo'
   };
   const STATIC_KO = Object.fromEntries(Object.entries(STATIC_EN).map(([ko, en]) => [en, ko]));
   function translateTextNodes(root, table) {
@@ -791,10 +792,41 @@
     inputLoadPattern.click();
   }
 
-  function loadPatternData(data) {
-    if (!data || !Array.isArray(data.cells) || !Array.isArray(data.legend) || !data.cols || !data.rows) {
-      throw new Error(t('formatError'));
+  // Validate untrusted files, gallery responses and restored state before allocating a grid.
+  function validateCanvasSize(data) {
+    if (!data || !Number.isInteger(data.cols) || !Number.isInteger(data.rows)
+      || data.cols < 1 || data.rows < 1 || data.cols > 128 || data.rows > 128
+      || (data.ratio && !['landscape', 'square', 'portrait'].includes(data.ratio))
+      || (data.sizeKey && !['small', 'medium', 'large', 'xlarge', 'xxlarge'].includes(data.sizeKey))) throw new Error(t('formatError'));
+  }
+  function isPixelColor(color) {
+    return typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color);
+  }
+  function validatePatternData(data) {
+    validateCanvasSize(data);
+    const total = data.cols * data.rows;
+    if (!Array.isArray(data.legend) || data.legend.length > total
+      || !Array.isArray(data.cells) || data.cells.length !== total) throw new Error(t('formatError'));
+    const numbers = new Set();
+    for (const entry of data.legend) {
+      if (!entry || !Number.isInteger(entry.num) || entry.num < 1 || entry.num > total
+        || numbers.has(entry.num) || !isPixelColor(entry.color)) throw new Error(t('formatError'));
+      numbers.add(entry.num);
     }
+    if (data.cells.some(n => !Number.isInteger(n) || (n !== 0 && !numbers.has(n)))) throw new Error(t('formatError'));
+  }
+  function validateDrawingData(data) {
+    validateCanvasSize(data);
+    const emptySetup = ['ratio', 'size'].includes(data.currentScreen) && !data.patternMode && Array.isArray(data.pixels) && data.pixels.length === 0;
+    if (!Array.isArray(data.pixels) || (!emptySetup && data.pixels.length !== data.cols * data.rows)
+      || data.pixels.some(c => c !== null && !isPixelColor(c))
+      || (data.currentColor !== undefined && !isPixelColor(data.currentColor))) throw new Error(t('formatError'));
+    if (data.patternMode === 'chart' || data.patternMode === 'color') {
+      validatePatternData({ ...data, cells: data.patternCells, legend: data.patternLegend });
+    }
+  }
+  function loadPatternData(data) {
+    validatePatternData(data);
     const total = data.cols * data.rows;
     state.ratio = data.ratio || 'square';
     state.sizeKey = data.sizeKey || 'medium';
@@ -820,9 +852,7 @@
 
   // 일반 그림(픽셀) 데이터 불러오기
   function loadDrawingData(data) {
-    if (!data || !Array.isArray(data.pixels) || !data.cols || !data.rows) {
-      throw new Error(t('formatError'));
-    }
+    validateDrawingData(data);
     const total = data.cols * data.rows;
     state.ratio = data.ratio || 'square';
     state.sizeKey = data.sizeKey || 'medium';
@@ -928,10 +958,16 @@
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.className = 'legend-chip';
-      chip.innerHTML =
-        `<span class="legend-num">${num}</span>` +
-        `<span class="legend-sw" style="background:${color}"></span>` +
-        `<span class="legend-hex">${color.toUpperCase()}</span>`;
+      const numberLabel = document.createElement('span');
+      numberLabel.className = 'legend-num';
+      numberLabel.textContent = num;
+      const swatch = document.createElement('span');
+      swatch.className = 'legend-sw';
+      swatch.style.backgroundColor = color;
+      const hexLabel = document.createElement('span');
+      hexLabel.className = 'legend-hex';
+      hexLabel.textContent = color.toUpperCase();
+      chip.append(numberLabel, swatch, hexLabel);
       if (isColor) {
         chip.addEventListener('click', () => {
           selectColor(color);
@@ -1314,6 +1350,7 @@
 
   // 도안(번호+범례) → 정답 색상 썸네일 이미지
   function renderPatternThumb(pattern, maxSize = 160) {
+    validatePatternData(pattern);
     const cols = pattern.cols, rows = pattern.rows;
     const numToColor = {};
     (pattern.legend || []).forEach(l => { numToColor[l.num] = l.color; });
@@ -1399,6 +1436,10 @@
       return;
     }
     const selectedCountry = getSelectedCountry();
+    if (galleryUploadCountry.value.trim() && !selectedCountry) {
+      toast(t('countryCheck'));
+      return;
+    }
     const ok = await showConfirm(
       t('galleryConfirmTitle'),
       t('galleryConfirmMsg')
@@ -2221,7 +2262,7 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
       const data = JSON.parse(raw);
-      if (!data || !Array.isArray(data.pixels)) return null;
+      validateDrawingData(data);
       return data;
     } catch (_) { return null; }
   }
@@ -2233,6 +2274,19 @@
         const encoded = location.hash.slice(5);
         const json = base64UrlDecode(encoded);
         const payload = JSON.parse(json);
+        validateCanvasSize({ cols: payload.c, rows: payload.h, ratio: payload.r, sizeKey: payload.s });
+        if (!payload.p || !Array.isArray(payload.p.palette) || !Array.isArray(payload.p.runs)
+          || payload.p.palette.length > payload.c * payload.h
+          || payload.p.palette.some(c => !isPixelColor(c))
+          || payload.p.runs.length > payload.c * payload.h) throw new Error(t('formatError'));
+        let runTotal = 0;
+        for (const run of payload.p.runs) {
+          if (!Array.isArray(run) || run.length !== 2 || !Number.isInteger(run[0])
+            || run[0] < -1 || run[0] >= payload.p.palette.length
+            || !Number.isInteger(run[1]) || run[1] < 1) throw new Error(t('formatError'));
+          runTotal += run[1];
+        }
+        if (runTotal !== payload.c * payload.h) throw new Error(t('formatError'));
         state.ratio = payload.r || 'square';
         state.sizeKey = payload.s || 'medium';
         state.cols = payload.c;
